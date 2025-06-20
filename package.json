@@ -1,0 +1,59 @@
+{
+  "name": "prext",
+  "version": "0.0.1",
+  "description": "The next of preact",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p ./tsconfig.json",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "coverage": "vitest run --coverage",
+    "lint": "biome lint . --fix --unsafe",
+    "check": "tsc --noEmit -p ./tsconfig.json",
+    "format": "prettier --write --cache \"./lib\" \"./examples\" ",
+    "postinstall": "simple-git-hooks"
+  },
+  "keywords": [
+    "preact",
+    "next",
+    "hono",
+    "framework",
+    "ssr",
+    "ssg",
+    "http",
+    "efficient",
+    "small"
+  ],
+  "author": {
+    "name": "LiasCode",
+    "email": "liascode.dev@gmail.com",
+    "url": "https://lias-code.pages.dev"
+  },
+  "license": "MIT",
+  "workspaces": [
+    "./examples/*"
+  ],
+  "devDependencies": {
+    "@biomejs/biome": "1.8.3",
+    "@types/node": "^20.17.57",
+    "@vitest/coverage-v8": "3.2.1",
+    "prettier": "^3.5.3",
+    "prettier-plugin-organize-imports": "^4.1.0",
+    "simple-git-hooks": "^2.13.0",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.1",
+    "zod": "^3.25.51"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "npm run lint && npm run format"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.14.4",
+    "hono": "^4.8.1",
+    "preact": "^10.26.9",
+    "preact-iso": "^2.9.2",
+    "preact-render-to-string": "^6.5.13"
+  }
+}

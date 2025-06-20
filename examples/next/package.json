@@ -1,0 +1,20 @@
+{
+  "name": "prext-next-example",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "tsx --watch ./index.ts"
+  },
+  "author": "LiasCode",
+  "devDependencies": {
+    "@types/node": "^20.12.11",
+    "tsx": "^4.19.2",
+    "typescript": "^5.4.5",
+    "zod": "^3.24.1"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.14.4",
+    "hono": "^4.8.1",
+    "preact": "^10.26.9"
+  }
+}
