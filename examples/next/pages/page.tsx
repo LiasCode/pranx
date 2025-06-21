@@ -1,18 +1,23 @@
+import { Suspense } from "preact/compat";
+import { Button } from "../components/Button";
 import { CounterButton } from "../components/CounterButton";
 
 export default function Page() {
   return (
-    <html>
-      <head>
-        <title>Prext Page</title>
-      </head>
-      <body
-        style={{ display: "flex", flexDirection: "column", gap: "2", justifyContent: "center", alignItems: "center" }}
-      >
-        <h1>This is the first prext page rendered</h1>
-        <CounterButton />
-        <a href="/blog">Blog</a>
-      </body>
-    </html>
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "10px" }}>
+      <h1>This is the first prext page rendered</h1>
+
+      <CounterButton />
+
+      <a href="/blog">Blog</a>
+
+      <Button>Click Me</Button>
+
+      <div style={{ border: "1px solid black", padding: "10px", marginTop: "10px" }}>
+        <Suspense fallback={<h2>Loading</h2>}>
+          <div>Component Inside a Suspense</div>
+        </Suspense>
+      </div>
+    </div>
   );
 }

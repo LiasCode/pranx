@@ -11,15 +11,15 @@ import path from "node:path";
 // page.js or nested layout.js
 // route.js or nested layout.js
 
-export type HIERARCHY_COMPONENTS_KIND = "LAYOUT" | "ERROR_BOUNDARY" | "SUSPENSE" | "NOT_FOUND" | "PAGE" | "API_HANDLER";
+export type HIERARCHY_COMPONENTS_KIND = "LAYOUT" | "ERROR_BOUNDARY" | "NOT_FOUND" | "PAGE" | "API_HANDLER" | "LOADING";
 
 export const HIERARCHY_COMPONENTS_FILE_NAMES: Record<HIERARCHY_COMPONENTS_KIND, string> = {
   LAYOUT: "layout",
   ERROR_BOUNDARY: "error",
-  SUSPENSE: "loading",
   NOT_FOUND: "not-found",
   PAGE: "page",
   API_HANDLER: "route",
+  LOADING: "loading",
 };
 
 export type API_FILE_HANDLER_EXPORT_METHODS = "POST" | "GET" | "PUT" | "DELETE" | "PATCH";
@@ -36,28 +36,29 @@ export type RouterComponent<Handler, Page> = {
       [T in API_FILE_HANDLER_EXPORT_METHODS]?: Handler;
     };
     default?: Page;
+    config?: PageConfig;
   };
 };
 
-type RoutableComponentFile<Handler, Page> = { default?: Page } & {
+export type PageConfig = {
+  static?: boolean;
+};
+
+type RoutableComponentFile<Handler, Page> = { default?: Page; config?: { static?: boolean } } & {
   [K in API_FILE_HANDLER_EXPORT_METHODS]?: Handler;
 };
 
 export class NextFileRouter<HandlerFunctionT, PageFunctionT> {
   name?: string;
   readonly root: string;
-  private cached_router_components: RouterComponent<HandlerFunctionT, PageFunctionT>[] | null = null;
+  cached_router_components: RouterComponent<HandlerFunctionT, PageFunctionT>[] | null = null;
 
   constructor(config: { name?: string; root: string }) {
     this.name = config.name;
     this.root = config.root;
   }
 
-  async make(options?: { cache?: boolean }): Promise<RouterComponent<HandlerFunctionT, PageFunctionT>[]> {
-    if (options?.cache !== undefined) {
-      if (options.cache === false && this.cached_router_components !== null) this.cached_router_components;
-    }
-
+  async make(): Promise<RouterComponent<HandlerFunctionT, PageFunctionT>[]> {
     const router_components: RouterComponent<HandlerFunctionT, PageFunctionT>[] = [];
 
     const dir = await fs.readdir(this.root, {
@@ -133,7 +134,11 @@ export class NextFileRouter<HandlerFunctionT, PageFunctionT> {
 
     path_steps[path_steps.length - 1] =
       filenameWithOutExtension === HIERARCHY_COMPONENTS_FILE_NAMES.PAGE ||
-      filenameWithOutExtension === HIERARCHY_COMPONENTS_FILE_NAMES.API_HANDLER
+      filenameWithOutExtension === HIERARCHY_COMPONENTS_FILE_NAMES.API_HANDLER ||
+      filenameWithOutExtension === HIERARCHY_COMPONENTS_FILE_NAMES.LAYOUT ||
+      filenameWithOutExtension === HIERARCHY_COMPONENTS_FILE_NAMES.ERROR_BOUNDARY ||
+      filenameWithOutExtension === HIERARCHY_COMPONENTS_FILE_NAMES.NOT_FOUND ||
+      filenameWithOutExtension === HIERARCHY_COMPONENTS_FILE_NAMES.LOADING
         ? ""
         : filenameWithOutExtension;
 
@@ -158,6 +163,10 @@ export class NextFileRouter<HandlerFunctionT, PageFunctionT> {
           DELETE: import_file.DELETE || undefined,
         },
         default: import_file.default || undefined,
+        config: {
+          static: true,
+          ...import_file.config,
+        },
       },
     };
   }
@@ -168,7 +177,7 @@ export class NextFileRouter<HandlerFunctionT, PageFunctionT> {
     if (filename === HIERARCHY_COMPONENTS_FILE_NAMES.ERROR_BOUNDARY) return "ERROR_BOUNDARY";
     if (filename === HIERARCHY_COMPONENTS_FILE_NAMES.LAYOUT) return "LAYOUT";
     if (filename === HIERARCHY_COMPONENTS_FILE_NAMES.NOT_FOUND) return "NOT_FOUND";
-    if (filename === HIERARCHY_COMPONENTS_FILE_NAMES.SUSPENSE) return "SUSPENSE";
+    if (filename === HIERARCHY_COMPONENTS_FILE_NAMES.LOADING) return "LOADING";
 
     return null;
   }
