@@ -1,11 +1,8 @@
 import type { Handler, Hono } from "hono";
-import { type Component, Fragment } from "preact";
+import { type Component, Fragment, h } from "preact";
 import { renderToStringAsync } from "preact-render-to-string";
-import React, { Suspense } from "preact/compat";
 import type { HIERARCHY_COMPONENTS_KIND, RouterComponent } from "../router/next-file-base-router";
 import { pathToHonoPath } from "./pathToHonoPath";
-
-React;
 
 export function attach_page(
   component: RouterComponent<Handler, () => Promise<Component>>,
@@ -24,8 +21,7 @@ export function attach_page(
     LOADING: null,
   };
 
-  // biome-ignore lint/complexity/noForEach: <explanation>
-  router_components.forEach((cr) => {
+  for (const cr of router_components) {
     if (cr.path === component.path) {
       if (cr.kind === "PAGE") {
         pagePathGroupComponents.PAGE = cr;
@@ -43,7 +39,12 @@ export function attach_page(
         pagePathGroupComponents.LOADING = cr;
       }
     }
-  });
+  }
+
+  // console.dir(router_components, {
+  //   depth: Number.POSITIVE_INFINITY,
+  //   compact: false,
+  // });
 
   let pageString = "";
 
@@ -58,17 +59,13 @@ export function attach_page(
 
     const Layout = pagePathGroupComponents.LAYOUT?.exports.default ?? Fragment;
 
-    const Loading = pagePathGroupComponents.LOADING?.exports.default ?? Fragment;
+    // const Loading = pagePathGroupComponents.LOADING?.exports.default ?? Fragment;
 
     // const ErrorBoundary = pagePathGroupComponents.ERROR_BOUNDARY?.exports.default ?? Fragment;
 
     // const NotFound = pagePathGroupComponents.NOT_FOUND?.exports.default ?? Fragment;
 
-    pageString = await renderToStringAsync(
-      <Layout>
-        <Suspense fallback={Loading}>{PageValue}</Suspense>
-      </Layout>
-    );
+    pageString = await renderToStringAsync(h(Layout, {}, PageValue));
   };
 
   server.get(pathToHonoPath(component.path), async (c) => {

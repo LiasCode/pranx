@@ -1,13 +1,10 @@
 import { Suspense } from "preact/compat";
 import { Button } from "../components/Button";
-import { CounterButton } from "../components/CounterButton";
 
 export default function Page() {
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "10px" }}>
       <h1>This is the first prext page rendered</h1>
-
-      <CounterButton />
 
       <a href="/blog">Blog</a>
 
