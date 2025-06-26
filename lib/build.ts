@@ -1,13 +1,11 @@
 import * as esbuild from "esbuild";
 import * as fs from "node:fs/promises";
 import path from "node:path";
+import { h } from "preact";
 import { renderToStringAsync } from "preact-render-to-string";
-import * as React from "preact/compat";
 import type { PrextConfig } from "./config/prext-config";
 import { Logger } from "./logger";
 import type { PrextPageModule } from "./types";
-
-React;
 
 export const PREXT_OUTPUT_DIR = path.resolve(path.join(process.cwd(), ".prext"));
 export const PAGES_OUTPUT_DIR = path.resolve(path.join(PREXT_OUTPUT_DIR, "pages"));
@@ -64,6 +62,10 @@ export async function build(user_config: PrextConfig) {
 
     external: ["preact", "preact-render-to-string"], // Assume preact is shared or already handled by hydration script
     metafile: true,
+    alias: {
+      "react": "preact/compat",
+      "react-dom": "preact/compat",
+    },
   });
 
   await fs.rm(outputHydrateScriptPath, { force: true });
@@ -95,7 +97,7 @@ export async function build(user_config: PrextConfig) {
 
     const outputFile = path.join(outputFileDir, "index.html");
 
-    const element = await renderToStringAsync(<PageComponent {...getStaticPropsResult?.props} />);
+    const element = await renderToStringAsync(h(PageComponent, { ...getStaticPropsResult?.props }));
 
     // Script that hydrate script will load to render the page again
     const publicPageScriptPath = pageFile.replace(".prext/pages/", "/");
@@ -114,9 +116,11 @@ export async function build(user_config: PrextConfig) {
           />
           <link rel="stylesheet" href="${publicCssPath}">
         </head>
+
         <body>
-          ${element}
+         ${element}
         </body>
+
         <script
           id="__PREXT_DATA__"
           type="application/json"
