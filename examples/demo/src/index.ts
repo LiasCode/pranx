@@ -6,7 +6,7 @@ const server = await prext.init();
 serve(
   {
     fetch: server.fetch,
-    port: 3030,
+    port: Number(process.env.PORT) || 3030,
   },
   (info) => {
     console.log(`Server is running on port http://localhost:${info.port}`);
