@@ -1,30 +1,29 @@
-import { PageConfig } from "@prext";
+import { GetStaticPropsResult } from "@prext";
+import { GetStaticProps } from "../../../../../lib/types";
+import { CounterButton } from "../../components/CounterButton";
+import Layout from "../../layout/layout";
 
-export default function Page() {
-  const posts: { title: string; id: string }[] = [
-    {
-      id: "1",
-      title: "test -1",
-    },
-    {
-      id: "2",
-      title: "test -2",
-    },
-  ];
+export const getStaticProps: GetStaticProps = async () => {
+  const data = await fetch("https://api.vercel.app/blog");
+  const posts = await data.json();
 
+  return {
+    props: {
+      posts,
+    },
+  };
+};
+
+export default function Page(props: GetStaticPropsResult["props"]) {
   return (
-    <div>
-      <h1>This is the first prext page rendered</h1>
-
+    <Layout>
+      <h1>This Blog Page Is Prerendered</h1>
+      <CounterButton />
       <ul>
-        {posts.map((post: any) => (
+        {props.posts.map((post: any) => (
           <li key={post.id}>{post.title}</li>
         ))}
       </ul>
-    </div>
+    </Layout>
   );
 }
-
-export const config: PageConfig = {
-  static: false,
-};

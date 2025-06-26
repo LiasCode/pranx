@@ -99,6 +99,7 @@ export async function build(user_config: PrextConfig) {
 
     // Script that hydrate script will load to render the page again
     const publicPageScriptPath = pageFile.replace(".prext/pages/", "/");
+    const publicCssPath = publicPageScriptPath.replace("page.js", "page.css");
 
     // Embed props and component map for client-side hydration (__PREXT_DATA__)
     const htmlContent = `
@@ -111,6 +112,7 @@ export async function build(user_config: PrextConfig) {
             type="image/svg+xml"
             href="/favicon.svg"
           />
+          <link rel="stylesheet" href="${publicCssPath}">
         </head>
         <body>
           ${element}

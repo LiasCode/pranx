@@ -1,21 +1,28 @@
 import { PropsWithChildren } from "preact/compat";
+import "./layout.css";
 
-export default function Layout(props: PropsWithChildren<{ title: string }>) {
+export default function Layout(props: PropsWithChildren) {
   return (
-    <html>
-      <head>
-        <title>{props.title}</title>
-        <link
-          rel="icon"
-          type="image/svg+xml"
-          href="/favicon.svg"
-        />
-      </head>
-      <body
-        style={{ display: "flex", flexDirection: "column", gap: "2", justifyContent: "center", alignItems: "center" }}
-      >
-        {props.children}
-      </body>
-    </html>
+    <div class="layout">
+      <header>
+        <h1>Prext</h1>
+        <ul>
+          <li>
+            <a href="/">Home</a>
+          </li>
+          <li>
+            <a href="/blog">Blog</a>
+          </li>
+
+          <li>
+            <a href="/about">About</a>
+          </li>
+        </ul>
+      </header>
+
+      {props.children}
+
+      <footer></footer>
+    </div>
   );
 }
