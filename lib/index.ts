@@ -1,2 +1,9 @@
+// Config
+export { defineConfig } from "./config/defineConfig";
+export { type PrextConfig } from "./config/prext-config";
+
+// Prext
 export * as prext from "./prext";
-export * as PrextRouter from "./router/next-file-base-router";
+
+// Types
+export * from "./types";

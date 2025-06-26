@@ -9,6 +9,6 @@ serve(
     port: 3030,
   },
   (info) => {
-    console.log(`Server is running on port ${info.port}`);
+    console.log(`Server is running on port http://localhost:${info.port}`);
   }
 );

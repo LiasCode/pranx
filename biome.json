@@ -20,6 +20,6 @@
     }
   },
   "files": {
-    "ignore": ["./dist/**/*", "node_modules/**/*", "examples/**/*", "coverage/**/*", "test-results/**/*"]
+    "ignore": ["./dist/**/*", "node_modules/**/*", "examples/**/*", "coverage/**/*", "test-results/**/*", "./lib/client/vendor"]
   }
 }

@@ -4,5 +4,5 @@
     "skipLibCheck": true
   },
   "extends": "../../tsconfig.json",
-  "include": ["./"]
+  "include": ["."]
 }

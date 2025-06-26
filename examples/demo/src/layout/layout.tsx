@@ -1,10 +1,10 @@
 import { PropsWithChildren } from "preact/compat";
 
-export default function Layout(props: PropsWithChildren) {
+export default function Layout(props: PropsWithChildren<{ title: string }>) {
   return (
     <html>
       <head>
-        <title>Prext Page</title>
+        <title>{props.title}</title>
         <link
           rel="icon"
           type="image/svg+xml"

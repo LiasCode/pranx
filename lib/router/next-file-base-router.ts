@@ -80,7 +80,7 @@ export class NextFileRouter<HandlerFunctionT, PageFunctionT> {
         pathPopFileArr.pop();
         const pathPopFile = pathPopFileArr.join("/");
 
-        const buildResult = await esbuild.build({
+        await esbuild.build({
           entryPoints: [path.resolve(path.join(this.root, file))],
 
           bundle: true,
@@ -110,10 +110,10 @@ export class NextFileRouter<HandlerFunctionT, PageFunctionT> {
           packages: "external",
         });
 
-        console.dir(buildResult.metafile, {
-          depth: Number.POSITIVE_INFINITY,
-          compact: false,
-        });
+        // console.dir(buildResult.metafile, {
+        //   depth: Number.POSITIVE_INFINITY,
+        //   compact: false,
+        // });
       } catch (error) {
         console.error("[PREXT_PREPROCESSING_ERROR]", error);
       }
