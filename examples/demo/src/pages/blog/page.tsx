@@ -7,12 +7,11 @@ export const getStaticProps: GetStaticProps = async () => {
   // const data = await fetch("https://api.vercel.app/blog");
   // const posts = await data.json();
   const posts = [
-    // ONLY SERVER OPEN
     {
       id: "1",
       title: "First Step",
     },
-    // ONLY SERVER END
+
     {
       id: "2",
       title: "Second Step, prerendering",

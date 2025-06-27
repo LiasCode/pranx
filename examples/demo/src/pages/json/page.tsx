@@ -10,7 +10,14 @@ export default function JSONPage() {
   }
   return (
     <Layout>
-      <>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "10px",
+        }}
+      >
         <h1>This page is for test loading .json files </h1>
 
         <Button>Click Me</Button>
@@ -28,7 +35,7 @@ export default function JSONPage() {
             <div>Component Inside a Suspense</div>
           </Suspense>
         </div>
-      </>
+      </div>
     </Layout>
   );
 }
