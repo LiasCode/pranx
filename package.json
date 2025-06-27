@@ -1,6 +1,6 @@
 {
   "name": "prext",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "The next of preact. A light-weight, Next.js-like framework with Preact, Hono, and esbuild for static site generation and hydration.",
   "main": "index.js",
   "type": "module",
