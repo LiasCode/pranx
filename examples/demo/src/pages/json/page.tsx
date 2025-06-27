@@ -5,11 +5,13 @@ import Layout from "../../layout/layout";
 import mockData from "./data.json";
 
 export default function JSONPage() {
-  console.log({ mockData });
+  if (typeof window !== "undefined") {
+    console.log({ mockData });
+  }
   return (
     <Layout>
       <>
-        <h1>This </h1>
+        <h1>This page is for test loading .json files </h1>
 
         <Button>Click Me</Button>
 

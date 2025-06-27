@@ -141,7 +141,8 @@ export async function build(user_config: PrextConfig) {
               "preact": "./${path.join(path.relative(path.dirname(outputFile), vendorBundleOutputPath), "preact.js")}",
               "preact/jsx-runtime": "./${path.join(path.relative(path.dirname(outputFile), vendorBundleOutputPath), "jsxRuntime.js")}",
               "preact/hooks": "./${path.join(path.relative(path.dirname(outputFile), vendorBundleOutputPath), "hooks.js")}",
-              "preact/compat": "./${path.join(path.relative(path.dirname(outputFile), vendorBundleOutputPath), "compat.js")}"
+              "preact/compat": "./${path.join(path.relative(path.dirname(outputFile), vendorBundleOutputPath), "compat.js")}",
+              "preact/devtools": "./${path.join(path.relative(path.dirname(outputFile), vendorBundleOutputPath), "devtools.js")}"
             }
           }
         </script>

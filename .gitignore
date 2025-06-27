@@ -7,3 +7,5 @@ coverage
 bun.lock
 
 .prext
+
+lib/client/vendor/*
