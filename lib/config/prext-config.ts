@@ -1,3 +1,5 @@
+import type { BuildOptions } from "esbuild";
+
 export type PrextConfig = {
   /**
    * Path to the directory containing your Preact pages.
@@ -10,4 +12,10 @@ export type PrextConfig = {
    * @default "public"
    */
   public_dir: string;
+
+  /**
+   * Extends esbuild configuration
+   * @default {}
+   */
+  esbuild?: BuildOptions;
 };

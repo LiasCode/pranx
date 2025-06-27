@@ -24,6 +24,7 @@
     "jsxImportSource": "preact",
 
     "skipLibCheck": true,
+    "checkJs": true,
 
     "paths": {
       "@prext": ["./lib/index.ts"],
@@ -31,6 +32,6 @@
       "react-dom": ["./node_modules/preact/compat/"]
     }
   },
-  "exclude": ["node_modules", "**/*.spec.ts", "**/*.test.ts"],
-  "include": ["lib"]
+  "include": ["lib/**/*"],
+  "exclude": ["node_modules", "**/*.spec.ts", "**/*.test.ts", "lib/client/vendor/**/*"]
 }

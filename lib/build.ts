@@ -12,6 +12,9 @@ export const PAGES_OUTPUT_DIR = path.resolve(path.join(PREXT_OUTPUT_DIR, "pages"
 export const ROUTE_HANDLER_OUTPUT_DIR = path.resolve(path.join(PREXT_OUTPUT_DIR, "server", "handlers"));
 
 export async function build(user_config: PrextConfig) {
+  Logger.info("Building");
+  console.time("building time");
+
   // 1- Clean .prext folder
   await fs.rm(PREXT_OUTPUT_DIR, { force: true, recursive: true });
 
@@ -87,11 +90,11 @@ export async function build(user_config: PrextConfig) {
       getStaticPropsResult = await getStaticProps();
     }
 
-    const pageFilePath = pageFile.split("/");
-
-    pageFilePath.shift();
-    pageFilePath.shift();
-    pageFilePath.pop();
+    const pageFilePath = pageFile.split("/").filter((_, i, arr) => {
+      if (i === 0 || i === 1) return false;
+      if (i === arr.length - 1) return false;
+      return true;
+    });
 
     const outputFileDir = path.join(outputDir, ...pageFilePath);
 
@@ -167,6 +170,9 @@ export async function build(user_config: PrextConfig) {
     sourcemap: false,
     minify: false,
   });
+
+  Logger.success("Building ends");
+  console.timeEnd("building time");
 }
 
 export async function getPageFiles(user_config: PrextConfig) {

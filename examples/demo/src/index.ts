@@ -1,7 +1,9 @@
 import { serve } from "@hono/node-server";
 import { prext } from "@prext";
 
-const server = await prext.init();
+const server = await prext.init({
+  watch: true,
+});
 
 serve(
   {
