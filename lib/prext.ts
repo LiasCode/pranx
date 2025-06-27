@@ -1,4 +1,3 @@
-import * as chokidar from "chokidar";
 import { Hono } from "hono";
 import { serveStatic } from "hono/serve-static";
 import * as fs from "node:fs/promises";
@@ -18,22 +17,9 @@ export async function init(props?: { server?: Hono; watch?: boolean }): Promise<
     process.exit(1);
   }
 
-  if (props?.watch === true) {
-    Logger.info(`Watching for changes on ${config.pages_dir} `);
-    const watcher = chokidar.watch(config.pages_dir, {
-      persistent: true,
-      depth: Number.POSITIVE_INFINITY,
-    });
-    watcher
-      .on("ready", async () => {
-        await build(config);
-      })
-      .on("change", async () => {
-        await build(config);
-      });
-  } else {
-    await build(config);
-  }
+  console.time("build-time");
+  await build(config, "dev");
+  console.timeEnd("build-time");
 
   const server = props?.server || new Hono();
 

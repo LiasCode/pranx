@@ -52,7 +52,9 @@ export function attach_page(
     const Page = pagePathGroupComponents.PAGE?.exports.default;
 
     if (!Page) {
-      throw new Error(`Page component not found for path: ${component.path}. File: ${component.relative_file_path}`);
+      throw new Error(
+        `Page component not found for path: ${component.path}. File: ${component.relative_file_path}`
+      );
     }
 
     const PageValue = await Page();

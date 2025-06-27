@@ -12,7 +12,13 @@ import path from "node:path";
 // page.js or nested layout.js
 // route.js or nested layout.js
 
-export type HIERARCHY_COMPONENTS_KIND = "LAYOUT" | "ERROR_BOUNDARY" | "NOT_FOUND" | "PAGE" | "API_HANDLER" | "LOADING";
+export type HIERARCHY_COMPONENTS_KIND =
+  | "LAYOUT"
+  | "ERROR_BOUNDARY"
+  | "NOT_FOUND"
+  | "PAGE"
+  | "API_HANDLER"
+  | "LOADING";
 
 export const HIERARCHY_COMPONENTS_FILE_NAMES: Record<HIERARCHY_COMPONENTS_KIND, string> = {
   LAYOUT: "layout",
@@ -45,7 +51,10 @@ export type PageConfig = {
   static?: boolean;
 };
 
-type RoutableComponentFile<Handler, Page> = { default?: Page; config?: { static?: boolean } } & {
+type RoutableComponentFile<Handler, Page> = {
+  default?: Page;
+  config?: { static?: boolean };
+} & {
   [K in API_FILE_HANDLER_EXPORT_METHODS]?: Handler;
 };
 
@@ -173,7 +182,12 @@ export class NextFileRouter<HandlerFunctionT, PageFunctionT> {
 
     if (this.resolve_file_kind(filenameWithOutExtension) === null) return false;
 
-    return filename.endsWith("ts") || filename.endsWith("tsx") || filename.endsWith("js") || filename.endsWith("jsx");
+    return (
+      filename.endsWith("ts") ||
+      filename.endsWith("tsx") ||
+      filename.endsWith("js") ||
+      filename.endsWith("jsx")
+    );
   }
 
   private create_route_from_imported_route_file(

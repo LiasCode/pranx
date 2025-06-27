@@ -24,6 +24,10 @@ export default function Layout(props: PropsWithChildren) {
             <li>
               <a href="/about">About</a>
             </li>
+
+            <li>
+              <a href="/json">JSON</a>
+            </li>
           </ul>
         </header>
 

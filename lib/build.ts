@@ -1,80 +1,45 @@
 import * as esbuild from "esbuild";
+import * as fse from "fs-extra";
+import { minify as minifyHtml } from "html-minifier";
 import * as fs from "node:fs/promises";
 import path from "node:path";
 import { h } from "preact";
 import { renderToStringAsync } from "preact-render-to-string";
 import type { PrextConfig } from "./config/prext-config";
-import { Logger } from "./logger";
-import type { PrextPageModule } from "./types";
+import { server_only_macro_plugin } from "./plugins/server-only-macro";
+import { getPageFiles, getPageModule, getRoutesHandlersFiles } from "./utils/resolve";
+
+export type PrextBuildMode = "dev" | "prod";
 
 export const PREXT_OUTPUT_DIR = path.resolve(path.join(process.cwd(), ".prext"));
+
 export const PAGES_OUTPUT_DIR = path.resolve(path.join(PREXT_OUTPUT_DIR, "pages"));
-export const ROUTE_HANDLER_OUTPUT_DIR = path.resolve(path.join(PREXT_OUTPUT_DIR, "server", "handlers"));
 
-export async function build(user_config: PrextConfig) {
-  Logger.info("Building");
-  console.time("building time");
+export const ROUTE_HANDLER_OUTPUT_DIR = path.resolve(
+  path.join(PREXT_OUTPUT_DIR, "server", "handlers")
+);
 
-  // 1- Clean .prext folder
-  await fs.rm(PREXT_OUTPUT_DIR, { force: true, recursive: true });
+export const VENDOR_SRC_DIR = path.join(import.meta.dirname, "client", "vendor");
+export const VENDOR_BUNDLE_OUTPUT_PATH = path.join(PAGES_OUTPUT_DIR, "vendor");
 
-  // 2- Find pages entry files
-  const pages_entry_points = await getPageFiles(user_config);
+export async function build(user_config: PrextConfig, mode: PrextBuildMode = "prod") {
+  // Clean .prext folder and prepare
+  await fse.emptyDir(PREXT_OUTPUT_DIR);
+  await fse.emptyDir(PAGES_OUTPUT_DIR);
+  await fse.emptyDir(ROUTE_HANDLER_OUTPUT_DIR);
 
-  const originHydrateScriptPath = path.resolve(path.join(import.meta.dirname, "client", "hydrate.js"));
+  // Bundle Hydrate Script
+  await bundle_hydrate_script(user_config, mode);
 
-  const outputHydrateScriptPath = path.join(user_config.pages_dir, "hydrate.js");
+  // Bundle vendors
+  await bundle_vendors(user_config, mode);
 
-  await fs.copyFile(originHydrateScriptPath, outputHydrateScriptPath);
+  // Bundle pages
+  const pages_bundle_result = await bundle_pages(user_config, mode);
 
-  // 3- Bundle Vendor preact lib
-  const vendorSrcDir = path.join(import.meta.dirname, "client", "vendor");
-  const vendorBundleOutputPath = path.join(PAGES_OUTPUT_DIR, "vendor");
-
-  const vendorEntries = (await fs.readdir(vendorSrcDir))
-    .filter((f) => f.endsWith("js"))
-    .map((f) => path.join(vendorSrcDir, f));
-
-  await esbuild.build({
-    entryPoints: vendorEntries,
-    bundle: false,
-    outdir: vendorBundleOutputPath,
-    format: "esm",
-    platform: "browser",
-    minify: false,
-    sourcemap: false,
-  });
-
-  // 4- Bundle user pages
-  const pagesBuildResult = await esbuild.build({
-    entryPoints: [...pages_entry_points, outputHydrateScriptPath],
-    bundle: true,
-    outdir: PAGES_OUTPUT_DIR,
-    format: "esm",
-    splitting: true,
-    platform: "node",
-    chunkNames: "_chunks/[name]-[hash]",
-    assetNames: "_assets/[name]-[hash]",
-
-    jsxFactory: "h",
-    jsxFragment: "Fragment",
-    loader: { ".js": "jsx", ".jsx": "jsx", ".ts": "tsx", ".tsx": "tsx", ".css": "css", ".json": "json" },
-
-    minify: false,
-    sourcemap: false,
-
-    external: ["preact", "preact-render-to-string"], // Assume preact is shared or already handled by hydration script
-    metafile: true,
-    alias: {
-      "react": "preact/compat",
-      "react-dom": "preact/compat",
-    },
-  });
-
-  await fs.rm(outputHydrateScriptPath, { force: true });
-
-  const outputsPagesFiles = Object.keys(pagesBuildResult.metafile.outputs).filter((f) => f.endsWith("page.js"));
-
+  const outputsPagesFiles = Object.keys(pages_bundle_result.metafile.outputs).filter((f) =>
+    f.endsWith("page.js")
+  );
   const outputDir = PAGES_OUTPUT_DIR;
 
   for (const pageFile of outputsPagesFiles) {
@@ -108,7 +73,7 @@ export async function build(user_config: PrextConfig) {
 
     // Embed props and component map for client-side hydration (__PREXT_DATA__)
     const htmlContent = `
-    <!doctype html> 
+      <!doctype html> 
       <html>
         <head>
           <title>Prext App</title>
@@ -138,11 +103,11 @@ export async function build(user_config: PrextConfig) {
         <script type="importmap">
           {
             "imports": {
-              "preact": "./${path.join(path.relative(path.dirname(outputFile), vendorBundleOutputPath), "preact.js")}",
-              "preact/jsx-runtime": "./${path.join(path.relative(path.dirname(outputFile), vendorBundleOutputPath), "jsxRuntime.js")}",
-              "preact/hooks": "./${path.join(path.relative(path.dirname(outputFile), vendorBundleOutputPath), "hooks.js")}",
-              "preact/compat": "./${path.join(path.relative(path.dirname(outputFile), vendorBundleOutputPath), "compat.js")}",
-              "preact/devtools": "./${path.join(path.relative(path.dirname(outputFile), vendorBundleOutputPath), "devtools.js")}"
+              "preact": "./${path.join(path.relative(path.dirname(outputFile), VENDOR_BUNDLE_OUTPUT_PATH), "preact.js")}",
+              "preact/jsx-runtime": "./${path.join(path.relative(path.dirname(outputFile), VENDOR_BUNDLE_OUTPUT_PATH), "jsxRuntime.js")}",
+              "preact/hooks": "./${path.join(path.relative(path.dirname(outputFile), VENDOR_BUNDLE_OUTPUT_PATH), "hooks.js")}",
+              "preact/compat": "./${path.join(path.relative(path.dirname(outputFile), VENDOR_BUNDLE_OUTPUT_PATH), "compat.js")}",
+              "preact/devtools": "./${path.join(path.relative(path.dirname(outputFile), VENDOR_BUNDLE_OUTPUT_PATH), "devtools.js")}"
             }
           }
         </script>
@@ -150,13 +115,128 @@ export async function build(user_config: PrextConfig) {
       </html>
     `;
 
-    await fs.writeFile(outputFile, htmlContent);
+    const finalHtml =
+      mode === "prod"
+        ? minifyHtml(htmlContent, {
+            collapseBooleanAttributes: true,
+            collapseInlineTagWhitespace: true,
+            collapseWhitespace: true,
+            html5: true,
+            minifyJS: false,
+            minifyCSS: true,
+            minifyURLs: true,
+            removeComments: true,
+            removeRedundantAttributes: true,
+            removeTagWhitespace: true,
+          })
+        : htmlContent;
+
+    await fs.writeFile(outputFile, finalHtml);
   }
 
-  // 5- Find Route Handlers entry files
+  // Bundle user Handlers
+  await bundle_handlers(user_config, mode);
+}
+
+export async function bundle_hydrate_script(_user_config: PrextConfig, mode: PrextBuildMode) {
+  const originHydrateScriptPath = path.resolve(
+    path.join(import.meta.dirname, "client", "hydrate.js")
+  );
+  const outputHydrateScriptPath = path.join(PAGES_OUTPUT_DIR, "hydrate.js");
+
+  await esbuild.build({
+    entryPoints: [originHydrateScriptPath],
+    bundle: true,
+    outfile: outputHydrateScriptPath,
+    format: "esm",
+    platform: "browser",
+
+    minify: mode === "prod",
+    sourcemap: mode !== "prod",
+
+    jsxFactory: "h",
+    jsxFragment: "Fragment",
+    loader: {
+      ".js": "jsx",
+      ".jsx": "jsx",
+      ".ts": "tsx",
+      ".tsx": "tsx",
+      ".json": "json",
+    },
+
+    external: ["preact"],
+
+    alias: {
+      "react": "preact/compat",
+      "react-dom": "preact/compat",
+    },
+
+    plugins: [server_only_macro_plugin()],
+  });
+}
+
+export async function bundle_vendors(_user_config: PrextConfig, mode: PrextBuildMode) {
+  const vendorEntries = (await fs.readdir(VENDOR_SRC_DIR))
+    .filter((f) => f.endsWith("js"))
+    .map((f) => path.join(VENDOR_SRC_DIR, f));
+
+  await esbuild.build({
+    entryPoints: vendorEntries,
+    bundle: false,
+    outdir: VENDOR_BUNDLE_OUTPUT_PATH,
+    format: "esm",
+    platform: "browser",
+    minify: mode === "prod",
+    sourcemap: mode !== "prod",
+    plugins: [server_only_macro_plugin()],
+  });
+}
+
+export async function bundle_pages(user_config: PrextConfig, mode: PrextBuildMode) {
+  // Find pages entry files
+  const pages_entry_points = await getPageFiles(user_config);
+
+  const pagesBuildResult = await esbuild.build({
+    entryPoints: pages_entry_points,
+    bundle: true,
+    outdir: PAGES_OUTPUT_DIR,
+    format: "esm",
+    splitting: true,
+    treeShaking: true,
+    platform: "node",
+    chunkNames: "_chunks/[name]-[hash]",
+    assetNames: "_assets/[name]-[hash]",
+
+    jsxFactory: "h",
+    jsxFragment: "Fragment",
+    loader: {
+      ".js": "jsx",
+      ".jsx": "jsx",
+      ".ts": "tsx",
+      ".tsx": "tsx",
+      ".css": "css",
+      ".json": "json",
+    },
+
+    minify: mode === "prod",
+    sourcemap: mode !== "prod",
+
+    external: ["preact"],
+    metafile: true,
+    alias: {
+      "react": "preact/compat",
+      "react-dom": "preact/compat",
+    },
+
+    plugins: [server_only_macro_plugin()],
+  });
+
+  return pagesBuildResult;
+}
+
+export async function bundle_handlers(user_config: PrextConfig, mode: PrextBuildMode) {
   const handlers_entry_points = await getRoutesHandlersFiles(user_config);
 
-  // 6- Bundle user Handlers
   await esbuild.build({
     entryPoints: handlers_entry_points,
     bundle: true,
@@ -167,77 +247,15 @@ export async function build(user_config: PrextConfig) {
     chunkNames: "_chunks/[name]-[hash]",
     jsxFactory: "h",
     jsxFragment: "Fragment",
-    loader: { ".js": "jsx", ".jsx": "jsx", ".ts": "tsx", ".tsx": "tsx", ".json": "json" },
-    sourcemap: false,
-    minify: false,
+    loader: {
+      ".js": "jsx",
+      ".jsx": "jsx",
+      ".ts": "tsx",
+      ".tsx": "tsx",
+      ".json": "json",
+      ".css": "text",
+    },
+    sourcemap: mode !== "prod",
+    minify: mode === "prod",
   });
-
-  Logger.success("Building ends");
-  console.timeEnd("building time");
-}
-
-export async function getPageFiles(user_config: PrextConfig) {
-  const pages_src_files = await fs.readdir(user_config.pages_dir, {
-    recursive: true,
-    encoding: "utf8",
-    withFileTypes: true,
-  });
-
-  const pages_files = pages_src_files.filter((f) => {
-    if (!f.isFile()) return false;
-
-    if (!["page.js", "page.ts", "page.jsx", "page.tsx"].includes(f.name)) {
-      return false;
-    }
-
-    return true;
-  });
-
-  const entry_points = pages_files.map((f) => path.join(f.parentPath, f.name));
-
-  return entry_points;
-}
-
-export async function getRoutesHandlersFiles(user_config: PrextConfig) {
-  const route_handler_src_files = await fs.readdir(user_config.pages_dir, {
-    recursive: true,
-    encoding: "utf8",
-    withFileTypes: true,
-  });
-
-  const route_files = route_handler_src_files.filter((f) => {
-    if (!f.isFile()) return false;
-
-    if (!["route.js", "route.ts", "route.jsx", "route.tsx"].includes(f.name)) {
-      return false;
-    }
-
-    return true;
-  });
-
-  const entry_points = route_files.map((f) => path.join(f.parentPath, f.name));
-
-  return entry_points;
-}
-
-export async function getPageModule(modulePath: string): Promise<PrextPageModule> {
-  try {
-    return await import(`file://${modulePath}`);
-  } catch (e) {
-    if (e instanceof Error) {
-      Logger.error(`Failed to load page module from ${modulePath}: ${e.message}`);
-    }
-    throw e;
-  }
-}
-
-export async function getPageComponent(modulePath: string): Promise<PrextPageModule["default"]> {
-  try {
-    return (await import(`file://${modulePath}`)).default;
-  } catch (e) {
-    if (e instanceof Error) {
-      Logger.error(`Failed to load page component from ${modulePath}: ${e.message}`);
-    }
-    throw e;
-  }
 }

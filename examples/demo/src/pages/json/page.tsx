@@ -17,7 +17,13 @@ export default function JSONPage() {
 
         <CounterButton />
 
-        <div style={{ border: "1px solid black", padding: "10px", marginTop: "10px" }}>
+        <div
+          style={{
+            border: "1px solid black",
+            padding: "10px",
+            marginTop: "10px",
+          }}
+        >
           <Suspense fallback={<h2>Loading</h2>}>
             <div>Component Inside a Suspense</div>
           </Suspense>

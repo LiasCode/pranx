@@ -3,7 +3,10 @@ import type { Component } from "preact";
 import type { RouterComponent } from "../router/next-file-base-router";
 import { pathToHonoPath } from "./pathToHonoPath";
 
-export function attach_api_handler(server: Hono, route_component: RouterComponent<Handler, () => Promise<Component>>) {
+export function attach_api_handler(
+  server: Hono,
+  route_component: RouterComponent<Handler, () => Promise<Component>>
+) {
   server.get(pathToHonoPath(route_component.path), async (c, next) => {
     if (route_component.exports.methods?.GET !== undefined) {
       return route_component.exports.methods.GET(c, next);

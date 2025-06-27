@@ -8,9 +8,12 @@ const PREXT_CONFIG_FILE_NAME = "prext.config.js";
 
 export async function load_user_config(config_file_path?: string): Promise<PrextConfig | null> {
   try {
-    const file_path = config_file_path ?? path.resolve(path.join(process.cwd(), PREXT_CONFIG_FILE_NAME));
+    const file_path =
+      config_file_path ?? path.resolve(path.join(process.cwd(), PREXT_CONFIG_FILE_NAME));
 
-    const file_src = (await import(file_path)) as { default: ReturnType<typeof defineConfig> };
+    const file_src = (await import(file_path)) as {
+      default: ReturnType<typeof defineConfig>;
+    };
 
     const Config = file_src.default;
 
