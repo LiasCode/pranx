@@ -13,7 +13,18 @@
     "check": "tsc --noEmit -p ./tsconfig.json",
     "format": "prettier --write --cache \"./lib\" \"./examples\"",
     "postinstall": "simple-git-hooks && bun run make-vendors",
-    "make-vendors": "tsx ./scripts/make-vendors.ts"
+    "make-vendors": "tsx ./scripts/make-vendors.ts",
+    "prepublishOnly": "bun run lint && bun run format",
+    "push": "npm version patch && git push",
+    "push-minor": "npm version minor && git push",
+    "push-major": "npm version major && git push"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "module": "./dist/index.js",
+      "import": "./dist/index.js"
+    }
   },
   "keywords": [
     "preact",
