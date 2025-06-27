@@ -45,6 +45,7 @@ export async function build(user_config: PrextConfig, mode: PrextBuildMode = "pr
   for (const pageFile of outputsPagesFiles) {
     const pageModule = await getPageModule(path.resolve(path.join(process.cwd(), pageFile)));
     const PageComponent = pageModule.default;
+    const MetaComponent = pageModule.meta;
     const getStaticProps = pageModule.getStaticProps;
     // const getServerSideProps = pageModule.getServerSideProps;
     // const getStaticPaths = pageModule.getStaticPaths;
@@ -65,7 +66,16 @@ export async function build(user_config: PrextConfig, mode: PrextBuildMode = "pr
 
     const outputFile = path.join(outputFileDir, "index.html");
 
-    const element = await renderToStringAsync(h(PageComponent, { ...getStaticPropsResult?.props }));
+    let meta_content = "";
+
+    if (MetaComponent !== undefined) {
+      const meta_return = await MetaComponent();
+      meta_content = await renderToStringAsync(meta_return);
+    }
+
+    const page_content = await renderToStringAsync(
+      h(PageComponent, { ...getStaticPropsResult?.props })
+    );
 
     // Script that hydrate script will load to render the page again
     const publicPageScriptPath = pageFile.replace(".prext/pages/", "/");
@@ -76,17 +86,12 @@ export async function build(user_config: PrextConfig, mode: PrextBuildMode = "pr
       <!doctype html> 
       <html>
         <head>
-          <title>Prext App</title>
-          <link
-            rel="icon"
-            type="image/svg+xml"
-            href="/favicon.svg"
-          />
+          ${meta_content}
           <link rel="stylesheet" href="${publicCssPath}">
         </head>
 
         <body>
-         ${element}
+         ${page_content}
         </body>
 
         <script

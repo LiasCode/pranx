@@ -1,6 +1,20 @@
+import { MetaFunction } from "@prext";
 import { Button } from "../../components/Button";
 import Layout from "../../layout/layout";
 import "./index.css";
+
+export const meta: MetaFunction = async () => {
+  return (
+    <>
+      <title>About | Prext</title>
+      <link
+        rel="icon"
+        type="image/svg+xml"
+        href="/favicon.svg"
+      />
+    </>
+  );
+};
 
 export default function Page() {
   return (

@@ -1,7 +1,20 @@
 import { GetStaticPropsResult } from "@prext";
-import { GetStaticProps } from "../../../../../lib/types";
+import { GetStaticProps, MetaFunction } from "../../../../../lib/types";
 import { CounterButton } from "../../components/CounterButton";
 import Layout from "../../layout/layout";
+
+export const meta: MetaFunction = async () => {
+  return (
+    <>
+      <title>Blog | Prext</title>
+      <link
+        rel="icon"
+        type="image/svg+xml"
+        href="/favicon.svg"
+      />
+    </>
+  );
+};
 
 export const getStaticProps: GetStaticProps = async () => {
   // const data = await fetch("https://api.vercel.app/blog");

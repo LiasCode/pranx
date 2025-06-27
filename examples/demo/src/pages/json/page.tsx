@@ -1,8 +1,22 @@
+import { MetaFunction } from "@prext";
 import { Suspense } from "preact/compat";
 import { Button } from "../../components/Button";
 import { CounterButton } from "../../components/CounterButton";
 import Layout from "../../layout/layout";
 import mockData from "./data.json";
+
+export const meta: MetaFunction = async () => {
+  return (
+    <>
+      <title>JSON | Prext</title>
+      <link
+        rel="icon"
+        type="image/svg+xml"
+        href="/favicon.svg"
+      />
+    </>
+  );
+};
 
 export default function JSONPage() {
   if (typeof window !== "undefined") {
