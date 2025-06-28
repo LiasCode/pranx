@@ -1,3 +1,6 @@
 import { defineConfig } from "@pranx";
 
-export default defineConfig({});
+export default defineConfig({
+  pages_dir: "",
+  public_dir: "",
+});
