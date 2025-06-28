@@ -11,7 +11,9 @@ export type GetStaticPropsResult<P extends Record<string, any> = Record<string, 
 
 export type GetStaticProps = () => Promise<GetStaticPropsResult>;
 
-export type GetStaticPaths = () => Promise<Array<{ paths: string[] }>>;
+export type GetStaticPathsResult = Array<{ paths: string[] }>;
+
+export type GetStaticPaths = () => Promise<GetStaticPathsResult>;
 
 export type GetServerSideProps = <T>() => Promise<T>;
 
@@ -29,6 +31,6 @@ export type PranxPageModule = {
   default: () => VNode;
   meta?: MetaFunction;
   getStaticProps?: GetStaticProps;
-  getStaticPaths?: () => GetStaticPaths;
+  getStaticPaths?: GetStaticPaths;
   getServerSideProps?: GetServerSideProps;
 };

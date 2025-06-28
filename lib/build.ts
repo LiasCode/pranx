@@ -9,6 +9,7 @@ import { h } from "preact";
 import { renderToStringAsync } from "preact-render-to-string";
 import type { PranxConfig } from "./config/pranx-config";
 import { sass_plugin } from "./plugins/sass";
+import { GetStaticPathsResult, GetStaticPropsResult, HydrationData } from "./types";
 import { getPageFiles, getPageModule, getRoutesHandlersFiles } from "./utils/resolve";
 
 export type PranxBuildMode = "dev" | "prod";
@@ -42,20 +43,31 @@ export async function build(user_config: PranxConfig, mode: PranxBuildMode = "pr
   const outputsPagesFiles = Object.keys(pages_bundle_result.metafile.outputs).filter((f) =>
     f.endsWith("page.js")
   );
-  const outputDir = PAGES_OUTPUT_DIR;
 
   for (const pageFile of outputsPagesFiles) {
     const pageModule = await getPageModule(path.resolve(path.join(process.cwd(), pageFile)));
     const PageComponent = pageModule.default;
     const MetaComponent = pageModule.meta;
     const getStaticProps = pageModule.getStaticProps;
-    // const getServerSideProps = pageModule.getServerSideProps;
-    // const getStaticPaths = pageModule.getStaticPaths;
+    const getStaticPaths = pageModule.getStaticPaths;
+    const getServerSideProps = pageModule.getServerSideProps;
 
-    let getStaticPropsResult = null;
+    let getStaticPropsResult: GetStaticPropsResult | null = null;
 
     if (getStaticProps !== undefined) {
       getStaticPropsResult = await getStaticProps();
+    }
+
+    let getStaticPathsResult: GetStaticPathsResult | null = null;
+
+    if (getStaticPaths !== undefined) {
+      getStaticPathsResult = await getStaticPaths();
+    }
+
+    let getServerSidePropsResult: any | null = null;
+
+    if (getServerSideProps !== undefined) {
+      getServerSidePropsResult = await getServerSideProps();
     }
 
     const pageFilePath = pageFile.split("/").filter((_, i, arr) => {
@@ -64,9 +76,9 @@ export async function build(user_config: PranxConfig, mode: PranxBuildMode = "pr
       return true;
     });
 
-    const outputFileDir = path.join(outputDir, ...pageFilePath);
+    const outputFileDir = path.join(PAGES_OUTPUT_DIR, ...pageFilePath);
 
-    const outputFile = path.join(outputFileDir, "index.html");
+    const outputHtmlFilePath = path.join(outputFileDir, "index.html");
 
     let meta_content = "";
 
@@ -83,6 +95,12 @@ export async function build(user_config: PranxConfig, mode: PranxBuildMode = "pr
     const publicPageScriptPath = pageFile.replace(".pranx/pages/", "/");
     const publicCssPath = publicPageScriptPath.replace("page.js", "page.css");
     const existsCss = existsSync(path.join(PAGES_OUTPUT_DIR, publicCssPath));
+
+    const hydrationData: HydrationData = {
+      pagePath: publicPageScriptPath,
+      pageProps: getStaticPropsResult?.props || {},
+      pageMap: {},
+    };
 
     // Embed props and component map for client-side hydration (__PRANX_DATA__)
     const htmlContent = `
@@ -101,21 +119,17 @@ export async function build(user_config: PranxConfig, mode: PranxBuildMode = "pr
           id="__PRANX_DATA__"
           type="application/json"
           >
-            ${JSON.stringify({
-              pagePath: publicPageScriptPath,
-              pageProps: getStaticPropsResult?.props || {},
-              pageMap: {},
-            })}
+            ${JSON.stringify(hydrationData)}
         </script>
       
         <script type="importmap">
           ${JSON.stringify({
             imports: {
-              "preact": `./${path.join(path.relative(path.dirname(outputFile), VENDOR_BUNDLE_OUTPUT_PATH), "preact.js")}`,
-              "preact/jsx-runtime": `./${path.join(path.relative(path.dirname(outputFile), VENDOR_BUNDLE_OUTPUT_PATH), "jsxRuntime.js")}`,
-              "preact/hooks": `./${path.join(path.relative(path.dirname(outputFile), VENDOR_BUNDLE_OUTPUT_PATH), "hooks.js")}`,
-              "preact/compat": `./${path.join(path.relative(path.dirname(outputFile), VENDOR_BUNDLE_OUTPUT_PATH), "compat.js")}`,
-              "preact/devtools": `./${path.join(path.relative(path.dirname(outputFile), VENDOR_BUNDLE_OUTPUT_PATH), "devtools.js")}`,
+              "preact": `./${path.join(path.relative(path.dirname(outputHtmlFilePath), VENDOR_BUNDLE_OUTPUT_PATH), "preact.js")}`,
+              "preact/jsx-runtime": `./${path.join(path.relative(path.dirname(outputHtmlFilePath), VENDOR_BUNDLE_OUTPUT_PATH), "jsxRuntime.js")}`,
+              "preact/hooks": `./${path.join(path.relative(path.dirname(outputHtmlFilePath), VENDOR_BUNDLE_OUTPUT_PATH), "hooks.js")}`,
+              "preact/compat": `./${path.join(path.relative(path.dirname(outputHtmlFilePath), VENDOR_BUNDLE_OUTPUT_PATH), "compat.js")}`,
+              "preact/devtools": `./${path.join(path.relative(path.dirname(outputHtmlFilePath), VENDOR_BUNDLE_OUTPUT_PATH), "devtools.js")}`,
             },
           })}
         </script>
@@ -139,7 +153,7 @@ export async function build(user_config: PranxConfig, mode: PranxBuildMode = "pr
           })
         : htmlContent;
 
-    await fs.writeFile(outputFile, finalHtml);
+    await fs.writeFile(outputHtmlFilePath, finalHtml);
   }
 
   // Bundle user Handlers
