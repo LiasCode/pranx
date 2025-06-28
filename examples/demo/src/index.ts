@@ -3,6 +3,7 @@ import { prext } from "@prext";
 
 const server = await prext.init({
   watch: true,
+  mode: process.env.PRANX_MODE === "prod" ? "prod" : "dev",
 });
 
 serve(

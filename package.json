@@ -28,8 +28,9 @@
   },
   "files": [
     "dist",
-    "lib",
-    "README.md"
+    "README.md",
+    "tsconfig.json",
+    "LICENSE"
   ],
   "keywords": [
     "preact",
