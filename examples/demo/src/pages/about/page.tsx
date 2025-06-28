@@ -1,7 +1,7 @@
 import { MetaFunction } from "@pranx";
 import { Button } from "../../components/Button";
 import Layout from "../../layout/layout";
-import "./index.css";
+import "./index.scss";
 
 export const meta: MetaFunction = async () => {
   return (

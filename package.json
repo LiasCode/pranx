@@ -75,6 +75,7 @@
     "kleur": "^4.1.5",
     "preact": "^10.26.9",
     "preact-iso": "^2.9.2",
-    "preact-render-to-string": "^6.5.13"
+    "preact-render-to-string": "^6.5.13",
+    "sass": "^1.89.2"
   }
 }

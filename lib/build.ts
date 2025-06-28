@@ -8,6 +8,7 @@ import path from "node:path";
 import { h } from "preact";
 import { renderToStringAsync } from "preact-render-to-string";
 import type { PranxConfig } from "./config/pranx-config";
+import { sass_plugin } from "./plugins/sass";
 import { getPageFiles, getPageModule, getRoutesHandlersFiles } from "./utils/resolve";
 
 export type PranxBuildMode = "dev" | "prod";
@@ -243,6 +244,7 @@ export async function bundle_pages(user_config: PranxConfig, mode: PranxBuildMod
         jsxImportSource: "preact",
         jsxRuntime: "automatic",
       }),
+      sass_plugin(),
     ],
   });
 
