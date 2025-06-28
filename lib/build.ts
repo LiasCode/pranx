@@ -1,3 +1,4 @@
+import mdx from "@mdx-js/esbuild";
 import * as esbuild from "esbuild";
 import * as fse from "fs-extra";
 import { minify as minifyHtml } from "html-minifier";
@@ -7,7 +8,6 @@ import path from "node:path";
 import { h } from "preact";
 import { renderToStringAsync } from "preact-render-to-string";
 import type { PranxConfig } from "./config/pranx-config";
-import { server_only_macro_plugin } from "./plugins/server-only-macro";
 import { getPageFiles, getPageModule, getRoutesHandlersFiles } from "./utils/resolve";
 
 export type PranxBuildMode = "dev" | "prod";
@@ -178,7 +178,7 @@ export async function bundle_hydrate_script(_user_config: PranxConfig, mode: Pra
       "react-dom": "preact/compat",
     },
 
-    plugins: [server_only_macro_plugin()],
+    plugins: [],
   });
 }
 
@@ -195,7 +195,7 @@ export async function bundle_vendors(_user_config: PranxConfig, mode: PranxBuild
     platform: "browser",
     minify: mode === "prod",
     sourcemap: mode !== "prod",
-    plugins: [server_only_macro_plugin()],
+    plugins: [],
   });
 }
 
@@ -216,6 +216,9 @@ export async function bundle_pages(user_config: PranxConfig, mode: PranxBuildMod
 
     jsxFactory: "h",
     jsxFragment: "Fragment",
+    jsx: "automatic",
+    jsxImportSource: "preact",
+
     loader: {
       ".js": "jsx",
       ".jsx": "jsx",
@@ -235,7 +238,12 @@ export async function bundle_pages(user_config: PranxConfig, mode: PranxBuildMod
       "react-dom": "preact/compat",
     },
 
-    plugins: [server_only_macro_plugin()],
+    plugins: [
+      mdx({
+        jsxImportSource: "preact",
+        jsxRuntime: "automatic",
+      }),
+    ],
   });
 
   return pagesBuildResult;

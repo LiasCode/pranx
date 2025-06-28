@@ -2,6 +2,7 @@ import { MetaFunction } from "@pranx";
 import { Suspense } from "preact/compat";
 import { Button } from "../components/Button";
 import { CounterButton } from "../components/CounterButton";
+import Guide from "../components/Guide.md";
 import Layout from "../layout/layout";
 
 export const meta: MetaFunction = async () => {
@@ -33,6 +34,8 @@ export default function Page() {
         <Button>Click Me</Button>
 
         <CounterButton />
+
+        <Guide />
 
         <div
           style={{

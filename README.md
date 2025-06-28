@@ -16,6 +16,7 @@ A light-weight, Next.js-like framework with Preact, Hono, and esbuild for static
 - [ ] Hot Module Replacement (HMR)
 - [x] Fast compilation with esbuild
 - [x] CSS importing and automatic bundle
+- [x] Markdown and .mdx support
 
 ### Usage
 
