@@ -2,14 +2,14 @@ import { existsSync } from "node:fs";
 import path from "node:path";
 import { Logger } from "../logger";
 import type { defineConfig } from "./defineConfig";
-import type { PrextConfig } from "./prext-config";
+import type { PranxConfig } from "./pranx-config";
 
-const PREXT_CONFIG_FILE_NAME = "prext.config.js";
+const PRANX_CONFIG_FILE_NAME = "pranx.config.js";
 
-export async function load_user_config(config_file_path?: string): Promise<PrextConfig | null> {
+export async function load_user_config(config_file_path?: string): Promise<PranxConfig | null> {
   try {
     const file_path =
-      config_file_path ?? path.resolve(path.join(process.cwd(), PREXT_CONFIG_FILE_NAME));
+      config_file_path ?? path.resolve(path.join(process.cwd(), PRANX_CONFIG_FILE_NAME));
 
     const file_src = (await import(file_path)) as {
       default: ReturnType<typeof defineConfig>;

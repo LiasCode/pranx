@@ -1,6 +1,6 @@
-import { PrextHandler } from "@prext";
+import { PranxHandler } from "@pranx";
 
-export const GET: PrextHandler = (c) => {
+export const GET: PranxHandler = (c) => {
   const id = c.req.param("id");
   return c.json({ id });
 };

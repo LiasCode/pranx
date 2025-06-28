@@ -1,11 +1,11 @@
 import { Hono } from "hono";
 import { serveStatic } from "hono/serve-static";
 import * as fs from "node:fs/promises";
-import { build, PAGES_OUTPUT_DIR, PREXT_OUTPUT_DIR, type PrextBuildMode } from "./build";
+import { build, PAGES_OUTPUT_DIR, PRANX_OUTPUT_DIR, type PranxBuildMode } from "./build";
 import { load_user_config } from "./config/config";
 import { Logger } from "./logger";
 
-type PranxMode = PrextBuildMode;
+type PranxMode = PranxBuildMode;
 
 type InitOptions = {
   server?: Hono;
@@ -22,7 +22,7 @@ export async function init(options?: InitOptions): Promise<Hono> {
     ...options,
   };
 
-  await fs.rm(PREXT_OUTPUT_DIR, { force: true, recursive: true });
+  await fs.rm(PRANX_OUTPUT_DIR, { force: true, recursive: true });
 
   const config = await load_user_config();
 

@@ -1,30 +1,31 @@
 import * as esbuild from "esbuild";
 import * as fse from "fs-extra";
 import { minify as minifyHtml } from "html-minifier";
+import { existsSync } from "node:fs";
 import * as fs from "node:fs/promises";
 import path from "node:path";
 import { h } from "preact";
 import { renderToStringAsync } from "preact-render-to-string";
-import type { PrextConfig } from "./config/prext-config";
+import type { PranxConfig } from "./config/pranx-config";
 import { server_only_macro_plugin } from "./plugins/server-only-macro";
 import { getPageFiles, getPageModule, getRoutesHandlersFiles } from "./utils/resolve";
 
-export type PrextBuildMode = "dev" | "prod";
+export type PranxBuildMode = "dev" | "prod";
 
-export const PREXT_OUTPUT_DIR = path.resolve(path.join(process.cwd(), ".prext"));
+export const PRANX_OUTPUT_DIR = path.resolve(path.join(process.cwd(), ".pranx"));
 
-export const PAGES_OUTPUT_DIR = path.resolve(path.join(PREXT_OUTPUT_DIR, "pages"));
+export const PAGES_OUTPUT_DIR = path.resolve(path.join(PRANX_OUTPUT_DIR, "pages"));
 
 export const ROUTE_HANDLER_OUTPUT_DIR = path.resolve(
-  path.join(PREXT_OUTPUT_DIR, "server", "handlers")
+  path.join(PRANX_OUTPUT_DIR, "server", "handlers")
 );
 
 export const VENDOR_SRC_DIR = path.join(import.meta.dirname, "client", "vendor");
 export const VENDOR_BUNDLE_OUTPUT_PATH = path.join(PAGES_OUTPUT_DIR, "vendor");
 
-export async function build(user_config: PrextConfig, mode: PrextBuildMode = "prod") {
-  // Clean .prext folder and prepare
-  await fse.emptyDir(PREXT_OUTPUT_DIR);
+export async function build(user_config: PranxConfig, mode: PranxBuildMode = "prod") {
+  // Clean .pranx folder and prepare
+  await fse.emptyDir(PRANX_OUTPUT_DIR);
   await fse.emptyDir(PAGES_OUTPUT_DIR);
   await fse.emptyDir(ROUTE_HANDLER_OUTPUT_DIR);
 
@@ -78,16 +79,17 @@ export async function build(user_config: PrextConfig, mode: PrextBuildMode = "pr
     );
 
     // Script that hydrate script will load to render the page again
-    const publicPageScriptPath = pageFile.replace(".prext/pages/", "/");
+    const publicPageScriptPath = pageFile.replace(".pranx/pages/", "/");
     const publicCssPath = publicPageScriptPath.replace("page.js", "page.css");
+    const existsCss = existsSync(path.join(PAGES_OUTPUT_DIR, publicCssPath));
 
-    // Embed props and component map for client-side hydration (__PREXT_DATA__)
+    // Embed props and component map for client-side hydration (__PRANX_DATA__)
     const htmlContent = `
       <!doctype html> 
       <html>
         <head>
           ${meta_content}
-          <link rel="stylesheet" href="${publicCssPath}">
+          ${existsCss ? `<link rel="stylesheet" href="${publicCssPath}">` : ""}
         </head>
 
         <body>
@@ -95,7 +97,7 @@ export async function build(user_config: PrextConfig, mode: PrextBuildMode = "pr
         </body>
 
         <script
-          id="__PREXT_DATA__"
+          id="__PRANX_DATA__"
           type="application/json"
           >
             ${JSON.stringify({
@@ -106,17 +108,17 @@ export async function build(user_config: PrextConfig, mode: PrextBuildMode = "pr
         </script>
       
         <script type="importmap">
-          {
-            "imports": {
-              "preact": "./${path.join(path.relative(path.dirname(outputFile), VENDOR_BUNDLE_OUTPUT_PATH), "preact.js")}",
-              "preact/jsx-runtime": "./${path.join(path.relative(path.dirname(outputFile), VENDOR_BUNDLE_OUTPUT_PATH), "jsxRuntime.js")}",
-              "preact/hooks": "./${path.join(path.relative(path.dirname(outputFile), VENDOR_BUNDLE_OUTPUT_PATH), "hooks.js")}",
-              "preact/compat": "./${path.join(path.relative(path.dirname(outputFile), VENDOR_BUNDLE_OUTPUT_PATH), "compat.js")}",
-              "preact/devtools": "./${path.join(path.relative(path.dirname(outputFile), VENDOR_BUNDLE_OUTPUT_PATH), "devtools.js")}"
-            }
-          }
+          ${JSON.stringify({
+            imports: {
+              "preact": `./${path.join(path.relative(path.dirname(outputFile), VENDOR_BUNDLE_OUTPUT_PATH), "preact.js")}`,
+              "preact/jsx-runtime": `./${path.join(path.relative(path.dirname(outputFile), VENDOR_BUNDLE_OUTPUT_PATH), "jsxRuntime.js")}`,
+              "preact/hooks": `./${path.join(path.relative(path.dirname(outputFile), VENDOR_BUNDLE_OUTPUT_PATH), "hooks.js")}`,
+              "preact/compat": `./${path.join(path.relative(path.dirname(outputFile), VENDOR_BUNDLE_OUTPUT_PATH), "compat.js")}`,
+              "preact/devtools": `./${path.join(path.relative(path.dirname(outputFile), VENDOR_BUNDLE_OUTPUT_PATH), "devtools.js")}`,
+            },
+          })}
         </script>
-        <script id="PREXT_HYDRATE" type="module" src="/hydrate.js"></script>
+        <script id="PRANX_HYDRATE" type="module" src="/hydrate.js"></script>
       </html>
     `;
 
@@ -143,7 +145,7 @@ export async function build(user_config: PrextConfig, mode: PrextBuildMode = "pr
   await bundle_handlers(user_config, mode);
 }
 
-export async function bundle_hydrate_script(_user_config: PrextConfig, mode: PrextBuildMode) {
+export async function bundle_hydrate_script(_user_config: PranxConfig, mode: PranxBuildMode) {
   const originHydrateScriptPath = path.resolve(
     path.join(import.meta.dirname, "client", "hydrate.js")
   );
@@ -180,7 +182,7 @@ export async function bundle_hydrate_script(_user_config: PrextConfig, mode: Pre
   });
 }
 
-export async function bundle_vendors(_user_config: PrextConfig, mode: PrextBuildMode) {
+export async function bundle_vendors(_user_config: PranxConfig, mode: PranxBuildMode) {
   const vendorEntries = (await fs.readdir(VENDOR_SRC_DIR))
     .filter((f) => f.endsWith("js"))
     .map((f) => path.join(VENDOR_SRC_DIR, f));
@@ -197,7 +199,7 @@ export async function bundle_vendors(_user_config: PrextConfig, mode: PrextBuild
   });
 }
 
-export async function bundle_pages(user_config: PrextConfig, mode: PrextBuildMode) {
+export async function bundle_pages(user_config: PranxConfig, mode: PranxBuildMode) {
   // Find pages entry files
   const pages_entry_points = await getPageFiles(user_config);
 
@@ -239,7 +241,7 @@ export async function bundle_pages(user_config: PrextConfig, mode: PrextBuildMod
   return pagesBuildResult;
 }
 
-export async function bundle_handlers(user_config: PrextConfig, mode: PrextBuildMode) {
+export async function bundle_handlers(user_config: PranxConfig, mode: PranxBuildMode) {
   const handlers_entry_points = await getRoutesHandlersFiles(user_config);
 
   await esbuild.build({

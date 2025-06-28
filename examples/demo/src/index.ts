@@ -1,7 +1,7 @@
 import { serve } from "@hono/node-server";
-import { prext } from "@prext";
+import { pranx } from "@pranx";
 
-const server = await prext.init({
+const server = await pranx.init({
   watch: true,
   mode: process.env.PRANX_MODE === "prod" ? "prod" : "dev",
 });

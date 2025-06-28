@@ -63,9 +63,9 @@ export class NextFileRouter<HandlerFunctionT, PageFunctionT> {
   readonly root: string;
   cached_router_components: RouterComponent<HandlerFunctionT, PageFunctionT>[] | null = null;
 
-  readonly BASE_OUTPUT_PREXT_DIR = path.resolve(path.join(process.cwd(), ".prext"));
+  readonly BASE_OUTPUT_PRANX_DIR = path.resolve(path.join(process.cwd(), ".pranx"));
 
-  readonly BASE_OUTPUT_PREXT_UI_DIR = path.resolve(path.join(this.BASE_OUTPUT_PREXT_DIR, "routes"));
+  readonly BASE_OUTPUT_PRANX_UI_DIR = path.resolve(path.join(this.BASE_OUTPUT_PRANX_DIR, "routes"));
 
   constructor(config: { name?: string; root: string }) {
     this.name = config.name;
@@ -73,8 +73,8 @@ export class NextFileRouter<HandlerFunctionT, PageFunctionT> {
   }
 
   async preprocess(): Promise<void> {
-    // Delete .prext Dir
-    await fs.rm(this.BASE_OUTPUT_PREXT_DIR, { force: true, recursive: true });
+    // Delete .pranx Dir
+    await fs.rm(this.BASE_OUTPUT_PRANX_DIR, { force: true, recursive: true });
 
     const dir = await fs.readdir(this.root, {
       recursive: true,
@@ -115,7 +115,7 @@ export class NextFileRouter<HandlerFunctionT, PageFunctionT> {
           minifyIdentifiers: false,
 
           tsconfig: path.join(process.cwd(), "tsconfig.json"),
-          outdir: path.join(this.BASE_OUTPUT_PREXT_UI_DIR, pathPopFile),
+          outdir: path.join(this.BASE_OUTPUT_PRANX_UI_DIR, pathPopFile),
           packages: "external",
         });
 
@@ -124,7 +124,7 @@ export class NextFileRouter<HandlerFunctionT, PageFunctionT> {
         //   compact: false,
         // });
       } catch (error) {
-        console.error("[PREXT_PREPROCESSING_ERROR]", error);
+        console.error("[PRANX_PREPROCESSING_ERROR]", error);
       }
     }
   }
@@ -134,7 +134,7 @@ export class NextFileRouter<HandlerFunctionT, PageFunctionT> {
 
     const router_components: RouterComponent<HandlerFunctionT, PageFunctionT>[] = [];
 
-    const dir = await fs.readdir(this.BASE_OUTPUT_PREXT_UI_DIR, {
+    const dir = await fs.readdir(this.BASE_OUTPUT_PRANX_UI_DIR, {
       recursive: true,
       encoding: "utf8",
     });
@@ -145,9 +145,9 @@ export class NextFileRouter<HandlerFunctionT, PageFunctionT> {
       let import_file: RoutableComponentFile<HandlerFunctionT, PageFunctionT> = {};
 
       try {
-        import_file = await import(path.resolve(this.BASE_OUTPUT_PREXT_UI_DIR, file));
+        import_file = await import(path.resolve(this.BASE_OUTPUT_PRANX_UI_DIR, file));
       } catch (error) {
-        console.error("[PREXT_PREPROCESSING_ERROR]-[IMPORTING_FILE_ERROR]", error);
+        console.error("[PRANX_PREPROCESSING_ERROR]-[IMPORTING_FILE_ERROR]", error);
       }
 
       const component = this.create_route_from_imported_route_file(import_file, file);
@@ -229,7 +229,7 @@ export class NextFileRouter<HandlerFunctionT, PageFunctionT> {
     return {
       path: final_path,
       filename: last_step,
-      absolute_file_path: path.resolve(path.join(this.BASE_OUTPUT_PREXT_UI_DIR, parsed_filename)),
+      absolute_file_path: path.resolve(path.join(this.BASE_OUTPUT_PRANX_UI_DIR, parsed_filename)),
       relative_file_path: parsed_filename,
       kind: component_kind,
       exports: {

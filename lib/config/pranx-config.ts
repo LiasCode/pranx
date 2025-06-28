@@ -1,6 +1,6 @@
 import type { BuildOptions } from "esbuild";
 
-export type PrextConfig = {
+export type PranxConfig = {
   /**
    * Path to the directory containing your Preact pages.
    * @default "src/pages"

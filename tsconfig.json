@@ -27,7 +27,7 @@
     "checkJs": true,
 
     "paths": {
-      "@prext": ["./lib/index.ts"],
+      "@pranx": ["./lib/index.ts"],
       "react": ["./node_modules/preact/compat/"],
       "react-dom": ["./node_modules/preact/compat/"]
     }

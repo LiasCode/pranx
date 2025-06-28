@@ -8,11 +8,11 @@ export default function Layout(props: PropsWithChildren) {
   }, []);
 
   return (
-    <div id="prext-root">
+    <div id="pranx-root">
       <div class="layout">
         <Toaster position="bottom-right" />
         <header>
-          <h1>Prext</h1>
+          <h1>Pranx</h1>
           <ul>
             <li>
               <a href="/">Home</a>
@@ -33,7 +33,7 @@ export default function Layout(props: PropsWithChildren) {
 
         <main>{props.children}</main>
 
-        <footer>Prext. All rights reserved. Made by @LiasCode</footer>
+        <footer>Pranx. All rights reserved. Made by @LiasCode</footer>
       </div>
     </div>
   );

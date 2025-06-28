@@ -1,4 +1,4 @@
-import { defineConfig } from "@prext";
+import { defineConfig } from "@pranx";
 
 export default defineConfig({
   pages_dir: "./src/pages",

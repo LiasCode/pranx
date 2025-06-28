@@ -6,6 +6,6 @@ coverage
 
 bun.lock
 
-.prext
+.pranx
 
 lib/client/vendor/*

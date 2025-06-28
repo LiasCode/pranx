@@ -1,10 +1,10 @@
 import * as fs from "node:fs/promises";
 import path from "node:path";
-import type { PrextConfig } from "../config/prext-config";
+import type { PranxConfig } from "../config/pranx-config";
 import { Logger } from "../logger";
-import type { PrextPageModule } from "../types";
+import type { PranxPageModule } from "../types";
 
-export async function getPageFiles(user_config: PrextConfig) {
+export async function getPageFiles(user_config: PranxConfig) {
   const pages_src_files = await fs.readdir(user_config.pages_dir, {
     recursive: true,
     encoding: "utf8",
@@ -26,7 +26,7 @@ export async function getPageFiles(user_config: PrextConfig) {
   return entry_points;
 }
 
-export async function getRoutesHandlersFiles(user_config: PrextConfig) {
+export async function getRoutesHandlersFiles(user_config: PranxConfig) {
   const route_handler_src_files = await fs.readdir(user_config.pages_dir, {
     recursive: true,
     encoding: "utf8",
@@ -48,7 +48,7 @@ export async function getRoutesHandlersFiles(user_config: PrextConfig) {
   return entry_points;
 }
 
-export async function getPageModule(modulePath: string): Promise<PrextPageModule> {
+export async function getPageModule(modulePath: string): Promise<PranxPageModule> {
   try {
     return await import(`file://${modulePath}`);
   } catch (e) {
@@ -59,7 +59,7 @@ export async function getPageModule(modulePath: string): Promise<PrextPageModule
   }
 }
 
-export async function getPageComponent(modulePath: string): Promise<PrextPageModule["default"]> {
+export async function getPageComponent(modulePath: string): Promise<PranxPageModule["default"]> {
   try {
     return (await import(`file://${modulePath}`)).default;
   } catch (e) {

@@ -1,5 +1,5 @@
 {
-  "name": "prext-demo",
+  "name": "pranx-demo",
   "main": "./src/index.ts",
   "type": "module",
   "scripts": {

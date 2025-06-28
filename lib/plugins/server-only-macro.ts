@@ -23,7 +23,7 @@ export const server_only_macro_plugin = (): esbuild.Plugin => {
         );
 
         // Replace all matched blocks with an empty string or a comment
-        contents = contents.replace(stripRegex, (_) => "// Prext: Server-side block removed.\n");
+        contents = contents.replace(stripRegex, (_) => "// Pranx: Server-side block removed.\n");
 
         return {
           contents,

@@ -1,4 +1,4 @@
-import { MetaFunction } from "@prext";
+import { MetaFunction } from "@pranx";
 import { Button } from "../../components/Button";
 import Layout from "../../layout/layout";
 import "./index.css";
@@ -6,7 +6,7 @@ import "./index.css";
 export const meta: MetaFunction = async () => {
   return (
     <>
-      <title>About | Prext</title>
+      <title>About | Pranx</title>
       <link
         rel="icon"
         type="image/svg+xml"

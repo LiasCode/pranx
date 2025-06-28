@@ -1,7 +1,7 @@
 import type { Handler } from "hono";
 import type { VNode } from "preact";
 
-export type PrextHandler = Handler;
+export type PranxHandler = Handler;
 
 export type GetStaticPropsResult<P extends Record<string, any> = Record<string, any>> = {
   props: P;
@@ -25,7 +25,7 @@ export interface HydrationData {
   pageMap: Record<string, string>; // Maps route -> client bundle path
 }
 
-export type PrextPageModule = {
+export type PranxPageModule = {
   default: () => VNode;
   meta?: MetaFunction;
   getStaticProps?: GetStaticProps;

@@ -1,9 +1,9 @@
 // Config
 export { defineConfig } from "./config/defineConfig";
-export { type PrextConfig } from "./config/prext-config";
+export { type PranxConfig } from "./config/pranx-config";
 
-// Prext
-export * as prext from "./prext";
+// Pranx
+export * as pranx from "./pranx";
 
 // Types
 export * from "./types";

@@ -1,4 +1,4 @@
-import { GetStaticPropsResult } from "@prext";
+import { GetStaticPropsResult } from "@pranx";
 import { GetStaticProps, MetaFunction } from "../../../../../lib/types";
 import { CounterButton } from "../../components/CounterButton";
 import Layout from "../../layout/layout";
@@ -6,7 +6,7 @@ import Layout from "../../layout/layout";
 export const meta: MetaFunction = async () => {
   return (
     <>
-      <title>Blog | Prext</title>
+      <title>Blog | Pranx</title>
       <link
         rel="icon"
         type="image/svg+xml"
