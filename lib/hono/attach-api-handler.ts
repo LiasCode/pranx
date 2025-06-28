@@ -1,54 +1,66 @@
 import type { Handler, Hono } from "hono";
-import type { Component } from "preact";
-import type { RouterComponent } from "../router/next-file-base-router";
-import { pathToHonoPath } from "./pathToHonoPath";
+import type { RouterComponent } from "../types";
+import { filePathToRoutingPath } from "../utils/filePathToRoutingPath";
 
-export function attach_api_handler(
-  server: Hono,
-  route_component: RouterComponent<Handler, () => Promise<Component>>
-) {
-  server.get(pathToHonoPath(route_component.path), async (c, next) => {
+export async function attach_api_handler(server: Hono, route_component: RouterComponent<Handler>) {
+  const path_resolved = filePathToRoutingPath(route_component.file_path);
+
+  let path_resolved_without_slash: string | string[] = path_resolved.split("");
+  path_resolved_without_slash.pop();
+  path_resolved_without_slash = path_resolved_without_slash.join("");
+
+  // GET
+  const get_handler: Handler = async (c, next) => {
     if (route_component.exports.methods?.GET !== undefined) {
       return route_component.exports.methods.GET(c, next);
     }
-    return c.json(
-      `Path: ${route_component.path} does not have a GET exported method. File: ${route_component.relative_file_path}`
-    );
-  });
+    console.error(`Path: ${route_component.file_path} does not have a GET exported method.`);
+    return c.notFound();
+  };
+  server.get(path_resolved_without_slash, get_handler);
+  server.get(path_resolved, get_handler);
 
-  server.post(pathToHonoPath(route_component.path), async (c, next) => {
+  // POST
+  const post_handler: Handler = async (c, next) => {
     if (route_component.exports.methods?.POST !== undefined) {
       return route_component.exports.methods.POST(c, next);
     }
-    return c.json(
-      `Path: ${route_component.path} does not have a POST exported method. File: ${route_component.relative_file_path}`
-    );
-  });
+    console.error(`Path: ${route_component.file_path} does not have a POST exported method.`);
+    return c.notFound();
+  };
+  server.post(path_resolved_without_slash, post_handler);
+  server.post(path_resolved, post_handler);
 
-  server.put(pathToHonoPath(route_component.path), async (c, next) => {
+  // PUT
+  const put_handler: Handler = async (c, next) => {
     if (route_component.exports.methods?.PUT !== undefined) {
       return route_component.exports.methods.PUT(c, next);
     }
-    return c.json(
-      `Path: ${route_component.path} does not have a PUT exported method. File: ${route_component.relative_file_path}`
-    );
-  });
+    console.error(`Path: ${route_component.file_path} does not have a PUT exported method.`);
+    return c.notFound();
+  };
+  server.put(path_resolved_without_slash, put_handler);
+  server.put(path_resolved, put_handler);
 
-  server.delete(pathToHonoPath(route_component.path), async (c, next) => {
+  // DELETE
+  const delete_handler: Handler = async (c, next) => {
     if (route_component.exports.methods?.DELETE !== undefined) {
       return route_component.exports.methods.DELETE(c, next);
     }
-    return c.json(
-      `Path: ${route_component.path} does not have a delete exported method. File: ${route_component.relative_file_path}`
-    );
-  });
+    console.error(`Path: ${route_component.file_path} does not have a DELETE exported method.`);
+    return c.notFound();
+  };
+  server.delete(path_resolved_without_slash, delete_handler);
+  server.delete(path_resolved, delete_handler);
 
-  server.patch(pathToHonoPath(route_component.path), async (c, next) => {
+  // PATCH
+  const patch_handler: Handler = async (c, next) => {
     if (route_component.exports.methods?.PATCH !== undefined) {
       return route_component.exports.methods.PATCH(c, next);
     }
-    return c.json(
-      `Path: ${route_component.path} does not have a patch exported method. File: ${route_component.relative_file_path}`
-    );
-  });
+    console.error(`Path: ${route_component.file_path} does not have a PATCH exported method.`);
+    return c.notFound();
+  };
+  server.patch(path_resolved_without_slash, patch_handler);
+  server.patch(path_resolved, patch_handler);
 }

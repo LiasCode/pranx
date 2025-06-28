@@ -18,6 +18,7 @@
     "@hono/node-server": "^1.14.4",
     "hono": "^4.8.1",
     "preact": "^10.26.9",
+    "preact-render-to-string": "^6.5.13",
     "react-hot-toast": "^2.5.2"
   }
 }

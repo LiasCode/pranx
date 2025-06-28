@@ -1,8 +1,10 @@
+import type { Handler } from "hono";
 import * as fs from "node:fs/promises";
 import path from "node:path";
+import { ROUTE_HANDLER_OUTPUT_DIR } from "../build";
 import type { PranxConfig } from "../config/pranx-config";
 import { Logger } from "../logger";
-import type { PranxPageModule } from "../types";
+import type { PranxPageModule, RouterComponent } from "../types";
 
 export async function getPageFiles(user_config: PranxConfig) {
   const pages_src_files = await fs.readdir(user_config.pages_dir, {
@@ -68,4 +70,27 @@ export async function getPageComponent(modulePath: string): Promise<PranxPageMod
     }
     throw e;
   }
+}
+
+export async function group_api_handlers() {
+  const files = await getRoutesHandlersFiles({
+    pages_dir: ROUTE_HANDLER_OUTPUT_DIR,
+    public_dir: "",
+  });
+  const handlers: RouterComponent<Handler>[] = [];
+
+  for (const f of files) {
+    const module = (await import(f)) as RouterComponent<Handler>["exports"]["methods"];
+    if (!module) {
+      throw new Error(`[group_api_handlers] - ERROR IMPORTING ${f}`);
+    }
+    handlers.push({
+      file_path: f.replace(ROUTE_HANDLER_OUTPUT_DIR, "").replace("route.js", ""),
+      exports: {
+        methods: { ...module },
+      },
+    });
+  }
+
+  return handlers;
 }

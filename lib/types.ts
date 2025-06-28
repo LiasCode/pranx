@@ -34,3 +34,14 @@ export type PranxPageModule = {
   getStaticPaths?: GetStaticPaths;
   getServerSideProps?: GetServerSideProps;
 };
+
+export type API_FILE_HANDLER_EXPORT_METHODS = "POST" | "GET" | "PUT" | "DELETE" | "PATCH";
+
+export type RouterComponent<H> = {
+  file_path: string;
+  exports: {
+    methods?: {
+      [T in API_FILE_HANDLER_EXPORT_METHODS]?: H;
+    };
+  };
+};

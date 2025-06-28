@@ -9,7 +9,7 @@ import { h } from "preact";
 import { renderToStringAsync } from "preact-render-to-string";
 import type { PranxConfig } from "./config/pranx-config";
 import { sass_plugin } from "./plugins/sass";
-import { GetStaticPathsResult, GetStaticPropsResult, HydrationData } from "./types";
+import type { GetStaticPathsResult, GetStaticPropsResult, HydrationData } from "./types";
 import { getPageFiles, getPageModule, getRoutesHandlersFiles } from "./utils/resolve";
 
 export type PranxBuildMode = "dev" | "prod";
@@ -59,12 +59,14 @@ export async function build(user_config: PranxConfig, mode: PranxBuildMode = "pr
     }
 
     let getStaticPathsResult: GetStaticPathsResult | null = null;
+    getStaticPathsResult;
 
     if (getStaticPaths !== undefined) {
       getStaticPathsResult = await getStaticPaths();
     }
 
     let getServerSidePropsResult: any | null = null;
+    getServerSidePropsResult;
 
     if (getServerSideProps !== undefined) {
       getServerSidePropsResult = await getServerSideProps();
@@ -275,9 +277,11 @@ export async function bundle_handlers(user_config: PranxConfig, mode: PranxBuild
     format: "esm",
     platform: "node",
     splitting: true,
+    treeShaking: true,
     chunkNames: "_chunks/[name]-[hash]",
-    jsxFactory: "h",
-    jsxFragment: "Fragment",
+    outbase: user_config.pages_dir,
+    resolveExtensions: [".js"],
+
     loader: {
       ".js": "jsx",
       ".jsx": "jsx",
@@ -286,6 +290,18 @@ export async function bundle_handlers(user_config: PranxConfig, mode: PranxBuild
       ".json": "json",
       ".css": "text",
     },
+    jsxFactory: "h",
+    jsxFragment: "Fragment",
+    jsx: "automatic",
+    jsxImportSource: "preact",
+
+    alias: {
+      "react": "preact/compat",
+      "react-dom": "preact/compat",
+    },
+
+    external: ["preact", "preact-render-to-string"],
+
     sourcemap: mode !== "prod",
     minify: mode === "prod",
   });

@@ -1,4 +1,4 @@
-export function pathToHonoPath(input: string): string {
+export function filePathToRoutingPath(input: string): string {
   let output = input;
   const steps = input.split("/").filter((s) => s !== "/" && s !== "");
 

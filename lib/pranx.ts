@@ -1,9 +1,17 @@
 import { Hono } from "hono";
 import { serveStatic } from "hono/serve-static";
 import * as fs from "node:fs/promises";
-import { build, PAGES_OUTPUT_DIR, PRANX_OUTPUT_DIR, type PranxBuildMode } from "./build";
+import {
+  build,
+  PAGES_OUTPUT_DIR,
+  PRANX_OUTPUT_DIR,
+  ROUTE_HANDLER_OUTPUT_DIR,
+  type PranxBuildMode,
+} from "./build";
 import { load_user_config } from "./config/config";
+import { attach_api_handler } from "./hono/attach-api-handler";
 import { Logger } from "./logger";
+import { group_api_handlers } from "./utils/resolve";
 
 type PranxMode = PranxBuildMode;
 
@@ -14,6 +22,8 @@ type InitOptions = {
 };
 
 export async function init(options?: InitOptions): Promise<Hono> {
+  console.time("[PRANX]-running");
+
   Logger.info("[PRANX]-[INIT]");
 
   const options_parsed: InitOptions = {
@@ -35,9 +45,15 @@ export async function init(options?: InitOptions): Promise<Hono> {
   await build(config, options_parsed.mode);
   console.timeEnd("[PRANX]-build-time");
 
+  console.time("[PRANX]-server-attach");
   const server = options_parsed?.server || new Hono();
 
-  // await attach_endpoints(server, router_components_parsed);
+  const handlers = await group_api_handlers();
+
+  for (const h of handlers) {
+    await attach_api_handler(server, h);
+    Logger.success(`Attached api handler ${h.file_path.replace(ROUTE_HANDLER_OUTPUT_DIR, "")}`);
+  }
 
   server.get(
     "*",
@@ -48,6 +64,8 @@ export async function init(options?: InitOptions): Promise<Hono> {
       },
     })
   );
+  console.timeEnd("[PRANX]-server-attach");
 
+  console.timeEnd("[PRANX]-running");
   return server;
 }
