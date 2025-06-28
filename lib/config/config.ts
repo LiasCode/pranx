@@ -1,3 +1,4 @@
+import * as fse from "fs-extra";
 import { existsSync } from "node:fs";
 import path from "node:path";
 import { Logger } from "../logger";
@@ -16,6 +17,10 @@ export async function load_user_config(config_file_path?: string): Promise<Pranx
     };
 
     const Config = file_src.default;
+
+    // Ensure exists the necesary folders
+    await fse.ensureDir(Config.pages_dir);
+    await fse.ensureDir(Config.public_dir);
 
     if (!existsSync(Config.pages_dir)) {
       throw new Error("[Config.pages_dir] does not exists");
