@@ -12,9 +12,9 @@
     "lint": "biome lint . --fix --unsafe",
     "check": "tsc --noEmit -p ./tsconfig.json",
     "format": "prettier --write --cache \"./lib\" \"./examples\"",
-    "postinstall": "simple-git-hooks && bun run make-vendors",
+    "postinstall": "npx simple-git-hooks && npm run make-vendors",
     "make-vendors": "tsx ./scripts/make-vendors.ts",
-    "prepublishOnly": "bun run build",
+    "prepublishOnly": "npm run build",
     "push": "npm version patch && git push",
     "push-minor": "npm version minor && git push",
     "push-major": "npm version major && git push"
@@ -67,7 +67,7 @@
     "zod": "^3.25.67"
   },
   "simple-git-hooks": {
-    "pre-commit": "bun run lint && bun run format"
+    "pre-commit": "npm run lint && npm run format"
   },
   "dependencies": {
     "@hono/node-server": "^1.14.4",
