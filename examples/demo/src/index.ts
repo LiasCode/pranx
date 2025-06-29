@@ -1,5 +1,5 @@
 import { serve } from "@hono/node-server";
-import { pranx } from "@pranx";
+import { pranx } from "pranx";
 
 const server = await pranx.init({
   watch: true,

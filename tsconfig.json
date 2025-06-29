@@ -2,8 +2,8 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
     "target": "ESNext",
-    "module": "es2022",
-    "moduleResolution": "node",
+    "module": "NodeNext",
+    "moduleResolution": "nodenext",
     "resolveJsonModule": true,
     "declaration": true,
     "outDir": "./dist",
@@ -26,8 +26,9 @@
     "skipLibCheck": true,
     "checkJs": true,
 
+    "emitDeclarationOnly": true,
+
     "paths": {
-      "@pranx": ["./lib/index.ts"],
       "react": ["./node_modules/preact/compat/"],
       "react-dom": ["./node_modules/preact/compat/"]
     }

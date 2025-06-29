@@ -1,4 +1,4 @@
-import { MetaFunction } from "@pranx";
+import { MetaFunction } from "pranx";
 import { Button } from "../../components/Button";
 import Layout from "../../layout/layout";
 import "./index.scss";

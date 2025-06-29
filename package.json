@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
-    "build": "rm -rf ./dist && tsc -p ./tsconfig.json && cp -r ./lib/client/vendor ./dist/client/vendor",
+    "build": "tsx ./scripts/build-project.ts && tsc",
     "test": "vitest run",
     "test:watch": "vitest",
     "coverage": "vitest run --coverage",

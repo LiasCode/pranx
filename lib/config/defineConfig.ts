@@ -1,5 +1,5 @@
 import path from "node:path";
-import type { PranxConfig } from "./pranx-config";
+import type { PranxConfig } from "./pranx-config.js";
 
 export function defineConfig(config: Partial<PranxConfig>): PranxConfig {
   return {

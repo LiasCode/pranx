@@ -1,4 +1,4 @@
-import { GetStaticPropsResult } from "@pranx";
+import { GetStaticPropsResult } from "pranx";
 import { GetStaticProps, MetaFunction } from "../../../../../lib/types";
 import { CounterButton } from "../../components/CounterButton";
 import Layout from "../../layout/layout";

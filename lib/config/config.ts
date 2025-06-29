@@ -1,9 +1,9 @@
 import * as fse from "fs-extra";
 import { existsSync } from "node:fs";
 import path from "node:path";
-import { Logger } from "../logger";
-import type { defineConfig } from "./defineConfig";
-import type { PranxConfig } from "./pranx-config";
+import { Logger } from "../logger/index.js";
+import type { defineConfig } from "./defineConfig.js";
+import type { PranxConfig } from "./pranx-config.js";
 
 const PRANX_CONFIG_FILE_NAME = "pranx.config.js";
 

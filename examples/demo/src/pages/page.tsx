@@ -1,4 +1,4 @@
-import { MetaFunction } from "@pranx";
+import { MetaFunction } from "pranx";
 import { Suspense } from "preact/compat";
 import { Button } from "../components/Button";
 import { CounterButton } from "../components/CounterButton";

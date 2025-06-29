@@ -1,10 +1,10 @@
 import type { Handler } from "hono";
 import * as fs from "node:fs/promises";
 import path from "node:path";
-import { ROUTE_HANDLER_OUTPUT_DIR } from "../build";
-import type { PranxConfig } from "../config/pranx-config";
-import { Logger } from "../logger";
-import type { PranxPageModule, RouterComponent } from "../types";
+import { ROUTE_HANDLER_OUTPUT_DIR } from "../build.js";
+import type { PranxConfig } from "../config/pranx-config.js";
+import { Logger } from "../logger/index.js";
+import type { PranxPageModule, RouterComponent } from "../types.js";
 
 export async function getPageFiles(user_config: PranxConfig) {
   const pages_src_files = await fs.readdir(user_config.pages_dir, {

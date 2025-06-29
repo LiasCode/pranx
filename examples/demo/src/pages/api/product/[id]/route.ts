@@ -1,4 +1,4 @@
-import { PranxHandler } from "@pranx";
+import { PranxHandler } from "pranx";
 
 export const GET: PranxHandler = (c) => {
   const id = c.req.param("id");

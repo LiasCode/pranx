@@ -5,12 +5,11 @@ import { minify as minifyHtml } from "html-minifier";
 import { existsSync } from "node:fs";
 import * as fs from "node:fs/promises";
 import path from "node:path";
-import { h } from "preact";
 import { renderToStringAsync } from "preact-render-to-string";
-import type { PranxConfig } from "./config/pranx-config";
-import { sass_plugin } from "./plugins/sass";
-import type { GetStaticPathsResult, GetStaticPropsResult, HydrationData } from "./types";
-import { getPageFiles, getPageModule, getRoutesHandlersFiles } from "./utils/resolve";
+import type { PranxConfig } from "./config/pranx-config.js";
+import { sass_plugin } from "./plugins/sass.js";
+import type { GetStaticPathsResult, GetStaticPropsResult, HydrationData } from "./types.js";
+import { getPageFiles, getPageModule, getRoutesHandlersFiles } from "./utils/resolve.js";
 
 export type PranxBuildMode = "dev" | "prod";
 
@@ -90,7 +89,7 @@ export async function build(user_config: PranxConfig, mode: PranxBuildMode = "pr
     }
 
     const page_content = await renderToStringAsync(
-      h(PageComponent, { ...getStaticPropsResult?.props })
+      <PageComponent {...getStaticPropsResult?.props} />
     );
 
     // Script that hydrate script will load to render the page again

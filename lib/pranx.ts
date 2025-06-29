@@ -7,11 +7,11 @@ import {
   PRANX_OUTPUT_DIR,
   ROUTE_HANDLER_OUTPUT_DIR,
   type PranxBuildMode,
-} from "./build";
-import { load_user_config } from "./config/config";
-import { attach_api_handler } from "./hono/attach-api-handler";
-import { Logger } from "./logger";
-import { group_api_handlers } from "./utils/resolve";
+} from "./build.js";
+import { load_user_config } from "./config/config.js";
+import { attach_api_handler } from "./hono/attach-api-handler.js";
+import { Logger } from "./logger/index.js";
+import { group_api_handlers } from "./utils/resolve.js";
 
 type PranxMode = PranxBuildMode;
 
