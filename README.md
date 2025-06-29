@@ -21,6 +21,14 @@ A light-weight, Next.js-like framework with Preact, Hono, and esbuild for static
 
 ### Usage
 
+#### Using a template
+
+```bash
+npx degit https://github.com/LiasCode/pranx-basic-starter-template my-pranx-app
+```
+
+#### Manual
+
 1- Create a hono project and select the `nodejs` adapter
 
 ```bash
