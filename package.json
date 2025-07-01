@@ -72,10 +72,10 @@
   "dependencies": {
     "@hono/node-server": "^1.14.4",
     "@mdx-js/esbuild": "^3.1.0",
+    "@swc/html": "^1.12.7",
     "esbuild": "^0.25.5",
     "fs-extra": "^11.3.0",
     "hono": "^4.8.3",
-    "html-minifier": "^4.0.0",
     "kleur": "^4.1.5",
     "preact": "^10.26.9",
     "preact-iso": "^2.9.2",

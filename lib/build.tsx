@@ -1,7 +1,7 @@
 import mdx from "@mdx-js/esbuild";
+import { minify } from "@swc/html";
 import * as esbuild from "esbuild";
 import * as fse from "fs-extra";
-import { minify as minifyHtml } from "html-minifier";
 import { existsSync } from "node:fs";
 import * as fs from "node:fs/promises";
 import path from "node:path";
@@ -138,23 +138,22 @@ export async function build(user_config: PranxConfig, mode: PranxBuildMode = "pr
       </html>
     `;
 
-    const finalHtml =
-      mode === "prod"
-        ? minifyHtml(htmlContent, {
-            collapseBooleanAttributes: true,
-            collapseInlineTagWhitespace: true,
-            collapseWhitespace: true,
-            html5: true,
-            minifyJS: false,
-            minifyCSS: true,
-            minifyURLs: true,
-            removeComments: true,
-            removeRedundantAttributes: true,
-            removeTagWhitespace: true,
-          })
-        : htmlContent;
+    let finalHtmlContent = htmlContent;
 
-    await fs.writeFile(outputHtmlFilePath, finalHtml);
+    if (mode === "prod") {
+      const html = await minify(htmlContent, {
+        collapseBooleanAttributes: true,
+        removeComments: true,
+        collapseWhitespaces: "all",
+        minifyJs: true,
+        minifyCss: true,
+        minifyJson: true,
+        forceSetHtml5Doctype: true,
+        sortAttributes: true,
+      });
+      finalHtmlContent = html.code;
+    }
+    await fs.writeFile(outputHtmlFilePath, finalHtmlContent);
   }
 
   // Bundle user Handlers
