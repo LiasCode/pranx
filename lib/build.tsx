@@ -166,7 +166,7 @@ export async function bundle_hydrate_script(_user_config: PranxConfig, mode: Pra
   );
   const outputHydrateScriptPath = path.join(PAGES_OUTPUT_DIR, "hydrate.js");
 
-  const hydrate_build_result = await esbuild.build({
+  await esbuild.build({
     entryPoints: [originHydrateScriptPath],
     bundle: true,
     outfile: outputHydrateScriptPath,
@@ -195,8 +195,6 @@ export async function bundle_hydrate_script(_user_config: PranxConfig, mode: Pra
 
     plugins: [],
   });
-
-  console.log({ hydrate_build_result });
 }
 
 export async function bundle_vendors(_user_config: PranxConfig, mode: PranxBuildMode) {
