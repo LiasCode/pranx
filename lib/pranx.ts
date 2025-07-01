@@ -46,6 +46,7 @@ export async function init(options?: InitOptions): Promise<Hono> {
   console.timeEnd("[PRANX]-build-time");
 
   console.time("[PRANX]-server-attach");
+
   const server = options_parsed?.server || new Hono();
 
   const handlers = await group_api_handlers();
