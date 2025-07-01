@@ -1,0 +1,26 @@
+{
+  "name": "playground",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch --include \"./src/**/*\" --clear-screen=false ./src/index.ts",
+    "build": "tsc",
+    "start": "NODE_ENV=production node dist/index.js",
+    "format": "prettier --write --cache ./src"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.14.4",
+    "@preact/signals": "^2.2.1",
+    "hono": "^4.8.3",
+    "pranx": "file://../../",
+    "preact": "^10.26.9",
+    "preact-render-to-string": "^6.5.13",
+    "react-hot-toast": "^2.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.17",
+    "prettier": "^3.6.2",
+    "prettier-plugin-organize-imports": "^4.1.0",
+    "tsx": "^4.7.1",
+    "typescript": "^5.8.3"
+  }
+}

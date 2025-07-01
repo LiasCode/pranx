@@ -80,5 +80,10 @@
     "preact-iso": "^2.9.2",
     "preact-render-to-string": "^6.5.13",
     "sass": "^1.89.2"
-  }
+  },
+  "trustedDependencies": [
+    "@biomejs/biome",
+    "@parcel/watcher",
+    "playground"
+  ]
 }
