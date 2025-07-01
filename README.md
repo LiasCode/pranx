@@ -18,6 +18,7 @@ A light-weight, Next.js-like framework with Preact, Hono, and esbuild for static
 - [x] CSS importing and automatic bundle
 - [x] Markdown and .mdx support
 - [x] Sass support
+- [ ] Extensible esbuild config
 
 ### Usage
 
