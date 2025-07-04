@@ -1,7 +1,7 @@
 import type { Handler } from "hono";
 import * as fs from "node:fs/promises";
 import path from "node:path";
-import { ROUTE_HANDLER_OUTPUT_DIR } from "../build.js";
+import { ROUTE_HANDLER_OUTPUT_DIR } from "../build/constants.js";
 import type { PranxConfig } from "../config/pranx-config.js";
 import { Logger } from "../logger/index.js";
 import type { PranxPageModule, RouterComponent } from "../types.js";
@@ -46,6 +46,28 @@ export async function getRoutesHandlersFiles(user_config: PranxConfig) {
   });
 
   const entry_points = route_files.map((f) => path.join(f.parentPath, f.name));
+
+  return entry_points;
+}
+
+export async function getLoadersFiles(user_config: PranxConfig) {
+  const route_handler_src_files = await fs.readdir(user_config.pages_dir, {
+    recursive: true,
+    encoding: "utf8",
+    withFileTypes: true,
+  });
+
+  const loader_files = route_handler_src_files.filter((f) => {
+    if (!f.isFile()) return false;
+
+    if (!["loader.js", "loader.ts", "loader.jsx", "loader.tsx"].includes(f.name)) {
+      return false;
+    }
+
+    return true;
+  });
+
+  const entry_points = loader_files.map((f) => path.join(f.parentPath, f.name));
 
   return entry_points;
 }

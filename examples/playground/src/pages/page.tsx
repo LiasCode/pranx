@@ -40,11 +40,21 @@ export const meta: MetaFunction = async () => {
   );
 };
 
-export default function HomePage() {
+export default function HomePage(props: { posts: { id: string; title: string }[] }) {
   return (
     <Layout>
       <div id="home-page">
         <h1>Demo | Pranx test playground</h1>
+
+        <div class="separator-horizontal"></div>
+
+        <h2>Statics Props</h2>
+
+        {props.posts?.map((p) => (
+          <div key={p.id}>
+            <span>{p.title}</span>
+          </div>
+        ))}
 
         <div class="separator-horizontal"></div>
 

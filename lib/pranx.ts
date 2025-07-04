@@ -1,13 +1,8 @@
 import { Hono } from "hono";
 import { serveStatic } from "hono/serve-static";
 import * as fs from "node:fs/promises";
-import {
-  build,
-  PAGES_OUTPUT_DIR,
-  PRANX_OUTPUT_DIR,
-  ROUTE_HANDLER_OUTPUT_DIR,
-  type PranxBuildMode,
-} from "./build.js";
+import { build, type PranxBuildMode } from "./build/build.js";
+import { PAGES_OUTPUT_DIR, PRANX_OUTPUT_DIR, ROUTE_HANDLER_OUTPUT_DIR } from "./build/constants.js";
 import { load_user_config } from "./config/config.js";
 import { attach_api_handler } from "./hono/attach-api-handler.js";
 import { Logger } from "./logger/index.js";

@@ -1,11 +1,11 @@
 import type * as esbuild from "esbuild";
-import { AcceptedPlugin } from "postcss";
+import type { AcceptedPlugin } from "postcss";
 
-export const postcss_plugin = (options: AcceptedPlugin[]): esbuild.Plugin => {
+export const postcss_plugin = (_options: AcceptedPlugin[]): esbuild.Plugin => {
   return {
     name: "postcss",
-    setup: function (build) {
-      build.onResolve({ filter: /.\.(css)$/, namespace: "file" }, async (args) => {
+    setup: (build) => {
+      build.onResolve({ filter: /.\.(css)$/, namespace: "file" }, async (_args) => {
         // const css = await readFile(sourceFullPath);
 
         // const result = await postcss(options.plugins).process(css, {

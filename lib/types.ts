@@ -5,7 +5,7 @@ export type PranxHandler = Handler;
 
 export type GetStaticPropsResult<P extends Record<string, any> = Record<string, any>> = {
   props: P;
-  revalidate?: number | false; // Not fully implemented in this example
+  revalidate?: number | false;
   notFound?: boolean;
 };
 
@@ -30,6 +30,12 @@ export interface HydrationData {
 export type PranxPageModule = {
   default: () => VNode;
   meta?: MetaFunction;
+  getStaticProps?: GetStaticProps;
+  getStaticPaths?: GetStaticPaths;
+  getServerSideProps?: GetServerSideProps;
+};
+
+export type PranxLoaderModule = {
   getStaticProps?: GetStaticProps;
   getStaticPaths?: GetStaticPaths;
   getServerSideProps?: GetServerSideProps;

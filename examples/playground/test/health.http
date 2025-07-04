@@ -1,0 +1,4 @@
+POST http://localhost:3030/api/health
+Content-Type: application/json
+
+{}

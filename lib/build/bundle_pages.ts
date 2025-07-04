@@ -1,0 +1,62 @@
+import mdx from "@mdx-js/esbuild";
+import * as esbuild from "esbuild";
+import type { PranxConfig } from "../config/pranx-config.js";
+import { sass_plugin } from "../plugins/sass.js";
+import { getPageFiles } from "../utils/resolve.js";
+import type { PranxBuildMode } from "./build.js";
+import { PAGES_OUTPUT_DIR } from "./constants.js";
+
+type PagesBundleOptions = {
+  user_config: PranxConfig;
+  mode: PranxBuildMode;
+};
+
+export async function bundle_pages(options: PagesBundleOptions) {
+  const pages_entry_points = await getPageFiles(options.user_config);
+
+  const pagesBuildResult = await esbuild.build({
+    entryPoints: pages_entry_points,
+    bundle: true,
+    outdir: PAGES_OUTPUT_DIR,
+    format: "esm",
+    splitting: true,
+    treeShaking: true,
+    platform: "node",
+    chunkNames: "_chunks/[name]-[hash]",
+    assetNames: "_assets/[name]-[hash]",
+
+    jsxFactory: "h",
+    jsxFragment: "Fragment",
+    jsx: "automatic",
+    jsxImportSource: "preact",
+
+    loader: {
+      ".js": "jsx",
+      ".jsx": "jsx",
+      ".ts": "tsx",
+      ".tsx": "tsx",
+      ".css": "css",
+      ".json": "json",
+    },
+
+    minify: options.mode === "prod",
+    sourcemap: options.mode !== "prod",
+
+    external: ["preact"],
+    metafile: true,
+    alias: {
+      "react": "preact/compat",
+      "react-dom": "preact/compat",
+    },
+
+    plugins: [
+      mdx({
+        jsxImportSource: "preact",
+        jsxRuntime: "automatic",
+      }),
+      sass_plugin(),
+    ],
+  });
+
+  return pagesBuildResult;
+}

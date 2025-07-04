@@ -9,4 +9,4 @@ export * as pranx from "./pranx.js";
 export * from "./types.js";
 
 // Build
-export * as build from "./build.js";
+export * as build from "./build/build.js";
