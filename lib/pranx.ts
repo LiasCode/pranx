@@ -1,3 +1,4 @@
+import * as fse from "fs-extra";
 import { Hono } from "hono";
 import { serveStatic } from "hono/serve-static";
 import * as fs from "node:fs/promises";
@@ -11,9 +12,23 @@ import { group_api_handlers } from "./utils/resolve.js";
 type PranxMode = PranxBuildMode;
 
 type InitOptions = {
+  /**
+   * for use your own hono instance
+   * */
   server?: Hono;
-  watch?: boolean;
+
+  /**
+   * optimize bundle
+   * @default "dev"
+   * */
   mode?: PranxMode;
+
+  /**
+   * work in progress
+   * reload when detect changes
+   * @default true
+   * */
+  watch?: boolean;
 };
 
 export async function init(options?: InitOptions): Promise<Hono> {
@@ -27,7 +42,7 @@ export async function init(options?: InitOptions): Promise<Hono> {
     ...options,
   };
 
-  await fs.rm(PRANX_OUTPUT_DIR, { force: true, recursive: true });
+  await fse.emptyDir(PRANX_OUTPUT_DIR);
 
   const config = await load_user_config();
 
@@ -40,6 +55,7 @@ export async function init(options?: InitOptions): Promise<Hono> {
   await build(config, options_parsed.mode);
   console.timeEnd("[PRANX]-build-time");
 
+  // Attach endpoints to hono server and declare static content
   console.time("[PRANX]-server-attach");
 
   const server = options_parsed?.server || new Hono();
@@ -51,15 +67,36 @@ export async function init(options?: InitOptions): Promise<Hono> {
     Logger.success(`Attached api handler ${h.file_path.replace(ROUTE_HANDLER_OUTPUT_DIR, "")}`);
   }
 
-  server.get(
+  server.use(
     "*",
     serveStatic({
       root: PAGES_OUTPUT_DIR,
-      getContent(path) {
-        return fs.readFile(path, "utf-8");
+      getContent: async (path) => {
+        try {
+          const content = await fs.readFile(path, "utf-8");
+          return content;
+        } catch (error) {
+          return null;
+        }
       },
     })
   );
+
+  server.use(
+    "*",
+    serveStatic({
+      root: config.public_dir,
+      getContent: async (path) => {
+        try {
+          const content = await fs.readFile(path, "utf-8");
+          return content;
+        } catch (error) {
+          return null;
+        }
+      },
+    })
+  );
+
   console.timeEnd("[PRANX]-server-attach");
 
   console.timeEnd("[PRANX]-running");

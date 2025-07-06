@@ -48,28 +48,34 @@ The default path is `public`
 
 Inside the pages folder each file name represents a part of the app.
 
-`page.{tsx,jsx,js,ts}` -> The page that will be rendered as html and hydratated to the client.
+- `page.{tsx,jsx,js,ts}`: The page that will be rendered as html and hydratated to the client.
 
-`route.{tsx,jsx,js,ts}` -> Contains api handler only for the server.
+- `meta.{tsx,jsx,js,ts}`: Contains the page metadata
+
+- `route.{tsx,jsx,js,ts}`: Contains api handler only for the server.
+
+- `loader.{tsx,jsx,js,ts}`: Contains the loader function to pass data as props to the page.
 
 The file path also represent the final url path that will be generated:
 
-- `pages/page.tsx` -> `/`
-- `pages/blog/page.tsx` -> `/blog/`
+- `pages/page.tsx`: `/`
+- `pages/blog/page.tsx`: `/blog/`
 
 > Work in progress
 
-- `pages/product/[id]/page.tsx` -> `/product/:id`
-- `pages/product/[...id]/page.tsx` -> `/product/:id*`
+- `pages/product/[id]/page.tsx`: `/product/:id`
+- `pages/product/[...id]/page.tsx`: `/product/:id*`
 
 #### page.tsx
 
 Can export several methods.
 
-- `default` -> page component will be rendered
-- `meta` -> meta description for the `head` tag
+- `default`: page component will be rendered
+- `meta`: meta description for the `head` tag
 - `getStaticProps`
-  > Work in progress
+
+> Work in progress
+
 - `getStaticPath`
 - `getServerSideProps`
 

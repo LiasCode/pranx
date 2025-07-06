@@ -15,22 +15,6 @@ await pranx.init({
   server: app,
 });
 
-app.onError((err, c) => {
-  console.dir(
-    {
-      kind: "App Level Error",
-      ...err,
-      stack: err.stack,
-    },
-    {
-      colors: true,
-      compact: false,
-      depth: Number.POSITIVE_INFINITY,
-    }
-  );
-  return c.text("App Level Error", 500);
-});
-
 serve(
   {
     fetch: app.fetch,
