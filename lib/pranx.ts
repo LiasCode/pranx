@@ -7,6 +7,7 @@ import { PAGES_OUTPUT_DIR, PRANX_OUTPUT_DIR, ROUTE_HANDLER_OUTPUT_DIR } from "./
 import { load_user_config } from "./config/config.js";
 import { attach_api_handler } from "./hono/attach-api-handler.js";
 import { Logger } from "./logger/index.js";
+import { filePathToRoutingPath } from "./utils/filePathToRoutingPath.js";
 import { group_api_handlers } from "./utils/resolve.js";
 
 type PranxMode = PranxBuildMode;
@@ -47,7 +48,7 @@ export async function init(options?: InitOptions): Promise<Hono> {
   const config = await load_user_config();
 
   if (config === null) {
-    Logger.error("[PRANX]-Config can't be parsed");
+    Logger.error("Config can't be parsed");
     process.exit(1);
   }
 
@@ -64,7 +65,9 @@ export async function init(options?: InitOptions): Promise<Hono> {
 
   for (const h of handlers) {
     await attach_api_handler(server, h);
-    Logger.success(`Attached api handler ${h.file_path.replace(ROUTE_HANDLER_OUTPUT_DIR, "")}`);
+    Logger.success(
+      `[ATTACHED HANDLER] ${filePathToRoutingPath(h.file_path.replace(ROUTE_HANDLER_OUTPUT_DIR, ""))} ${Object.keys(h?.exports?.methods || {}).toString()}`
+    );
   }
 
   server.use(
@@ -96,7 +99,6 @@ export async function init(options?: InitOptions): Promise<Hono> {
       },
     })
   );
-
   console.timeEnd("[PRANX]-server-attach");
 
   console.timeEnd("[PRANX]-running");
