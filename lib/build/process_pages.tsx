@@ -19,4 +19,6 @@ export async function process_pages(options: ProcessPagesOptions) {
   });
 
   await generate_static_pages(groupResult, options.mode);
+
+  return groupResult;
 }

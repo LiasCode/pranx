@@ -2,7 +2,7 @@
 
 The next of preact.
 
-A light-weight, Next.js-like framework with Preact, Hono, and esbuild for static site generation and hydration.
+A light-weight, Next.js-like framework with Preact, Hono, esbuild and swc for static site generation, server side rendering and hydration.
 
 ### Features
 
@@ -28,87 +28,6 @@ A light-weight, Next.js-like framework with Preact, Hono, and esbuild for static
 npx degit https://github.com/LiasCode/pranx-basic-starter-template my-pranx-app
 ```
 
-#### Manual
-
-1- Create a hono project and select the `nodejs` adapter
-
-```bash
-npm create hono@latest
-```
-
-2- Add pranx
-
-```bash
-npm install pranx@latest
-```
-
-3- Update the tsconfig.json file
-
-```json
-{
-  "compilerOptions": {
-    "target": "ESNext",
-    "module": "es2022",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "declaration": true,
-    "outDir": "./dist",
-
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-
-    "strict": true,
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitAny": true,
-    "noUnusedLocals": true,
-    "noImplicitReturns": true,
-    "noImplicitThis": true,
-    "noUncheckedIndexedAccess": true,
-    "noUnusedParameters": true,
-
-    "jsx": "react-jsx",
-    "jsxImportSource": "preact",
-
-    "skipLibCheck": true,
-    "checkJs": true
-  },
-  "exclude": ["node_modules"],
-  "include": ["src"]
-}
-```
-
-4- Update the entry point, default should be `src/index.ts`
-
-```ts
-import { serve } from "@hono/node-server";
-import { pranx } from "pranx";
-
-const app = await pranx.init({
-  mode: "prod",
-});
-
-serve(
-  {
-    fetch: app.fetch,
-    port: Number(process.env.PORT) || 3030,
-  },
-  (info) => {
-    console.log(`Server is running on http://localhost:${info.port}`);
-  }
-);
-```
-
-5- Create the `pranx.config.js` file at the root of your project:
-
-```js
-import { defineConfig } from "pranx";
-
-export default defineConfig({});
-```
-
-6- Done !!!
-
 ### Routing
 
 The routing system start with the definition of the `pages` path.
@@ -129,30 +48,27 @@ The default path is `public`
 
 Inside the pages folder each file name represents a part of the app.
 
-`page.{tsx,jsx,js,ts}` -> The page that will be rendered as html and hydratated to the client.
+- `page.{tsx,jsx,js,ts}`: The page that will be rendered as html and hydratated to the client.
 
-`route.{tsx,jsx,js,ts}` -> Contains api handler only for the server.
+- `meta.{tsx,jsx,js,ts}`: Contains the page metadata
+
+- `route.{tsx,jsx,js,ts}`: Contains api handler only for the server.
+
+- `loader.{tsx,jsx,js,ts}`: Contains the loader function to pass data as props to the page.
 
 The file path also represent the final url path that will be generated:
 
-- `pages/page.tsx` -> `/`
-- `pages/blog/page.tsx` -> `/blog/`
+- `pages/page.tsx`: `/`
+- `pages/blog/page.tsx`: `/blog/`
 
-> Work in progress
+> Work in progress for pages
 
-- `pages/product/[id]/page.tsx` -> `/product/:id`
-- `pages/product/[...id]/page.tsx` -> `/product/:id*`
+- `pages/product/[id]/page.tsx`: `/product/:id`
+- `pages/product/[...id]/page.tsx`: `/product/:id*`
 
 #### page.tsx
 
-Can export several methods.
-
-- `default` -> page component will be rendered
-- `meta` -> meta description for the `head` tag
-- `getStaticProps`
-  > Work in progress
-- `getStaticPath`
-- `getServerSideProps`
+Export the page element
 
 Example:
 
@@ -163,30 +79,6 @@ import { GetStaticPropsResult } from "pranx";
 import type { GetStaticProps, MetaFunction } from "pranx";
 import { CounterButton } from "../../components/CounterButton";
 import Layout from "../../layout/layout";
-
-export const meta: MetaFunction = async () => {
-  return (
-    <>
-      <title>Blog | Pranx</title>
-      <link
-        rel="icon"
-        type="image/svg+xml"
-        href="/favicon.svg"
-      />
-    </>
-  );
-};
-
-export const getStaticProps: GetStaticProps = async () => {
-  const data = await fetch("https://api.vercel.app/blog");
-  const posts = await data.json();
-
-  return {
-    props: {
-      posts,
-    },
-  };
-};
 
 export default function Page(props: GetStaticPropsResult["props"]) {
   return (
@@ -212,6 +104,69 @@ export default function Page(props: GetStaticPropsResult["props"]) {
     </Layout>
   );
 }
+```
+
+#### meta.ts
+
+Export the function that generate the head metadata for the output html
+
+Example:
+
+`pages/blog/meta.tsx`
+
+```tsx
+import type { MetaFunction } from "pranx";
+
+export const meta: MetaFunction = async () => {
+  return (
+    <>
+      <meta charset="utf-8" />
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+      />
+      <title>Demo | Pranx test playground</title>
+      <link
+        rel="icon"
+        type="image/svg+xml"
+        href="/favicon.svg"
+      />
+      <meta
+        name="color-scheme"
+        content="light dark"
+      />
+      <meta
+        name="theme-color"
+        content="#ffffff"
+      />
+      <meta
+        name="author"
+        content="LiasCode"
+      />
+    </>
+  );
+};
+```
+
+#### loader.ts
+
+Export methods that will be passed to the page component as props
+
+Example:
+
+`pages/blog/loader.tsx`
+
+```tsx
+import type { GetStaticProps } from "pranx";
+import posts from "../data/data.json";
+
+export const getStaticProps: GetStaticProps = async () => {
+  return {
+    props: {
+      posts: posts,
+    },
+  };
+};
 ```
 
 #### route.ts

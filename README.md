@@ -61,23 +61,14 @@ The file path also represent the final url path that will be generated:
 - `pages/page.tsx`: `/`
 - `pages/blog/page.tsx`: `/blog/`
 
-> Work in progress
+> Work in progress for pages
 
 - `pages/product/[id]/page.tsx`: `/product/:id`
 - `pages/product/[...id]/page.tsx`: `/product/:id*`
 
 #### page.tsx
 
-Can export several methods.
-
-- `default`: page component will be rendered
-- `meta`: meta description for the `head` tag
-- `getStaticProps`
-
-> Work in progress
-
-- `getStaticPath`
-- `getServerSideProps`
+Export the page element
 
 Example:
 
@@ -88,30 +79,6 @@ import { GetStaticPropsResult } from "pranx";
 import type { GetStaticProps, MetaFunction } from "pranx";
 import { CounterButton } from "../../components/CounterButton";
 import Layout from "../../layout/layout";
-
-export const meta: MetaFunction = async () => {
-  return (
-    <>
-      <title>Blog | Pranx</title>
-      <link
-        rel="icon"
-        type="image/svg+xml"
-        href="/favicon.svg"
-      />
-    </>
-  );
-};
-
-export const getStaticProps: GetStaticProps = async () => {
-  const data = await fetch("https://api.vercel.app/blog");
-  const posts = await data.json();
-
-  return {
-    props: {
-      posts,
-    },
-  };
-};
 
 export default function Page(props: GetStaticPropsResult["props"]) {
   return (
@@ -137,6 +104,70 @@ export default function Page(props: GetStaticPropsResult["props"]) {
     </Layout>
   );
 }
+```
+
+#### meta.ts
+
+Export the function that generate the head metadata for the output html
+
+Example:
+
+`pages/blog/meta.tsx`
+
+```tsx
+import type { MetaFunction } from "pranx";
+
+export const meta: MetaFunction = async () => {
+  return (
+    <>
+      <meta charset="utf-8" />
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+      />
+      <title>Demo | Pranx test playground</title>
+      <link
+        rel="icon"
+        type="image/svg+xml"
+        href="/favicon.svg"
+      />
+      <meta
+        name="color-scheme"
+        content="light dark"
+      />
+      <meta
+        name="theme-color"
+        content="#ffffff"
+      />
+      <meta
+        name="author"
+        content="LiasCode"
+      />
+    </>
+  );
+};
+```
+
+#### loader.ts
+
+Export methods that will be passed to the page component as props
+
+Example:
+
+`pages/blog/loader.tsx`
+
+```tsx
+import type { GetStaticProps } from "pranx";
+import posts from "../data/data.json";
+
+export const getStaticProps: GetStaticProps = async () => {
+  return {
+    props: {
+      posts: posts,
+    },
+  };
+};
+
 ```
 
 #### route.ts
