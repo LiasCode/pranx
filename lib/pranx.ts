@@ -3,7 +3,8 @@ import { Hono } from "hono";
 import { serveStatic } from "hono/serve-static";
 import * as fs from "node:fs/promises";
 import { build, type PranxBuildMode } from "./build/build.js";
-import { PAGES_OUTPUT_DIR, PRANX_OUTPUT_DIR, ROUTE_HANDLER_OUTPUT_DIR } from "./build/constants.js";
+import { CLIENT_OUTPUT_DIR, PRANX_OUTPUT_DIR, SERVER_OUTPUT_DIR } from "./build/constants.js";
+import { process_pages } from "./build/process_pages.js";
 import { load_user_config } from "./config/config.js";
 import { attach_api_handler } from "./hono/attach-api-handler.js";
 import { Logger } from "./logger/index.js";
@@ -52,9 +53,20 @@ export async function init(options?: InitOptions): Promise<Hono> {
     process.exit(1);
   }
 
+  // Build and bundle
   console.time("[PRANX]-build-time");
-  await build(config, options_parsed.mode);
+  const build_result = await build(config, options_parsed.mode);
   console.timeEnd("[PRANX]-build-time");
+
+  // Process and generate public files
+  console.time("[PRANX]-generation");
+  await process_pages({
+    mode: options_parsed.mode || "dev",
+    pages_bundle_result: build_result.pages,
+    user_config: config,
+    server_bundle_result: build_result.server,
+  });
+  console.timeEnd("[PRANX]-generation");
 
   // Attach endpoints to hono server and declare static content
   console.time("[PRANX]-server-attach");
@@ -66,14 +78,14 @@ export async function init(options?: InitOptions): Promise<Hono> {
   for (const h of handlers) {
     await attach_api_handler(server, h);
     Logger.success(
-      `[ATTACHED HANDLER] ${filePathToRoutingPath(h.file_path.replace(ROUTE_HANDLER_OUTPUT_DIR, ""))} ${Object.keys(h?.exports?.methods || {}).toString()}`
+      `[ATTACHED HANDLER] ${filePathToRoutingPath(h.file_path.replace(SERVER_OUTPUT_DIR, ""))} ${Object.keys(h?.exports?.methods || {}).toString()}`
     );
   }
 
   server.use(
     "*",
     serveStatic({
-      root: PAGES_OUTPUT_DIR,
+      root: CLIENT_OUTPUT_DIR,
       getContent: async (path) => {
         try {
           const content = await fs.readFile(path, "utf-8");

@@ -4,7 +4,7 @@ import type { PranxConfig } from "../config/pranx-config.js";
 import { sass_plugin } from "../plugins/sass.js";
 import { getPageFiles } from "../utils/resolve.js";
 import type { PranxBuildMode } from "./build.js";
-import { PAGES_OUTPUT_DIR } from "./constants.js";
+import { CLIENT_OUTPUT_DIR } from "./constants.js";
 
 type PagesBundleOptions = {
   user_config: PranxConfig;
@@ -17,7 +17,7 @@ export async function bundle_pages(options: PagesBundleOptions) {
   const pagesBuildResult = await esbuild.build({
     entryPoints: pages_entry_points,
     bundle: true,
-    outdir: PAGES_OUTPUT_DIR,
+    outdir: CLIENT_OUTPUT_DIR,
     format: "esm",
     splitting: true,
     treeShaking: true,

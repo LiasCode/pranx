@@ -1,7 +1,7 @@
 import type { Handler } from "hono";
 import * as fs from "node:fs/promises";
 import path from "node:path";
-import { ROUTE_HANDLER_OUTPUT_DIR } from "../build/constants.js";
+import { SERVER_OUTPUT_DIR } from "../build/constants.js";
 import type { PranxConfig } from "../config/pranx-config.js";
 import { Logger } from "../logger/index.js";
 import type { PranxPageModule, RouterComponent } from "../types.js";
@@ -24,6 +24,28 @@ export async function getPageFiles(user_config: PranxConfig) {
   });
 
   const entry_points = pages_files.map((f) => path.join(f.parentPath, f.name));
+
+  return entry_points;
+}
+
+export async function getMetaFiles(user_config: PranxConfig) {
+  const meta_src_files = await fs.readdir(user_config.pages_dir, {
+    recursive: true,
+    encoding: "utf8",
+    withFileTypes: true,
+  });
+
+  const meta_files = meta_src_files.filter((f) => {
+    if (!f.isFile()) return false;
+
+    if (!["meta.js", "meta.ts", "meta.jsx", "meta.tsx"].includes(f.name)) {
+      return false;
+    }
+
+    return true;
+  });
+
+  const entry_points = meta_files.map((f) => path.join(f.parentPath, f.name));
 
   return entry_points;
 }
@@ -83,6 +105,17 @@ export async function getPageModule(modulePath: string): Promise<PranxPageModule
   }
 }
 
+export async function getModule<T>(modulePath: string): Promise<T> {
+  try {
+    return await import(`file://${modulePath}`);
+  } catch (e) {
+    if (e instanceof Error) {
+      Logger.error(`Failed to load module from ${modulePath}: ${e.message}`);
+    }
+    throw e;
+  }
+}
+
 export async function getPageComponent(modulePath: string): Promise<PranxPageModule["default"]> {
   try {
     return (await import(`file://${modulePath}`)).default;
@@ -96,7 +129,7 @@ export async function getPageComponent(modulePath: string): Promise<PranxPageMod
 
 export async function group_api_handlers() {
   const files = await getRoutesHandlersFiles({
-    pages_dir: ROUTE_HANDLER_OUTPUT_DIR,
+    pages_dir: SERVER_OUTPUT_DIR,
     public_dir: "",
   });
   const handlers: RouterComponent<Handler>[] = [];
@@ -107,7 +140,7 @@ export async function group_api_handlers() {
       throw new Error(`[group_api_handlers] - ERROR IMPORTING ${f}`);
     }
     handlers.push({
-      file_path: f.replace(ROUTE_HANDLER_OUTPUT_DIR, "").replace("route.js", ""),
+      file_path: f.replace(SERVER_OUTPUT_DIR, "").replace("route.js", ""),
       exports: {
         methods: { ...module },
       },
