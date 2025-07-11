@@ -1,5 +1,5 @@
 //@ts-check
-import { hydrate } from "preact";
+import { h, hydrate } from "preact";
 import { ErrorBoundary, lazy, LocationProvider, Route, Router } from "preact-iso";
 
 const hydratePage = async () => {
@@ -43,7 +43,7 @@ const hydratePage = async () => {
           routes.push(
             <Route
               path={p}
-              component={() => <Component {...pageProps} />}
+              component={() => h(Component, { ...pageProps }, null)}
             />
           );
         } else {
