@@ -12,7 +12,7 @@ type VendorsBundleOptions = {
 
 export async function bundle_vendors(options: VendorsBundleOptions) {
   const vendorEntries = (await fs.readdir(VENDOR_SOURCE_DIR))
-    .filter((f) => f.endsWith("js"))
+    .filter((f) => f.endsWith("js") && f !== "router.js")
     .map((f) => path.join(VENDOR_SOURCE_DIR, f));
 
   const result = await esbuild.build({
@@ -24,6 +24,19 @@ export async function bundle_vendors(options: VendorsBundleOptions) {
     minify: options.mode === "prod",
     sourcemap: options.mode !== "prod",
     plugins: [],
+  });
+
+  await esbuild.build({
+    entryPoints: [path.join(VENDOR_SOURCE_DIR, "router.js")],
+    bundle: true,
+    outdir: VENDOR_BUNDLE_OUTPUT_PATH,
+    format: "esm",
+    platform: "browser",
+    minify: options.mode === "prod",
+    sourcemap: options.mode !== "prod",
+    plugins: [],
+
+    external: ["preact"],
   });
 
   return result;

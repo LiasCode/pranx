@@ -98,6 +98,7 @@ export async function generate_static_pages(
               "preact/hooks": "/vendor/hooks.js",
               "preact/compat": "/vendor/compat.js",
               "preact/devtools": "/vendor/devtools.js",
+              "preact-iso": "/vendor/router.js",
             },
           })} 
         </script>
