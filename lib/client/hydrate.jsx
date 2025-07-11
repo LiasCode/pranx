@@ -63,7 +63,6 @@ const hydratePage = async () => {
             <Router
               onRouteChange={(url) => {
                 if (pageMap[url]) {
-                  console.log({ url, pageMap, next_head: pageMap[url]?.head });
                   document.head.innerHTML = "";
                   document.head.innerHTML = pageMap[url]?.head;
                 }
@@ -75,7 +74,6 @@ const hydratePage = async () => {
         </LocationProvider>,
         document.body
       );
-      console.log(`Pranx: Page hydrated for path: ${currentPath}`);
     } catch (e) {
       console.error(
         `Pranx: Error hydrating component for path ${currentPath} from ${componentModulePath}:`,
