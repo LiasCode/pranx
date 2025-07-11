@@ -9,16 +9,16 @@ A light-weight, Next.js-like framework with Preact, Hono, esbuild and swc for st
 - [x] File-System Based Routing
 - [x] Api handlers
 - [x] Static Site Generation (SSG)
-- [ ] SSR
 - [x] Client Side Routing
 - [x] Client-Side Hydration
 - [x] Fully typescript support
-- [ ] Hot Module Replacement (HMR)
 - [x] Fast compilation with esbuild
 - [x] CSS importing and automatic bundle
 - [x] Markdown and .mdx support
 - [x] Sass support
-- [ ] Extensible esbuild config
+- [x] Extensible esbuild config with plugins
+- [ ] SSR
+- [ ] Hot Module Replacement (HMR)
 
 ### Usage
 
@@ -35,11 +35,12 @@ The default path is `src/pages`
 It can be customize in the `pranx.config.js` file.
 
 ```js
-import { defineConfig } from "pranx";
+import { defineConfig, plugins } from "pranx";
 
 export default defineConfig({
-  pages_dir: "",
-  public_dir: "",
+  esbuild: {
+    plugins: [plugins.mdx_plugin(), plugins.sass_plugin()],
+  },
 });
 ```
 
@@ -167,7 +168,6 @@ export const getStaticProps: GetStaticProps = async () => {
     },
   };
 };
-
 ```
 
 #### route.ts

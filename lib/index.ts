@@ -10,3 +10,6 @@ export * from "./types.js";
 
 // Build
 export * as build from "./build/build.js";
+
+// Plugins
+export * as plugins from "./plugins/index.js";

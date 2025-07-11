@@ -1,7 +1,5 @@
-import mdx from "@mdx-js/esbuild";
 import * as esbuild from "esbuild";
 import type { PranxConfig } from "../config/pranx-config.js";
-import { sass_plugin } from "../plugins/sass.js";
 import { getPageFiles } from "../utils/resolve.js";
 import type { PranxBuildMode } from "./build.js";
 import { CLIENT_OUTPUT_DIR } from "./constants.js";
@@ -49,13 +47,7 @@ export async function bundle_pages(options: PagesBundleOptions) {
       "react-dom": "preact/compat",
     },
 
-    plugins: [
-      mdx({
-        jsxImportSource: "preact",
-        jsxRuntime: "automatic",
-      }),
-      sass_plugin(),
-    ],
+    plugins: options.user_config.esbuild?.plugins,
   });
 
   return pagesBuildResult;
