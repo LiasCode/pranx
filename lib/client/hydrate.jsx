@@ -1,5 +1,6 @@
 //@ts-check
-import { h, hydrate } from "preact";
+import { hydrate } from "preact";
+import { ErrorBoundary, lazy, LocationProvider, Route, Router } from "preact-iso";
 
 const hydratePage = async () => {
   const pranxDataScript = document.getElementById("__PRANX_DATA__");
@@ -25,7 +26,7 @@ const hydratePage = async () => {
     return;
   }
 
-  const { pagePath, pageProps } = pranxData;
+  const { pagePath, pageProps, pageMap } = pranxData;
 
   const currentPath = window.location.pathname;
 
@@ -34,7 +35,46 @@ const hydratePage = async () => {
   if (componentModulePath) {
     try {
       const Component = (await import(componentModulePath)).default;
-      hydrate(h(Component, { ...pageProps }), document.body);
+
+      const routes = [];
+
+      for (const [p, f] of Object.entries(pageMap)) {
+        if (p === pagePath.replace("page.js", "")) {
+          routes.push(
+            <Route
+              path={p}
+              component={() => <Component {...pageProps} />}
+            />
+          );
+        } else {
+          const LazyComponent = lazy(() => import(f.public_file));
+          routes.push(
+            <Route
+              path={p}
+              component={() => <LazyComponent />}
+            />
+          );
+        }
+      }
+
+      hydrate(
+        <LocationProvider>
+          <ErrorBoundary>
+            <Router
+              onRouteChange={(url) => {
+                if (pageMap[url]) {
+                  console.log({ url, pageMap, next_head: pageMap[url]?.head });
+                  document.head.innerHTML = "";
+                  document.head.innerHTML = pageMap[url]?.head;
+                }
+              }}
+            >
+              {...routes}
+            </Router>
+          </ErrorBoundary>
+        </LocationProvider>,
+        document.body
+      );
       console.log(`Pranx: Page hydrated for path: ${currentPath}`);
     } catch (e) {
       console.error(

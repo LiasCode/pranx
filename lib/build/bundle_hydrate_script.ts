@@ -11,7 +11,7 @@ type HydrateBundleOptions = {
 
 export async function bundle_hydrate_script(options: HydrateBundleOptions) {
   const originHydrateScriptPath = path.resolve(
-    path.join(import.meta.dirname, "..", "client", "hydrate.js")
+    path.join(import.meta.dirname, "..", "client", "hydrate.jsx")
   );
   const outputHydrateScriptPath = path.join(CLIENT_OUTPUT_DIR, "hydrate.js");
 

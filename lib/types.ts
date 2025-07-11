@@ -4,7 +4,13 @@ import type { VNode } from "preact";
 export interface HydrationData {
   pagePath: string;
   pageProps: Record<string, any>;
-  pageMap: Record<string, string>; // Maps route -> client bundle path
+  pageMap: Record<
+    string,
+    {
+      public_file: string;
+      head: string;
+    }
+  >; // Maps route -> client bundle path
 }
 
 // page.tsx

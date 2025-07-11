@@ -10,7 +10,7 @@ A light-weight, Next.js-like framework with Preact, Hono, esbuild and swc for st
 - [x] Api handlers
 - [x] Static Site Generation (SSG)
 - [ ] SSR
-- [ ] Client Side Routing
+- [x] Client Side Routing
 - [x] Client-Side Hydration
 - [x] Fully typescript support
 - [ ] Hot Module Replacement (HMR)

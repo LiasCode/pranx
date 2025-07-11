@@ -10,9 +10,15 @@ export default function HomePage(props: { posts: { id: string; title: string }[]
       <div id="home-page">
         <h1>Demo | Pranx test playground</h1>
 
+        <h2>Client side navigation</h2>
+
+        <a href="/about">Go to About page</a>
+
         <div class="separator-horizontal"></div>
 
         <h2>Statics Props</h2>
+
+        <div class="separator-horizontal"></div>
 
         {props.posts?.map((p) => (
           <div key={p.id}>
