@@ -1,4 +1,5 @@
 //@ts-check
+
 import { h, hydrate } from "preact";
 import { ErrorBoundary, lazy, LocationProvider, Route, Router } from "preact-iso";
 
@@ -14,9 +15,7 @@ const hydratePage = async () => {
    * @type {import("../types.js").HydrationData}
    */
   let pranxData = {
-    pageMap: {},
-    pagePath: "",
-    pageProps: {},
+    pages_map: {},
   };
 
   try {
@@ -26,35 +25,25 @@ const hydratePage = async () => {
     return;
   }
 
-  const { pagePath, pageProps, pageMap } = pranxData;
+  const { pages_map } = pranxData;
 
   const currentPath = window.location.pathname;
 
-  const componentModulePath = pagePath;
+  const componentModulePath = pages_map[currentPath];
 
   if (componentModulePath) {
     try {
-      const Component = (await import(componentModulePath)).default;
-
       const routes = [];
 
-      for (const [p, f] of Object.entries(pageMap)) {
-        if (p === pagePath.replace("page.js", "")) {
-          routes.push(
-            <Route
-              path={p}
-              component={() => h(Component, { ...pageProps }, null)}
-            />
-          );
-        } else {
-          const LazyComponent = lazy(() => import(f.public_file));
-          routes.push(
-            <Route
-              path={p}
-              component={() => <LazyComponent />}
-            />
-          );
-        }
+      for (const [path, data] of Object.entries(pages_map)) {
+        const Component = lazy(() => import(data.entry_file));
+
+        routes.push(
+          <Route
+            path={path}
+            component={() => h(Component, { ...data.props })}
+          />
+        );
       }
 
       hydrate(
@@ -62,9 +51,9 @@ const hydratePage = async () => {
           <ErrorBoundary>
             <Router
               onRouteChange={(url) => {
-                if (pageMap[url]) {
+                if (pages_map[url]) {
                   document.head.innerHTML = "";
-                  document.head.innerHTML = pageMap[url]?.head;
+                  document.head.innerHTML = pages_map[url].meta;
                 }
               }}
             >

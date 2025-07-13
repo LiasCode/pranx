@@ -2,15 +2,16 @@ import type { Handler } from "hono";
 import type { VNode } from "preact";
 
 export interface HydrationData {
-  pagePath: string;
-  pageProps: Record<string, any>;
-  pageMap: Record<
+  pages_map: Record<
     string,
     {
-      public_file: string;
-      head: string;
+      entry_file: string;
+      meta: string;
+      props: Record<string, any>;
+      isStatic: boolean;
+      have_server_side_props: boolean;
     }
-  >; // Maps route -> client bundle path
+  >;
 }
 
 // page.tsx

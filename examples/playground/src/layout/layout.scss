@@ -37,4 +37,12 @@ p {
   width: 100%;
   max-width: 720px;
   justify-self: center;
+
+  ul#links {
+    margin-top: 10px;
+    list-style: none inside;
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+  }
 }

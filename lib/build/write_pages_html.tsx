@@ -1,0 +1,62 @@
+import * as swcHtml from "@swc/html";
+import * as fs from "node:fs/promises";
+import path from "node:path";
+import type { HydrationData } from "../types.js";
+import type { PranxBuildMode } from "./build.js";
+import { CLIENT_OUTPUT_DIR } from "./constants.js";
+import type { InternalPageMapResult } from "./generate_pages_map.js";
+
+export async function write_pages_html(
+  pages_map: InternalPageMapResult,
+  hydration_data: HydrationData,
+  mode: PranxBuildMode = "dev"
+) {
+  for (const [route_path, value] of Object.entries(pages_map)) {
+    const output_html_file_path = path.join(CLIENT_OUTPUT_DIR, route_path, "index.html");
+
+    const htmlContent = `
+      <!doctype html>
+      <html>
+        <head>
+          ${value.meta}
+        </head>
+
+        <body>${value.page_rendered_result}</body>
+
+        <script type="importmap">
+          ${JSON.stringify({
+            imports: {
+              "preact": "/vendor/preact.js",
+              "preact/jsx-runtime": "/vendor/jsxRuntime.js",
+              "preact/hooks": "/vendor/hooks.js",
+              "preact/compat": "/vendor/compat.js",
+              "preact/devtools": "/vendor/devtools.js",
+              "preact-iso": "/vendor/router.js",
+            },
+          })} 
+        </script>
+
+        <script id="__PRANX_DATA__" type="application/json">${JSON.stringify(hydration_data)}</script>
+
+        <script id="__PRANX_HYDRATE_SCRIPT__" type="module" src="/hydrate.js"></script>
+      </html>
+    `;
+
+    let finalHtmlContent = htmlContent;
+
+    if (mode === "prod") {
+      const html = await swcHtml.minify(htmlContent, {
+        collapseBooleanAttributes: true,
+        removeComments: true,
+        collapseWhitespaces: "all",
+        minifyJs: true,
+        minifyCss: true,
+        minifyJson: true,
+        forceSetHtml5Doctype: true,
+        sortAttributes: true,
+      });
+      finalHtmlContent = html.code;
+    }
+    await fs.writeFile(output_html_file_path, finalHtmlContent);
+  }
+}
