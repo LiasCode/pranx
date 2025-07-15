@@ -1,7 +1,8 @@
-import { defineConfig, plugins } from "pranx";
+import { defineConfig } from "pranx";
+import { mdx_plugin, sass_plugin } from "pranx/plugins";
 
 export default defineConfig({
   esbuild: {
-    plugins: [plugins.mdx_plugin(), plugins.sass_plugin()],
+    plugins: [mdx_plugin(), sass_plugin()],
   },
 });
