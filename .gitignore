@@ -7,5 +7,3 @@ coverage
 bun.lock
 
 .pranx
-
-lib/client/vendor/*
