@@ -1,5 +1,5 @@
 import path from "node:path";
-import { renderToStringAsync } from "preact-render-to-string";
+import { renderToString, renderToStringAsync } from "preact-render-to-string";
 import type {
   GetServerSideProps,
   GetStaticProps,
@@ -20,6 +20,7 @@ export type InternalPageMapResult = Record<
     getStaticPropsResult: GetStaticPropsResult | null;
     getServerSidePropsFn: GetServerSideProps | null;
     getStaticPropsFn: GetStaticProps | null;
+    renderFn: (props: Record<string, any>) => string;
   }
 >;
 
@@ -41,6 +42,7 @@ export async function generate_pages_map(routes_data: PagesGroupByPath) {
       getStaticPropsResult: null,
       page_rendered_result: "",
       getStaticPropsFn: null,
+      renderFn: (_props) => "",
     };
 
     // Head Metadata
@@ -69,16 +71,34 @@ export async function generate_pages_map(routes_data: PagesGroupByPath) {
     // Page
     const PageComponent = value.page.module.default;
 
+    page_map_internal[route_path].renderFn = (props: Record<string, any>) =>
+      renderToString(<PageComponent {...props} />);
+
     const loader = value.loader?.module || {};
+    let page_rendered_as_html = "";
 
-    if (loader.getStaticProps) {
-      page_map_internal[route_path].getStaticPropsResult = await loader.getStaticProps();
+    // Its plugs props via server on every request
+    if (loader.getServerSideProps !== undefined) {
+      page_map_internal[route_path].isStatic = false;
+      page_map_internal[route_path].have_server_side_props = true;
+
+      page_map_internal[route_path].getServerSidePropsFn = loader.getServerSideProps;
     }
+    // Its static
+    if (loader.getStaticProps !== undefined) {
+      page_map_internal[route_path].isStatic = true;
+      page_map_internal[route_path].have_server_side_props = false;
 
-    const pageProps = { ...page_map_internal[route_path].getStaticPropsResult?.props };
+      page_map_internal[route_path].getStaticPropsFn = loader.getStaticProps;
 
-    const page_rendered_as_html = await renderToStringAsync(<PageComponent {...pageProps} />);
-    page_map_internal[route_path].page_rendered_result = page_rendered_as_html;
+      page_map_internal[route_path].getStaticPropsResult = await loader.getStaticProps();
+
+      const pageProps = { ...page_map_internal[route_path].getStaticPropsResult?.props };
+
+      page_rendered_as_html = await renderToStringAsync(<PageComponent {...pageProps} />);
+
+      page_map_internal[route_path].page_rendered_result = page_rendered_as_html;
+    }
 
     hydrationData.pages_map[route_path] = {
       entry_file: page_map_internal[route_path].entry_file,

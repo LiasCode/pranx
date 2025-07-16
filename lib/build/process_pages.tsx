@@ -23,5 +23,9 @@ export async function process_pages(options: ProcessPagesOptions) {
 
   await write_pages_html(page_map_internal, hydrationData);
 
-  return groupResult;
+  return {
+    groupResult,
+    page_map_internal,
+    hydrationData,
+  };
 }

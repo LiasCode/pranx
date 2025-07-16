@@ -12,35 +12,11 @@ export async function write_pages_html(
   mode: PranxBuildMode = "dev"
 ) {
   for (const [route_path, value] of Object.entries(pages_map)) {
+    if (!value.isStatic) continue;
+
     const output_html_file_path = path.join(CLIENT_OUTPUT_DIR, route_path, "index.html");
 
-    const htmlContent = `
-      <!doctype html>
-      <html>
-        <head>
-          ${value.meta}
-        </head>
-
-        <body>${value.page_rendered_result}</body>
-
-        <script type="importmap">
-          ${JSON.stringify({
-            imports: {
-              "preact": "/vendor/preact.js",
-              "preact/jsx-runtime": "/vendor/jsxRuntime.js",
-              "preact/hooks": "/vendor/hooks.js",
-              "preact/compat": "/vendor/compat.js",
-              "preact/devtools": "/vendor/devtools.js",
-              "preact-iso": "/vendor/router.js",
-            },
-          })} 
-        </script>
-
-        <script id="__PRANX_DATA__" type="application/json">${JSON.stringify(hydration_data)}</script>
-
-        <script id="__PRANX_HYDRATE_SCRIPT__" type="module" src="/hydrate.js"></script>
-      </html>
-    `;
+    const htmlContent = html_template(value, hydration_data);
 
     let finalHtmlContent = htmlContent;
 
@@ -60,3 +36,36 @@ export async function write_pages_html(
     await fs.writeFile(output_html_file_path, finalHtmlContent);
   }
 }
+
+export const html_template = (
+  page_value: InternalPageMapResult[1],
+  hydration_data: HydrationData
+) => {
+  return `
+    <!doctype html>
+    <html>
+      <head>
+        ${page_value.meta}
+      </head>
+
+      <body>${page_value.page_rendered_result}</body>
+
+      <script type="importmap">
+        ${JSON.stringify({
+          imports: {
+            "preact": "/vendor/preact.js",
+            "preact/jsx-runtime": "/vendor/jsxRuntime.js",
+            "preact/hooks": "/vendor/hooks.js",
+            "preact/compat": "/vendor/compat.js",
+            "preact/devtools": "/vendor/devtools.js",
+            "preact-iso": "/vendor/router.js",
+          },
+        })} 
+      </script>
+
+      <script id="__PRANX_DATA__" type="application/json">${JSON.stringify(hydration_data)}</script>
+
+      <script id="__PRANX_HYDRATE_SCRIPT__" type="module" src="/hydrate.js"></script>
+    </html>
+  `;
+};

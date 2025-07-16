@@ -1,4 +1,4 @@
-import type { Handler } from "hono";
+import type { Context, Handler } from "hono";
 import type { VNode } from "preact";
 
 export interface HydrationData {
@@ -32,7 +32,7 @@ export type GetStaticPathsResult = Array<{ paths: string[] }>;
 
 export type GetStaticPaths = () => Promise<GetStaticPathsResult>;
 
-export type GetServerSideProps = <T>() => Promise<T>;
+export type GetServerSideProps = (c: Context) => Promise<Record<string, any>>;
 
 export type PranxLoaderModule = {
   getStaticProps?: GetStaticProps;

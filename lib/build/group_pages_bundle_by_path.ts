@@ -121,7 +121,7 @@ export async function group_pages_bundle_by_path(props: {
   return group;
 }
 
-const extract_path_from_filename = (file: string): string => {
+export const extract_path_from_filename = (file: string): string => {
   return path.dirname(file);
 };
 

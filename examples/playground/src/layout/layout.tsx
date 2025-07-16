@@ -17,6 +17,9 @@ export const Layout = (props: PropsWithChildren) => {
           <li>
             <a href="/docs">Docs</a>
           </li>
+          <li>
+            <a href="/server_props">Server Props</a>
+          </li>
         </ul>
 
         {props.children}

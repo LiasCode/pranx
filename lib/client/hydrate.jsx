@@ -2,6 +2,7 @@
 
 import { h, hydrate } from "preact";
 import { ErrorBoundary, lazy, LocationProvider, Route, Router } from "preact-iso";
+import { ServerPage } from "./ServerPage.js";
 
 const hydratePage = async () => {
   const pranxDataScript = document.getElementById("__PRANX_DATA__");
@@ -20,6 +21,7 @@ const hydratePage = async () => {
 
   try {
     pranxData = JSON.parse(pranxDataScript.textContent);
+    console.dir(pranxData, { colors: true, compact: false, depth: Number.POSITIVE_INFINITY });
   } catch (e) {
     console.error("Pranx: Failed to parse __PRANX_DATA__:", e);
     return;
@@ -38,12 +40,25 @@ const hydratePage = async () => {
       for (const [path, data] of Object.entries(pages_map)) {
         const Component = lazy(() => import(data.entry_file));
 
-        routes.push(
-          <Route
-            path={path}
-            component={() => h(Component, { ...data.props })}
-          />
-        );
+        if (data.have_server_side_props) {
+          routes.push(
+            <Route
+              path={path}
+              component={() => (
+                <ServerPage loader_path={path}>
+                  <Component {...data.props} />
+                </ServerPage>
+              )}
+            />
+          );
+        } else {
+          routes.push(
+            <Route
+              path={path}
+              component={() => h(Component, { ...data.props })}
+            />
+          );
+        }
       }
 
       hydrate(
@@ -52,7 +67,6 @@ const hydratePage = async () => {
             <Router
               onRouteChange={(url) => {
                 if (pages_map[url]) {
-                  document.head.innerHTML = "";
                   document.head.innerHTML = pages_map[url].meta;
                 }
               }}

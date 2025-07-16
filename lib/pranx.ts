@@ -7,6 +7,7 @@ import { CLIENT_OUTPUT_DIR, PRANX_OUTPUT_DIR, SERVER_OUTPUT_DIR } from "./build/
 import { process_pages } from "./build/process_pages.js";
 import { load_user_config } from "./config/config.js";
 import { attach_api_handler } from "./hono/attach-api-handler.js";
+import { attach_page_handler } from "./hono/attach-page-handler.js";
 import { Logger } from "./logger/index.js";
 import { filePathToRoutingPath } from "./utils/filePathToRoutingPath.js";
 import { group_api_handlers } from "./utils/resolve.js";
@@ -60,7 +61,7 @@ export async function init(options?: InitOptions): Promise<Hono> {
 
   // Process and generate public files
   console.time("[PRANX]-generation");
-  await process_pages({
+  const { page_map_internal, hydrationData } = await process_pages({
     mode: options_parsed.mode || "dev",
     pages_bundle_result: build_result.pages,
     user_config: config,
@@ -80,6 +81,10 @@ export async function init(options?: InitOptions): Promise<Hono> {
     Logger.success(
       `[ATTACHED HANDLER] ${filePathToRoutingPath(h.file_path.replace(SERVER_OUTPUT_DIR, ""))} ${Object.keys(h?.exports?.methods || {}).toString()}`
     );
+  }
+
+  for (const [path, page_data] of Object.entries(page_map_internal)) {
+    await attach_page_handler(server, path, page_data, hydrationData);
   }
 
   server.use(
