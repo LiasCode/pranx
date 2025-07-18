@@ -1,9 +1,12 @@
 //@ts-check
 import { h, hydrate } from "preact";
 import { ErrorBoundary, lazy, LocationProvider, Route, Router } from "preact-iso";
+import type { HydrationData } from "../types.js";
 import { ServerPage } from "./ServerPage.js";
+import { collectCurrentStylesheets, updateHead } from "./headDiff.js";
 
 async function hydratePage() {
+  collectCurrentStylesheets();
   const pranxDataScript = document.getElementById("__PRANX_DATA__");
 
   if (!pranxDataScript || !pranxDataScript.textContent) {
@@ -11,10 +14,7 @@ async function hydratePage() {
     return;
   }
 
-  /**
-   * @type {import("../types.js").HydrationData}
-   */
-  let pranxData = {
+  let pranxData: HydrationData = {
     pages_map: {},
   };
 
@@ -71,9 +71,14 @@ async function hydratePage() {
       <LocationProvider>
         <ErrorBoundary>
           <Router
+            onLoadStart={(url) => {
+              if (pages_map[url]) {
+                updateHead(pages_map[url].meta);
+              }
+            }}
             onRouteChange={(url) => {
               if (pages_map[url]) {
-                document.head.innerHTML = pages_map[url].meta;
+                updateHead(pages_map[url].meta);
               }
             }}
           >

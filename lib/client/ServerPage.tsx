@@ -1,12 +1,18 @@
 import { useLocation } from "preact-iso";
-import { Children, cloneElement, type PropsWithChildren, useEffect, useState } from "preact/compat";
+import {
+  Children,
+  cloneElement,
+  type PropsWithChildren,
+  useLayoutEffect,
+  useState,
+} from "preact/compat";
 
 export function ServerPage(props: PropsWithChildren<{ loader_path: string }>) {
   const [data_props, setDataProps] = useState<Record<string, any>>({});
 
   const location = useLocation();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     // @ts-expect-error
     if (location.wasPush === false) return;
 
