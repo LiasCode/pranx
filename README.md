@@ -62,10 +62,9 @@ The file path also represent the final url path that will be generated:
 
 - `pages/page.tsx`: `/`
 - `pages/blog/page.tsx`: `/blog/`
+- `pages/product/[id]/page.tsx`: `/product/:id`
 
 > Work in progress for pages
-
-- `pages/product/[id]/page.tsx`: `/product/:id`
 - `pages/product/[...id]/page.tsx`: `/product/:id*`
 
 #### page.tsx

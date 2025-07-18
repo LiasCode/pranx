@@ -1,4 +1,4 @@
-export function filePathToRoutingPath(input: string): string {
+export function filePathToRoutingPath(input: string, appendSlash = true): string {
   let output = input;
   const steps = input.split("/").filter((s) => s !== "/" && s !== "");
 
@@ -42,7 +42,7 @@ export function filePathToRoutingPath(input: string): string {
     outputSplitted.push(step);
   }
 
-  output = `/${outputSplitted.join("/")}/`;
+  output = `/${outputSplitted.join("/")}${appendSlash ? "/" : ""}`;
 
   return output;
 }

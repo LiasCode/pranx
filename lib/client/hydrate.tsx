@@ -2,8 +2,10 @@
 import { h, hydrate } from "preact";
 import { ErrorBoundary, lazy, LocationProvider, Route, Router } from "preact-iso";
 import type { HydrationData } from "../types.js";
+import { filePathToRoutingPath } from "../utils/filePathToRoutingPath.js";
 import { ServerPage } from "./ServerPage.js";
 import { collectCurrentStylesheets, updateHead } from "./headDiff.js";
+import { matchRoute } from "./matchRoute.js";
 
 async function hydratePage() {
   collectCurrentStylesheets();
@@ -27,7 +29,16 @@ async function hydratePage() {
 
   const { pages_map } = pranxData;
 
-  const current_path = window.location.pathname;
+  const current_path = Object.keys(pages_map).find(
+    (path) => matchRoute(window.location.pathname, filePathToRoutingPath(path)) !== undefined
+  );
+
+  if (!current_path) {
+    console.warn(
+      `Pranx: No component module path found for client hydration for path: ${current_path}`
+    );
+    return;
+  }
 
   const component_module_path = pages_map[current_path];
 
@@ -43,13 +54,14 @@ async function hydratePage() {
 
     for (const [path, page_data] of Object.entries(pages_map)) {
       const Component = lazy(() => import(page_data.entry_file));
+      const path_parsed = filePathToRoutingPath(path);
 
       if (page_data.have_server_side_props) {
         routes.push(
           <Route
-            path={path}
+            path={path_parsed}
             component={() => (
-              <ServerPage loader_path={path}>
+              <ServerPage>
                 <Component {...page_data.props} />
               </ServerPage>
             )}
@@ -60,7 +72,7 @@ async function hydratePage() {
       if (page_data.isStatic) {
         routes.push(
           <Route
-            path={path}
+            path={path_parsed}
             component={() => h(Component, { ...page_data.props })}
           />
         );
@@ -72,13 +84,23 @@ async function hydratePage() {
         <ErrorBoundary>
           <Router
             onLoadStart={(url) => {
-              if (pages_map[url]) {
-                updateHead(pages_map[url].meta);
+              const matched_path = Object.keys(pages_map).find(
+                (path) => matchRoute(url, filePathToRoutingPath(path)) !== undefined
+              );
+              if (!matched_path) return;
+
+              if (pages_map[matched_path]) {
+                updateHead(pages_map[matched_path].meta);
               }
             }}
             onRouteChange={(url) => {
-              if (pages_map[url]) {
-                updateHead(pages_map[url].meta);
+              const matched_path = Object.keys(pages_map).find(
+                (path) => matchRoute(url, filePathToRoutingPath(path)) !== undefined
+              );
+              if (!matched_path) return;
+
+              if (pages_map[matched_path]) {
+                updateHead(pages_map[matched_path].meta);
               }
             }}
           >
@@ -101,3 +123,8 @@ if (document.readyState === "loading") {
 } else {
   hydratePage();
 }
+
+export type Matches = {
+  params: Record<string, string>;
+  rest?: string;
+};

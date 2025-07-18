@@ -75,9 +75,8 @@ export async function init(options?: InitOptions): Promise<Hono> {
   Logger.info("[server]");
   for (const h of handlers) {
     await attach_api_handler(server, h);
-    console.log(
-      ` - ${filePathToRoutingPath(h.file_path.replace(SERVER_OUTPUT_DIR, ""))} (${Object.keys(h?.exports?.methods || {}).toString()})`
-    );
+    const path = filePathToRoutingPath(h.file_path.replace(SERVER_OUTPUT_DIR, ""));
+    console.log(` - ${path} (${Object.keys(h?.exports?.methods || {}).toString()})`);
   }
 
   for (const [path, page_data] of Object.entries(page_map_internal)) {
@@ -125,6 +124,8 @@ export async function init(options?: InitOptions): Promise<Hono> {
 const printPagesMapsasAsciTree = (page_map_internal: InternalPageMapResult) => {
   Logger.info("[pages]");
   for (const [path, page_data] of Object.entries(page_map_internal)) {
-    console.log(` - ${path} (${page_data.isStatic ? "static" : "server props"})`);
+    console.log(
+      ` - ${filePathToRoutingPath(path)} (${page_data.isStatic ? "static" : "server props"})`
+    );
   }
 };

@@ -63,7 +63,7 @@ export const active_css = () => {
     const hrefSplitted = hrefWithOutFileName.split("/");
     hrefSplitted.pop();
     hrefWithOutFileName = hrefSplitted.join("/");
-    console.log({ currentPath, hrefWithOutFileName });
+
     if (currentPath === hrefWithOutFileName) {
       link.disabled = false;
     } else {

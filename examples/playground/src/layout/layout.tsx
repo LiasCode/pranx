@@ -20,6 +20,10 @@ export const Layout = (props: PropsWithChildren) => {
           <li>
             <a href="/server_props">Server Props</a>
           </li>
+
+          <li>
+            <a href={`/product/${Math.trunc(Math.random() * 10)}`}>Product Details</a>
+          </li>
         </ul>
 
         {props.children}
