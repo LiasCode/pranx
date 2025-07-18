@@ -40,7 +40,7 @@ export async function bundle_pages(options: PagesBundleOptions) {
     minify: options.mode === "prod",
     sourcemap: options.mode !== "prod",
 
-    external: ["preact"],
+    external: ["preact", "preact-render-to-string", "preact-iso"],
     metafile: true,
     alias: {
       "react": "preact/compat",

@@ -35,7 +35,7 @@ export async function bundle_hydrate_script(options: HydrateBundleOptions) {
       ".json": "json",
     },
 
-    external: ["preact", "preact-iso"],
+    external: ["preact", "preact-render-to-string", "preact-iso"],
 
     alias: {
       "react": "preact/compat",

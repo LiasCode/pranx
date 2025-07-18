@@ -44,7 +44,7 @@ export async function bundle_server(options: HandlersBundleOptions) {
       "react-dom": "preact/compat",
     },
 
-    external: ["preact", "preact-render-to-string"],
+    external: ["preact", "preact-render-to-string", "preact-iso"],
 
     sourcemap: false,
     minify: false,
