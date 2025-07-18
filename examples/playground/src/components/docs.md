@@ -14,10 +14,10 @@ A light-weight, Next.js-like framework with Preact, Hono, esbuild and swc for st
 - [x] Fully typescript support
 - [x] Fast compilation with esbuild
 - [x] CSS importing and automatic bundle
+- [x] Extensible esbuild config with plugins
 - [x] Markdown and .mdx support
 - [x] Sass support
-- [x] Extensible esbuild config with plugins
-- [ ] SSR
+- [x] SSR
 - [ ] Hot Module Replacement (HMR)
 
 ### Usage
