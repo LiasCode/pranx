@@ -26,7 +26,7 @@
       "examples/**/*",
       "coverage/**/*",
       "test-results/**/*",
-      "./lib/client/vendor"
+      "./lib/client/vendor/**/*"
     ]
   }
 }

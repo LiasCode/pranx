@@ -12,16 +12,16 @@ export async function write_pages_html(
   mode: PranxBuildMode = "dev"
 ) {
   for (const [route_path, value] of Object.entries(pages_map)) {
-    if (!value.isStatic) continue;
+    if (value.have_server_side_props) continue;
 
     const output_html_file_path = path.join(CLIENT_OUTPUT_DIR, route_path, "index.html");
 
-    const htmlContent = html_template(value, hydration_data);
+    const html_content = html_template(value, hydration_data);
 
-    let finalHtmlContent = htmlContent;
+    let final_html_content = html_content;
 
     if (mode === "prod") {
-      const html = await swcHtml.minify(htmlContent, {
+      const html = await swcHtml.minify(html_content, {
         collapseBooleanAttributes: true,
         removeComments: true,
         collapseWhitespaces: "all",
@@ -31,9 +31,9 @@ export async function write_pages_html(
         forceSetHtml5Doctype: true,
         sortAttributes: true,
       });
-      finalHtmlContent = html.code;
+      final_html_content = html.code;
     }
-    await fs.writeFile(output_html_file_path, finalHtmlContent);
+    await fs.writeFile(output_html_file_path, final_html_content);
   }
 }
 

@@ -84,6 +84,7 @@ export async function init(options?: InitOptions): Promise<Hono> {
   }
 
   for (const [path, page_data] of Object.entries(page_map_internal)) {
+    if (!page_data.have_server_side_props) continue;
     await attach_page_handler(server, path, page_data, hydrationData);
   }
 

@@ -1,10 +1,9 @@
 //@ts-check
-
 import { h, hydrate } from "preact";
 import { ErrorBoundary, lazy, LocationProvider, Route, Router } from "preact-iso";
 import { ServerPage } from "./ServerPage.js";
 
-const hydratePage = async () => {
+async function hydratePage() {
   const pranxDataScript = document.getElementById("__PRANX_DATA__");
 
   if (!pranxDataScript || !pranxDataScript.textContent) {
@@ -21,7 +20,6 @@ const hydratePage = async () => {
 
   try {
     pranxData = JSON.parse(pranxDataScript.textContent);
-    console.dir(pranxData, { colors: true, compact: false, depth: Number.POSITIVE_INFINITY });
   } catch (e) {
     console.error("Pranx: Failed to parse __PRANX_DATA__:", e);
     return;
@@ -29,66 +27,69 @@ const hydratePage = async () => {
 
   const { pages_map } = pranxData;
 
-  const currentPath = window.location.pathname;
+  const current_path = window.location.pathname;
 
-  const componentModulePath = pages_map[currentPath];
+  const component_module_path = pages_map[current_path];
 
-  if (componentModulePath) {
-    try {
-      const routes = [];
+  if (!component_module_path) {
+    console.warn(
+      `Pranx: No component module path found for client hydration for path: ${current_path}`
+    );
+    return;
+  }
 
-      for (const [path, data] of Object.entries(pages_map)) {
-        const Component = lazy(() => import(data.entry_file));
+  try {
+    const routes = [];
 
-        if (data.have_server_side_props) {
-          routes.push(
-            <Route
-              path={path}
-              component={() => (
-                <ServerPage loader_path={path}>
-                  <Component {...data.props} />
-                </ServerPage>
-              )}
-            />
-          );
-        } else {
-          routes.push(
-            <Route
-              path={path}
-              component={() => h(Component, { ...data.props })}
-            />
-          );
-        }
+    for (const [path, page_data] of Object.entries(pages_map)) {
+      const Component = lazy(() => import(page_data.entry_file));
+
+      if (page_data.have_server_side_props) {
+        routes.push(
+          <Route
+            path={path}
+            component={() => (
+              <ServerPage loader_path={path}>
+                <Component {...page_data.props} />
+              </ServerPage>
+            )}
+          />
+        );
       }
 
-      hydrate(
-        <LocationProvider>
-          <ErrorBoundary>
-            <Router
-              onRouteChange={(url) => {
-                if (pages_map[url]) {
-                  document.head.innerHTML = pages_map[url].meta;
-                }
-              }}
-            >
-              {...routes}
-            </Router>
-          </ErrorBoundary>
-        </LocationProvider>,
-        document.body
-      );
-    } catch (e) {
-      console.error(
-        `Pranx: Error hydrating component for path ${currentPath} from ${componentModulePath}:`,
-        e
-      );
+      if (page_data.isStatic) {
+        routes.push(
+          <Route
+            path={path}
+            component={() => h(Component, { ...page_data.props })}
+          />
+        );
+      }
     }
-  } else {
-    console.warn(
-      `Pranx: No component module path found for client hydration for path: ${currentPath}`
+
+    hydrate(
+      <LocationProvider>
+        <ErrorBoundary>
+          <Router
+            onRouteChange={(url) => {
+              if (pages_map[url]) {
+                document.head.innerHTML = pages_map[url].meta;
+              }
+            }}
+          >
+            {...routes}
+          </Router>
+        </ErrorBoundary>
+      </LocationProvider>,
+      document.body
+    );
+  } catch (e) {
+    console.error(
+      `Pranx: Error hydrating component for path ${current_path} from ${component_module_path}:`,
+      e
     );
   }
-};
+}
 
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", hydratePage);
