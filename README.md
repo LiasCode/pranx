@@ -74,34 +74,38 @@ Export the page element
 
 Example:
 
-`pages/blog/page.tsx`
+`pages/page.tsx`
 
 ```tsx
-import { GetStaticPropsResult } from "pranx";
-import type { GetStaticProps, MetaFunction } from "pranx";
-import { CounterButton } from "../../components/CounterButton";
-import Layout from "../../layout/layout";
+import { useSignal } from "@preact/signals";
+import { useEffect } from "preact/compat";
+import { Layout } from "../layout/layout";
+import Docs from "./docs.md";
+import "./home.scss";
 
-export default function Page(props: GetStaticPropsResult["props"]) {
+export default function HomePage(props: { msg: string }) {
+  const count = useSignal(0);
+
+  useEffect(() => {
+    console.log("Hello World");
+  }, []);
+
   return (
     <Layout>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: "10px",
-        }}
-      >
-        <h1>
-          This Blog Page Is Prerendered with <code>getStaticProps</code>
-        </h1>
-        <CounterButton />
-        <ul>
-          {props.posts.map((post: any) => (
-            <li key={post.id}>{post.title}</li>
-          ))}
-        </ul>
+      <div id="home-page">
+        <h1>Home</h1>
+        <button
+          onClick={() => {
+            count.value = count.value + 1;
+            console.log(count.value);
+          }}
+        >
+          A simple Counter {"->"} {count.value}
+        </button>
+
+        <span>{props.msg}</span>
+
+        <Docs />
       </div>
     </Layout>
   );
@@ -110,11 +114,11 @@ export default function Page(props: GetStaticPropsResult["props"]) {
 
 #### meta.ts
 
-Export the function that generate the head metadata for the output html
+Export the function that generate the head metadata for the page
 
 Example:
 
-`pages/blog/meta.tsx`
+`pages/meta.tsx`
 
 ```tsx
 import type { MetaFunction } from "pranx";
@@ -123,16 +127,20 @@ export const meta: MetaFunction = async () => {
   return (
     <>
       <meta charset="utf-8" />
+
       <meta
         name="viewport"
         content="width=device-width, initial-scale=1"
       />
-      <title>Demo | Pranx test playground</title>
+
+      <title>Home | Example</title>
+
       <link
         rel="icon"
         type="image/svg+xml"
         href="/favicon.svg"
       />
+
       <meta
         name="color-scheme"
         content="light dark"
@@ -141,6 +149,7 @@ export const meta: MetaFunction = async () => {
         name="theme-color"
         content="#ffffff"
       />
+
       <meta
         name="author"
         content="LiasCode"
@@ -152,20 +161,19 @@ export const meta: MetaFunction = async () => {
 
 #### loader.ts
 
-Export methods that will be passed to the page component as props
+Export methods that define the way to render the page and generate the props
 
 Example:
 
-`pages/blog/loader.tsx`
+`pages/loader.ts`
 
 ```tsx
 import type { GetStaticProps } from "pranx";
-import posts from "../data/data.json";
 
 export const getStaticProps: GetStaticProps = async () => {
   return {
     props: {
-      posts: posts,
+      msg: "Hello from the static prop",
     },
   };
 };
