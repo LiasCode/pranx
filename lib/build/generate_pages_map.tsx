@@ -7,7 +7,6 @@ import type {
   GetStaticPropsResult,
   HydrationData,
 } from "../types.js";
-import { filePathToRoutingPath } from "../utils/filePathToRoutingPath.js";
 import { CLIENT_OUTPUT_DIR } from "./constants.js";
 import type { PagesGroupByPath } from "./group_pages_bundle_by_path.js";
 
@@ -79,14 +78,6 @@ export async function generate_pages_map(routes_data: PagesGroupByPath) {
 
     const loader = value.loader?.module || {};
     let page_rendered_as_html = "";
-
-    const isRouteDynamic = filePathToRoutingPath(route_path, false) !== route_path;
-
-    if (isRouteDynamic && loader.getServerSideProps === undefined) {
-      Logger.error(
-        `Route ${route_path} is dynamic, must have a getServerSideProps export in the loader file`
-      );
-    }
 
     if (loader.getServerSideProps !== undefined && loader.getStaticProps !== undefined) {
       Logger.error(`Route ${route_path} only can have a getServerSideProps or a getStaticProps`);

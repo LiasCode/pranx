@@ -1,6 +1,7 @@
 import * as fse from "fs-extra";
 import { Hono } from "hono";
 import { serveStatic } from "hono/serve-static";
+import kleur from "kleur";
 import * as fs from "node:fs/promises";
 import { build, type PranxBuildMode } from "./build/build.js";
 import { CLIENT_OUTPUT_DIR, PRANX_OUTPUT_DIR, SERVER_OUTPUT_DIR } from "./build/constants.js";
@@ -38,7 +39,7 @@ type InitOptions = {
 const PRANX_RUNNING_TAG_TIME = "Pranx Running in" as const;
 
 export async function init(options?: InitOptions): Promise<Hono> {
-  console.log("========");
+  console.log(kleur.bold().magenta("Pranx Running"));
   console.time(PRANX_RUNNING_TAG_TIME);
 
   const options_parsed: InitOptions = {
@@ -72,11 +73,15 @@ export async function init(options?: InitOptions): Promise<Hono> {
 
   const handlers = await group_api_handlers();
 
-  Logger.info("[server]");
+  Logger.info(kleur.underline("Server"));
+  let index = 0;
   for (const h of handlers) {
     await attach_api_handler(server, h);
     const path = filePathToRoutingPath(h.file_path.replace(SERVER_OUTPUT_DIR, ""));
-    console.log(` - ${path} (${Object.keys(h?.exports?.methods || {}).toString()})`);
+    console.log(
+      `${index === 0 ? "┌" : "├"} ƒ ${path} (${Object.keys(h?.exports?.methods || {}).toString()})`
+    );
+    index++;
   }
 
   for (const [path, page_data] of Object.entries(page_map_internal)) {
@@ -116,16 +121,21 @@ export async function init(options?: InitOptions): Promise<Hono> {
     })
   );
 
+  console.log("\n○  (Static)   prerendered as static content");
+  console.log("ƒ  (Dynamic)  server-rendered on demand\n");
+
   console.timeEnd(PRANX_RUNNING_TAG_TIME);
-  console.log("========");
   return server;
 }
 
 const printPagesMapsasAsciTree = (page_map_internal: InternalPageMapResult) => {
-  Logger.info("[pages]");
+  Logger.info(kleur.underline("Pages"));
+
+  let index = 0;
   for (const [path, page_data] of Object.entries(page_map_internal)) {
     console.log(
-      ` - ${filePathToRoutingPath(path)} (${page_data.isStatic ? "static" : "server props"})`
+      `${index === 0 ? "┌" : "├"} ${page_data.isStatic ? "○" : "ƒ"} ${filePathToRoutingPath(path, false)} `
     );
+    index++;
   }
 };
