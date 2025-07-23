@@ -1,11 +1,14 @@
 import * as fse from "fs-extra";
+import * as fs from "node:fs/promises";
 import path from "node:path";
 
 const VENDORS_OUTPUT_DIR = path.resolve(path.join(process.cwd(), "lib", "client", "vendor"));
 
 await fse.emptyDir(VENDORS_OUTPUT_DIR);
 
-const PREACT_FILE_DIR = path.resolve(path.join(process.cwd(), "node_modules", "preact", "dist", "preact.module.js"));
+const PREACT_FILE_DIR = path.resolve(
+  path.join(process.cwd(), "node_modules", "preact", "dist", "preact.module.js")
+);
 
 const COMPAT_FILE_DIR = path.resolve(
   path.join(process.cwd(), "node_modules", "preact", "compat", "dist", "compat.module.js")
@@ -38,3 +41,30 @@ await fse.copy(DEVTOOLS_FILE_DIR, path.join(VENDORS_OUTPUT_DIR, "devtools.js"));
 await fse.copy(HOOKS_FILE_DIR, path.join(VENDORS_OUTPUT_DIR, "hooks.js"));
 
 await fse.copy(JSX_RUNTIME_FILE_DIR, path.join(VENDORS_OUTPUT_DIR, "jsxRuntime.js"));
+
+const routerSrcContent = `
+import {
+  ErrorBoundary,
+  LocationProvider,
+  Route,
+  Router,
+  hydrate,
+  lazy,
+  prerender,
+  useLocation,
+  useRoute,
+} from "preact-iso";
+
+export {
+  ErrorBoundary,
+  LocationProvider,
+  Route,
+  Router,
+  hydrate,
+  lazy,
+  prerender,
+  useLocation,
+  useRoute,
+};`;
+
+await fs.writeFile(path.join(VENDORS_OUTPUT_DIR, "router.js"), routerSrcContent);

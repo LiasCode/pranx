@@ -1,5 +1,6 @@
 import * as esbuild from "esbuild";
 import * as fse from "fs-extra";
+import { glob } from "glob";
 import { exec } from "node:child_process";
 import path from "node:path";
 
@@ -12,8 +13,12 @@ await fse.emptyDir(OUTPUT_DIR);
 // Vendors
 await fse.copy("./lib/client", OUTPUT_VENDORS_DIR);
 
+const entryPoints = await glob("./lib/**/*.{ts,tsx}", {
+  ignore: ["lib/client/**/*", "lib/types/**/*"],
+});
+
 const build_config: esbuild.BuildOptions = {
-  entryPoints: ["lib/**/*.ts", "lib/**/*.tsx"],
+  entryPoints: entryPoints,
   outdir: OUTPUT_DIR,
 
   bundle: false,
