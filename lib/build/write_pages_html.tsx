@@ -16,7 +16,7 @@ export async function write_pages_html(
 
     const output_html_file_path = path.join(CLIENT_OUTPUT_DIR, route_path, "index.html");
 
-    const html_content = html_template(value, hydration_data);
+    const html_content = html_page_template(value, hydration_data);
 
     let final_html_content = html_content;
 
@@ -37,7 +37,7 @@ export async function write_pages_html(
   }
 }
 
-export const html_template = (
+export const html_page_template = (
   page_value: InternalPageMapResult[1],
   hydration_data: HydrationData
 ) => {
@@ -63,7 +63,7 @@ export const html_template = (
         })} 
       </script>
 
-      <script id="__PRANX_DATA__" type="application/json">${JSON.stringify(hydration_data)}</script>
+      <script id="__PRANX_DATA__" type="application/json">${JSON.stringify(hydration_data, null, 4)}</script>
 
       <script id="__PRANX_HYDRATE_SCRIPT__" type="module" src="/hydrate.js"></script>
     </html>

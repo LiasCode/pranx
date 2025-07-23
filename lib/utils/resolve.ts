@@ -1,108 +1,44 @@
+import { glob } from "glob";
 import type { Handler } from "hono";
-import * as fs from "node:fs/promises";
-import path from "node:path";
 import { SERVER_OUTPUT_DIR } from "../build/constants.js";
 import type { PranxConfig } from "../config/pranx-config.js";
 import { Logger } from "../logger/index.js";
-import type { PranxPageModule, RouterComponent } from "../types.js";
+import type { RouterComponent } from "../types.js";
 
 export async function getPageFiles(user_config: PranxConfig) {
-  const pages_src_files = await fs.readdir(user_config.pages_dir, {
-    recursive: true,
-    encoding: "utf8",
-    withFileTypes: true,
+  const entry_points = await glob("**/*page.{ts,js,jsx,tsx}", {
+    cwd: user_config.pages_dir,
+    absolute: true,
   });
-
-  const pages_files = pages_src_files.filter((f) => {
-    if (!f.isFile()) return false;
-
-    if (!["page.js", "page.ts", "page.jsx", "page.tsx"].includes(f.name)) {
-      return false;
-    }
-
-    return true;
-  });
-
-  const entry_points = pages_files.map((f) => path.join(f.parentPath, f.name));
 
   return entry_points;
 }
 
 export async function getMetaFiles(user_config: PranxConfig) {
-  const meta_src_files = await fs.readdir(user_config.pages_dir, {
-    recursive: true,
-    encoding: "utf8",
-    withFileTypes: true,
+  const entry_points = await glob("**/*meta.{ts,js,jsx,tsx}", {
+    cwd: user_config.pages_dir,
+    absolute: true,
   });
-
-  const meta_files = meta_src_files.filter((f) => {
-    if (!f.isFile()) return false;
-
-    if (!["meta.js", "meta.ts", "meta.jsx", "meta.tsx"].includes(f.name)) {
-      return false;
-    }
-
-    return true;
-  });
-
-  const entry_points = meta_files.map((f) => path.join(f.parentPath, f.name));
 
   return entry_points;
 }
 
 export async function getRoutesHandlersFiles(user_config: PranxConfig) {
-  const route_handler_src_files = await fs.readdir(user_config.pages_dir, {
-    recursive: true,
-    encoding: "utf8",
-    withFileTypes: true,
+  const entry_points = await glob("**/*route.{ts,js,jsx,tsx}", {
+    cwd: user_config.pages_dir,
+    absolute: true,
   });
-
-  const route_files = route_handler_src_files.filter((f) => {
-    if (!f.isFile()) return false;
-
-    if (!["route.js", "route.ts", "route.jsx", "route.tsx"].includes(f.name)) {
-      return false;
-    }
-
-    return true;
-  });
-
-  const entry_points = route_files.map((f) => path.join(f.parentPath, f.name));
 
   return entry_points;
 }
 
 export async function getLoadersFiles(user_config: PranxConfig) {
-  const route_handler_src_files = await fs.readdir(user_config.pages_dir, {
-    recursive: true,
-    encoding: "utf8",
-    withFileTypes: true,
+  const entry_points = await glob("**/*loader.{ts,js,jsx,tsx}", {
+    cwd: user_config.pages_dir,
+    absolute: true,
   });
-
-  const loader_files = route_handler_src_files.filter((f) => {
-    if (!f.isFile()) return false;
-
-    if (!["loader.js", "loader.ts", "loader.jsx", "loader.tsx"].includes(f.name)) {
-      return false;
-    }
-
-    return true;
-  });
-
-  const entry_points = loader_files.map((f) => path.join(f.parentPath, f.name));
 
   return entry_points;
-}
-
-export async function getPageModule(modulePath: string): Promise<PranxPageModule> {
-  try {
-    return await import(`file://${modulePath}`);
-  } catch (e) {
-    if (e instanceof Error) {
-      Logger.error(`Failed to load page module from ${modulePath}: ${e.message}`);
-    }
-    throw e;
-  }
 }
 
 export async function getModule<T>(modulePath: string): Promise<T> {
@@ -111,17 +47,6 @@ export async function getModule<T>(modulePath: string): Promise<T> {
   } catch (e) {
     if (e instanceof Error) {
       Logger.error(`Failed to load module from ${modulePath}: ${e.message}`);
-    }
-    throw e;
-  }
-}
-
-export async function getPageComponent(modulePath: string): Promise<PranxPageModule["default"]> {
-  try {
-    return (await import(`file://${modulePath}`)).default;
-  } catch (e) {
-    if (e instanceof Error) {
-      Logger.error(`Failed to load page component from ${modulePath}: ${e.message}`);
     }
     throw e;
   }

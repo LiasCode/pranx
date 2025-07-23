@@ -4,12 +4,12 @@ import { getLoadersFiles, getMetaFiles, getRoutesHandlersFiles } from "../utils/
 import type { PranxBuildMode } from "./build.js";
 import { SERVER_OUTPUT_DIR } from "./constants.js";
 
-type HandlersBundleOptions = {
+type ServerBundleOptions = {
   user_config: PranxConfig;
   mode: PranxBuildMode;
 };
 
-export async function bundle_server(options: HandlersBundleOptions) {
+export async function bundle_server(options: ServerBundleOptions) {
   const handlers_entry_points = await getRoutesHandlersFiles(options.user_config);
   const loader_entry_points = await getLoadersFiles(options.user_config);
   const meta_entry_points = await getMetaFiles(options.user_config);

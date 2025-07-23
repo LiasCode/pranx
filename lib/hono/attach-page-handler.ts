@@ -1,6 +1,6 @@
 import type { Handler, Hono } from "hono";
 import type { InternalPageMapResult } from "../build/generate_pages_map.js";
-import { html_template } from "../build/write_pages_html.js";
+import { html_page_template } from "../build/write_pages_html.js";
 import type { HydrationData } from "../types.js";
 import { filePathToRoutingPath } from "../utils/filePathToRoutingPath.js";
 
@@ -28,7 +28,7 @@ export async function attach_page_handler(
         h.pages_map[file_path].props = page_props;
       }
 
-      const html = html_template(page_data, h);
+      const html = html_page_template(page_data, h);
 
       return c.html(html);
     } catch (error) {
