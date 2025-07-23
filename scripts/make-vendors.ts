@@ -2,6 +2,8 @@ import * as fse from "fs-extra";
 import * as fs from "node:fs/promises";
 import path from "node:path";
 
+console.time("build - make-vendors");
+
 const VENDORS_OUTPUT_DIR = path.resolve(path.join(process.cwd(), "lib", "client", "vendor"));
 
 await fse.emptyDir(VENDORS_OUTPUT_DIR);
@@ -68,3 +70,5 @@ export {
 };`;
 
 await fs.writeFile(path.join(VENDORS_OUTPUT_DIR, "router.js"), routerSrcContent);
+
+console.timeEnd("build - make-vendors");

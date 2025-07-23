@@ -34,5 +34,5 @@
     }
   },
   "include": ["lib/**/*"],
-  "exclude": ["node_modules", "**/*.spec.ts", "**/*.test.ts", "lib/client/vendor/**/*"]
+  "exclude": ["node_modules", "**/*.spec.ts", "**/*.test.ts", "lib/client/**/*", "lib/types/**/*"]
 }
