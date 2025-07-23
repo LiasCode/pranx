@@ -93,13 +93,14 @@ export async function generate_pages_map(routes_data: PagesGroupByPath) {
     // Its static
     let static_props: GetStaticPropsResult = { props: {} };
 
-    if (loader.getStaticProps !== undefined) {
-      current_page_data.isStatic = true;
+    if (current_page_data.isStatic === true) {
       current_page_data.have_server_side_props = false;
 
-      current_page_data.getStaticPropsFn = loader.getStaticProps;
+      if (loader.getStaticProps) {
+        current_page_data.getStaticPropsFn = loader.getStaticProps;
+        static_props = await loader.getStaticProps();
+      }
 
-      static_props = await loader.getStaticProps();
       current_page_data.getStaticPropsResult = static_props;
 
       page_rendered_as_html = renderFn(static_props.props);
