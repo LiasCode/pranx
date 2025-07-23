@@ -33,6 +33,7 @@ export async function bundle_pages(options: PagesBundleOptions) {
       ".jsx": "jsx",
       ".ts": "tsx",
       ".tsx": "tsx",
+      ".module.css": "local-css",
       ".css": "css",
       ".json": "json",
     },

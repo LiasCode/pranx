@@ -32,6 +32,9 @@
       "types": "./dist/plugins/index.d.ts",
       "module": "./dist/plugins/index.js",
       "import": "./dist/plugins/index.js"
+    },
+    "./types/*": {
+      "types": "./dist/types/*"
     }
   },
   "files": [

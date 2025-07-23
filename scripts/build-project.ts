@@ -5,15 +5,16 @@ import path from "node:path";
 
 const OUTPUT_DIR = path.resolve(path.join(process.cwd(), "dist"));
 const OUTPUT_VENDORS_DIR = path.join(OUTPUT_DIR, "client");
+const TYPES_SRC_DIR = path.join(process.cwd(), "lib", "types");
+const TYPES_OUT_DIR = path.join(OUTPUT_DIR, "types");
 
 await fse.emptyDir(OUTPUT_DIR);
-await fse.emptyDir(OUTPUT_VENDORS_DIR);
-
+// Vendors
 await fse.copy("./lib/client", OUTPUT_VENDORS_DIR);
 
 const build_config: esbuild.BuildOptions = {
-  entryPoints: ["./lib/**/*.ts", "./lib/**/*.tsx"],
-  outdir: path.resolve(path.join(process.cwd(), "dist")),
+  entryPoints: ["lib/**/*.ts", "lib/**/*.tsx"],
+  outdir: OUTPUT_DIR,
 
   bundle: false,
   splitting: false,
@@ -24,15 +25,12 @@ const build_config: esbuild.BuildOptions = {
   platform: "node",
 
   keepNames: true,
-  minify: false,
+  minify: process.env.WATCH !== "true",
 
   jsxFactory: "h",
   jsxFragment: "Fragment",
   jsx: "automatic",
   jsxImportSource: "preact",
-
-  chunkNames: "_chunks/[name]-[hash]",
-  color: true,
 
   loader: {
     ".js": "jsx",
@@ -47,6 +45,8 @@ if (process.env.WATCH === "true") {
   const ctx = await esbuild.context(build_config);
   await ctx.watch();
   exec("tsc --watch");
+  await fse.copy(TYPES_SRC_DIR, TYPES_OUT_DIR);
 } else {
   await esbuild.build(build_config);
+  await fse.copy(TYPES_SRC_DIR, TYPES_OUT_DIR);
 }

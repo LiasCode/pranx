@@ -123,8 +123,3 @@ if (document.readyState === "loading") {
 } else {
   hydratePage();
 }
-
-export type Matches = {
-  params: Record<string, string>;
-  rest?: string;
-};

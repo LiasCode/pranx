@@ -25,14 +25,14 @@ export function updateHead(newHeadHTML: string) {
       const href = (node as HTMLLinkElement).href;
       if (loadedCSS.has(href)) continue;
       loadedCSS.add(href);
-      document.head.appendChild(node.cloneNode(true));
+      document.head.prepend(node.cloneNode(true));
       return;
     }
 
     // Avoid duplication
     const exists = currentNodes.some((existing) => existing.outerHTML === node.outerHTML);
     if (!exists) {
-      document.head.appendChild(node.cloneNode(true));
+      document.head.prepend(node.cloneNode(true));
     }
   }
 
@@ -49,25 +49,3 @@ export function updateHead(newHeadHTML: string) {
     }
   }
 }
-
-export const active_css = () => {
-  const currentPath = window.location.pathname;
-
-  const links = document.head.querySelectorAll('link[rel="stylesheet"]');
-
-  for (const link of links) {
-    if (!(link instanceof HTMLLinkElement)) continue;
-
-    const linkUrl = new URL(link.href);
-    let hrefWithOutFileName = linkUrl.pathname;
-    const hrefSplitted = hrefWithOutFileName.split("/");
-    hrefSplitted.pop();
-    hrefWithOutFileName = hrefSplitted.join("/");
-
-    if (currentPath === hrefWithOutFileName) {
-      link.disabled = false;
-    } else {
-      link.disabled = true;
-    }
-  }
-};

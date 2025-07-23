@@ -1,4 +1,7 @@
-import type { Matches } from "./hydrate.js";
+export type Matches = {
+  params: Record<string, string>;
+  rest?: string;
+};
 
 /**
  * Compara una URL contra un patrón definido y extrae parámetros.
