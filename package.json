@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/package",
   "name": "pranx",
   "version": "0.0.44",
   "description": "The next of preact. A light-weight, Next.js-like framework with Preact, Hono, and esbuild for static site generation and hydration.",
