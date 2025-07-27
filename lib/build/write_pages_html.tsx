@@ -6,6 +6,17 @@ import type { PranxBuildMode } from "./build.js";
 import { CLIENT_OUTPUT_DIR } from "./constants.js";
 import type { InternalPageMapResult } from "./generate_pages_map.js";
 
+export const imports_map = JSON.stringify({
+  imports: {
+    "preact": "/vendor/preact.js",
+    "preact/jsx-runtime": "/vendor/jsxRuntime.js",
+    "preact/hooks": "/vendor/hooks.js",
+    "preact/compat": "/vendor/compat.js",
+    "preact/devtools": "/vendor/devtools.js",
+    "preact-iso": "/vendor/router.js",
+  },
+});
+
 export async function write_pages_html(
   pages_map: InternalPageMapResult,
   hydration_data: HydrationData,
@@ -50,20 +61,9 @@ export const html_page_template = (
 
       <body>${page_value.page_rendered_result}</body>
 
-      <script type="importmap">
-        ${JSON.stringify({
-          imports: {
-            "preact": "/vendor/preact.js",
-            "preact/jsx-runtime": "/vendor/jsxRuntime.js",
-            "preact/hooks": "/vendor/hooks.js",
-            "preact/compat": "/vendor/compat.js",
-            "preact/devtools": "/vendor/devtools.js",
-            "preact-iso": "/vendor/router.js",
-          },
-        })} 
-      </script>
+      <script type="importmap">${imports_map}</script>
 
-      <script id="__PRANX_DATA__" type="application/json">${JSON.stringify(hydration_data, null, 4)}</script>
+      <script id="__PRANX_DATA__" type="application/json">${JSON.stringify(hydration_data)}</script>
 
       <script id="__PRANX_HYDRATE_SCRIPT__" type="module" src="/hydrate.js"></script>
     </html>
