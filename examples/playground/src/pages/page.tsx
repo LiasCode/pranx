@@ -1,7 +1,7 @@
+import { Layout } from "@/layout/layout";
 import { HooksTest } from "../components/HooksTest";
 import { MdTest } from "../components/MdTest";
 import { SignalsTest } from "../components/SignalsTest";
-import { Layout } from "../layout/layout";
 import "./home.scss";
 
 export default function HomePage(props: { posts: { id: string; title: string }[] }) {

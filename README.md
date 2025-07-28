@@ -18,6 +18,7 @@ A light-weight, Next.js-like framework with Preact, Hono, esbuild and swc for st
 - [x] Markdown and .mdx support
 - [x] Sass support
 - [x] SSR
+- [x] Tailwindcss support
 - [ ] Hot Module Replacement (HMR)
 
 ### Usage

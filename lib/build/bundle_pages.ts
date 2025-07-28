@@ -43,9 +43,15 @@ export async function bundle_pages(options: PagesBundleOptions) {
 
     external: ["preact", "preact-render-to-string", "preact-iso"],
     metafile: true,
+
     alias: {
       "react": "preact/compat",
       "react-dom": "preact/compat",
+      ...options.user_config.esbuild?.alias,
+    },
+
+    define: {
+      ...options.user_config.esbuild?.define,
     },
 
     plugins: options.user_config.esbuild?.plugins,
