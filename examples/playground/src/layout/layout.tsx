@@ -1,27 +1,28 @@
 import type { PropsWithChildren } from "preact/compat";
-import "./layout.scss";
+import "./layout.css";
 
 export const Layout = (props: PropsWithChildren) => {
   return (
-    <div id="app">
-      <div id="layout">
-        <h2>Links With Client side navigation</h2>
-
-        <ul id="links">
-          <li>
+    <div className="w-full h-full flex flex-col items-center border border-purple-300 p-4 max-w-screen-md place-self-center">
+      <div className="w-full h-full flex flex-col items-center justify-center">
+        <ul class="flex flex-row gap-3 border border-blue-400 rounded p-2">
+          <li className="hover:text-purple-300">
             <a href="/">Home</a>
           </li>
-          <li>
+
+          <li className="hover:text-purple-300">
             <a href="/about">About</a>
           </li>
-          <li>
+
+          <li className="hover:text-purple-300">
             <a href="/docs">Docs</a>
           </li>
-          <li>
+
+          <li className="hover:text-purple-300">
             <a href="/server_props">Server Props</a>
           </li>
 
-          <li>
+          <li className="hover:text-purple-300">
             <a href={`/product/${Math.trunc(Math.random() * 10)}`}>Product Details</a>
           </li>
         </ul>
