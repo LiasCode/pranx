@@ -1,4 +1,3 @@
-//@ts-check
 import { h, hydrate } from "preact";
 import { ErrorBoundary, lazy, LocationProvider, Route, Router } from "preact-iso";
 import type { HydrationData } from "../types.js";

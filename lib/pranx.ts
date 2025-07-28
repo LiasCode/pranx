@@ -1,18 +1,17 @@
-import * as fse from "fs-extra";
 import { Hono } from "hono";
 import { serveStatic } from "hono/serve-static";
 import kleur from "kleur";
 import * as fs from "node:fs/promises";
 import { build, type PranxBuildMode } from "./build/build.js";
-import { CLIENT_OUTPUT_DIR, PRANX_OUTPUT_DIR, SERVER_OUTPUT_DIR } from "./build/constants.js";
-import type { InternalPageMapResult } from "./build/generate_pages_map.js";
+import { CLIENT_OUTPUT_DIR } from "./build/constants.js";
 import { process_pages } from "./build/process_pages.js";
 import { load_user_config } from "./config/config.js";
 import { attach_api_handler } from "./hono/attach-api-handler.js";
 import { attach_page_handler } from "./hono/attach-page-handler.js";
 import { Logger } from "./logger/index.js";
-import { filePathToRoutingPath } from "./utils/filePathToRoutingPath.js";
+import { printPagesMapsAsAsciTree } from "./utils/printPagesMapsAsAsciTree.js";
 import { group_api_handlers } from "./utils/resolve.js";
+import { measureTime } from "./utils/time-perf.js";
 
 type PranxMode = PranxBuildMode;
 
@@ -36,19 +35,18 @@ type InitOptions = {
   watch?: boolean;
 };
 
-const PRANX_RUNNING_TAG_TIME = "Pranx Running in" as const;
+const PRANX_RUNNING_TAG_TIME = "PRANX_RUNNING_TAG_TIME" as const;
 
 export async function init(options?: InitOptions): Promise<Hono> {
-  console.log(kleur.bold().magenta("Pranx Running"));
-  console.time(PRANX_RUNNING_TAG_TIME);
+  console.log(kleur.bold().magenta("Pranx Start"));
+
+  measureTime(PRANX_RUNNING_TAG_TIME);
 
   const options_parsed: InitOptions = {
     mode: "dev",
     watch: true,
     ...options,
   };
-
-  await fse.emptyDir(PRANX_OUTPUT_DIR);
 
   const config = await load_user_config();
 
@@ -68,20 +66,13 @@ export async function init(options?: InitOptions): Promise<Hono> {
     server_bundle_result: build_result.server,
   });
 
-  // Attach endpoints to hono server and declare static content
+  // Attach endpoints to hono server
   const server = options_parsed?.server || new Hono();
 
   const handlers = await group_api_handlers();
 
-  Logger.info(kleur.underline("Server"));
-  let index = 0;
   for (const h of handlers) {
     await attach_api_handler(server, h);
-    const path = filePathToRoutingPath(h.file_path.replace(SERVER_OUTPUT_DIR, ""));
-    console.log(
-      `${index === 0 ? "┌" : "├"} ƒ ${path} (${Object.keys(h?.exports?.methods || {}).toString()})`
-    );
-    index++;
   }
 
   for (const [path, page_data] of Object.entries(page_map_internal)) {
@@ -89,8 +80,7 @@ export async function init(options?: InitOptions): Promise<Hono> {
     await attach_page_handler(server, path, page_data, hydrationData);
   }
 
-  printPagesMapsasAsciTree(page_map_internal);
-
+  // Declare static content
   server.use(
     "*",
     serveStatic({
@@ -121,21 +111,17 @@ export async function init(options?: InitOptions): Promise<Hono> {
     })
   );
 
-  console.log("\n○  (Static)   prerendered as static content");
-  console.log("ƒ  (Dynamic)  server-rendered on demand\n");
+  printPagesMapsAsAsciTree({
+    handlers,
+    page_map_internal,
+  });
 
-  console.timeEnd(PRANX_RUNNING_TAG_TIME);
+  Logger.info(
+    `Pranx started in ${kleur
+      .bold()
+      .underline()
+      .green(measureTime(PRANX_RUNNING_TAG_TIME) || 0)} ms`
+  );
+
   return server;
 }
-
-const printPagesMapsasAsciTree = (page_map_internal: InternalPageMapResult) => {
-  Logger.info(kleur.underline("Pages"));
-
-  let index = 0;
-  for (const [path, page_data] of Object.entries(page_map_internal)) {
-    console.log(
-      `${index === 0 ? "┌" : "├"} ${page_data.isStatic ? "○" : "ƒ"} ${filePathToRoutingPath(path, false)} `
-    );
-    index++;
-  }
-};

@@ -1,4 +1,4 @@
-import { useLocation } from "preact-iso";
+import { type LocationHook, useLocation } from "preact-iso";
 import {
   Children,
   cloneElement,
@@ -11,10 +11,9 @@ export function ServerPage(props: PropsWithChildren) {
   const loader_path = window.location.pathname;
   const [data_props, setDataProps] = useState<Record<string, any>>({});
 
-  const location = useLocation();
+  const location = useLocation() as LocationHook & { wasPush: boolean };
 
   useLayoutEffect(() => {
-    // @ts-expect-error
     if (location.wasPush === false) return;
 
     (async () => {
