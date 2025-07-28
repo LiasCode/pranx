@@ -1,3 +1,5 @@
+import { Input } from "@ui/input";
+import { Label } from "@ui/label";
 import { useEffect, useState } from "preact/hooks";
 
 export function HooksTest() {
@@ -15,8 +17,8 @@ export function HooksTest() {
     <>
       <h2>Hook Test</h2>
 
-      <label>Name:</label>
-      <input
+      <Label>Name:</Label>
+      <Input
         value={name}
         onInput={(e) => setName(e.currentTarget.value)}
       />

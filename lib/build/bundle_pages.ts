@@ -23,6 +23,9 @@ export async function bundle_pages(options: PagesBundleOptions) {
     chunkNames: "_chunks/[name]-[hash]",
     assetNames: "_assets/[name]-[hash]",
 
+    mainFields: ["module", "main"], // Prefer ESM versions
+    conditions: ["import", "module", "require"], // Module resolution conditions
+
     jsxFactory: "h",
     jsxFragment: "Fragment",
     jsx: "automatic",

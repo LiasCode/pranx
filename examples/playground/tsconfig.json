@@ -13,7 +13,6 @@
 
     "strict": true,
     "noFallthroughCasesInSwitch": true,
-    "noImplicitAny": true,
     "noUnusedLocals": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
@@ -25,6 +24,8 @@
 
     "skipLibCheck": true,
     "checkJs": true,
+
+    "baseUrl": "./",
 
     "paths": {
       "react": ["./node_modules/preact/compat/"],

@@ -8,13 +8,28 @@
     "format": "prettier --write --cache ./src"
   },
   "dependencies": {
+    "@floating-ui/react-dom": "^2.1.4",
     "@hono/node-server": "^1.14.4",
     "@preact/signals": "^2.2.1",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "cmdk": "^1.1.1",
+    "date-fns": "^4.1.0",
+    "dayjs": "^1.11.13",
+    "embla-carousel-react": "^8.6.0",
     "hono": "^4.8.3",
+    "input-otp": "^1.4.2",
+    "lucide-preact": "^0.528.0",
     "pranx": "file://../../",
     "preact": "^10.26.9",
     "preact-render-to-string": "^6.5.13",
-    "react-hot-toast": "^2.5.2"
+    "react-day-picker": "^9.8.1",
+    "react-hot-toast": "^2.5.2",
+    "react-resizable-panels": "^3.0.3",
+    "recharts": "^3.1.0",
+    "tailwind-merge": "^3.3.1",
+    "tailwindcss-animate": "^1.0.7",
+    "vaul": "^1.1.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.11",

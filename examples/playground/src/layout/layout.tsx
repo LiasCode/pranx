@@ -5,7 +5,7 @@ export const Layout = (props: PropsWithChildren) => {
   return (
     <div className="w-full h-full flex flex-col items-center border border-purple-300 p-4 max-w-screen-md place-self-center">
       <div className="w-full h-full flex flex-col items-center justify-center">
-        <ul class="flex flex-row gap-3 border border-blue-400 rounded p-2">
+        <ul class="flex flex-row gap-3 border border-blue-400 rounded p-2 mb-8">
           <li className="hover:text-purple-300">
             <a href="/">Home</a>
           </li>
@@ -24,6 +24,10 @@ export const Layout = (props: PropsWithChildren) => {
 
           <li className="hover:text-purple-300">
             <a href={`/product/${Math.trunc(Math.random() * 10)}`}>Product Details</a>
+          </li>
+
+          <li className="hover:text-purple-300">
+            <a href={"/shadcn-components"}>shadcn-preact</a>
           </li>
         </ul>
 
