@@ -5,11 +5,11 @@ import path from "node:path";
 export const OUTPUT_DIR = path.resolve(path.join(process.cwd(), "dist"));
 export const OUTPUT_VENDORS_DIR = path.join(OUTPUT_DIR, "client");
 
-export const TYPES_SRC_DIR = path.join(process.cwd(), "lib", "types");
+export const TYPES_SRC_DIR = path.join(process.cwd(), "src", "types");
 export const TYPES_OUT_DIR = path.join(OUTPUT_DIR, "types");
 
-export const entryPoints = await glob("./lib/**/*.{ts,tsx}", {
-  ignore: ["lib/client/**/*", "lib/types/**/*"],
+export const entryPoints = await glob("./src/**/*.{ts,tsx}", {
+  ignore: ["src/client/**/*", "src/types/**/*"],
 });
 
 export const build_config: esbuild.BuildOptions = {

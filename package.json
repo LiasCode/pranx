@@ -13,7 +13,7 @@
     "coverage": "vitest run --coverage",
     "lint": "biome lint . --fix --unsafe",
     "check": "tsc --noEmit -p ./tsconfig.json",
-    "format": "prettier --write --cache \"./lib\" \"./examples\"",
+    "format": "prettier --write --cache \"./src\" \"./examples\"",
     "make-vendors": "tsx ./scripts/make-vendors.ts",
     "prepublishOnly": "npm run build",
     "push": "npm version patch && git push",

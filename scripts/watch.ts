@@ -1,6 +1,6 @@
 import * as esbuild from "esbuild";
 import { exec } from "node:child_process";
-import { Logger } from "../lib/logger/index";
+import { Logger } from "../src/logger/index";
 import { build_config } from "./shared/config";
 import { prepare_output_dir } from "./shared/prepare_output_dir";
 

@@ -33,6 +33,6 @@
       "react-dom": ["./node_modules/preact/compat/"]
     }
   },
-  "include": ["lib/**/*"],
-  "exclude": ["node_modules", "**/*.spec.ts", "**/*.test.ts", "lib/client/**/*", "lib/types/**/*"]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "**/*.spec.ts", "**/*.test.ts", "src/client/**/*", "src/types/**/*"]
 }

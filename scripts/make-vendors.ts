@@ -4,7 +4,7 @@ import path from "node:path";
 
 console.time("build - make-vendors");
 
-const VENDORS_OUTPUT_DIR = path.resolve(path.join(process.cwd(), "lib", "client", "vendor"));
+const VENDORS_OUTPUT_DIR = path.resolve(path.join(process.cwd(), "src", "client", "vendor"));
 
 await fse.emptyDir(VENDORS_OUTPUT_DIR);
 
