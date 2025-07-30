@@ -11,6 +11,6 @@ null !=
         ? window
         : void 0) &&
   i.__PREACT_DEVTOOLS__ &&
-  i.__PREACT_DEVTOOLS__.attachPreact("10.26.9", n, { Fragment: o, Component: e });
+  i.__PREACT_DEVTOOLS__.attachPreact("10.27.0", n, { Fragment: o, Component: e });
 export { t as addHookName };
 //# sourceMappingURL=devtools.module.js.map

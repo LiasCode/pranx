@@ -489,5 +489,5 @@ function w(n) {
         }
       }));
   })());
-export { r as resetPropWarnings };
+export { c as getCurrentVNode, a as getDisplayName, f as getOwnerStack, r as resetPropWarnings };
 //# sourceMappingURL=debug.module.js.map

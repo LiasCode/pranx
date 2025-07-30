@@ -109,7 +109,7 @@ function $() {
           ),
           (t.__v = r.__v),
           (t.__.__k[t.__i] = t),
-          z(f, t, c),
+          N(f, t, c),
           t.__e != o && C(t))));
   $.__r = 0;
 }
@@ -128,7 +128,7 @@ function I(n, l, u, t, i, r, o, e, f, c, s) {
       (y.__i = a),
       (g = O(n, y, h, i, r, o, e, f, c, s)),
       (w = y.__e),
-      y.ref && h.ref != y.ref && (h.ref && q(h.ref, null, y), s.push(y.ref, y.__c || w, y)),
+      y.ref && h.ref != y.ref && (h.ref && B(h.ref, null, y), s.push(y.ref, y.__c || w, y)),
       null == d && null != w && (d = w),
       4 & y.__u || h.__k === y.__k
         ? (f = A(y, f, n))
@@ -170,7 +170,7 @@ function P(n, l, u, t, i) {
       : (n.__k[r] = null);
   if (a)
     for (r = 0; r < s; r++)
-      null != (e = u[r]) && 0 == (2 & e.__u) && (e.__e == t && (t = S(e)), B(e, e));
+      null != (e = u[r]) && 0 == (2 & e.__u) && (e.__e == t && (t = S(e)), D(e, e));
   return t;
 }
 function A(n, l, u) {
@@ -202,22 +202,21 @@ function H(n, l) {
 function L(n, l, u, t) {
   var i,
     r,
-    o = n.key,
-    e = n.type,
-    f = l[u];
-  if ((null === f && null == n.key) || (f && o == f.key && e == f.type && 0 == (2 & f.__u)))
-    return u;
-  if (t > (null != f && 0 == (2 & f.__u) ? 1 : 0))
-    for (i = u - 1, r = u + 1; i >= 0 || r < l.length; ) {
-      if (i >= 0) {
-        if ((f = l[i]) && 0 == (2 & f.__u) && o == f.key && e == f.type) return i;
-        i--;
-      }
-      if (r < l.length) {
-        if ((f = l[r]) && 0 == (2 & f.__u) && o == f.key && e == f.type) return r;
-        r++;
-      }
-    }
+    o,
+    e = n.key,
+    f = n.type,
+    c = l[u],
+    s = null != c && 0 == (2 & c.__u);
+  if ((null === c && null == n.key) || (s && e == c.key && f == c.type)) return u;
+  if (t > (s ? 1 : 0))
+    for (i = u - 1, r = u + 1; i >= 0 || r < l.length; )
+      if (
+        null != (c = l[(o = i >= 0 ? i-- : r++)]) &&
+        0 == (2 & c.__u) &&
+        e == c.key &&
+        f == c.type
+      )
+        return o;
   return -1;
 }
 function T(n, l, u) {
@@ -313,7 +312,7 @@ function O(n, u, t, i, r, o, e, f, c, s) {
           ? (m = (h = u.__c = t.__c).__ = h.__E)
           : (S
               ? (u.__c = h = new j(b, M))
-              : ((u.__c = h = new x(b, M)), (h.constructor = j), (h.render = D)),
+              : ((u.__c = h = new x(b, M)), (h.constructor = j), (h.render = E)),
             C && C.sub(h),
             (h.props = b),
             h.state || (h.state = {}),
@@ -387,7 +386,7 @@ function O(n, u, t, i, r, o, e, f, c, s) {
         null != h.getChildContext && (i = d(d({}, i), h.getChildContext())),
         S && !p && null != h.getSnapshotBeforeUpdate && (_ = h.getSnapshotBeforeUpdate(v, y)),
         (L = a),
-        null != a && a.type === k && null == a.key && (L = N(a.props.children)),
+        null != a && a.type === k && null == a.key && (L = V(a.props.children)),
         (f = I(n, w(L) ? L : [L], u, t, i, r, o, e, f, c, s)),
         (h.base = u.__e),
         (u.__u &= -161),
@@ -398,18 +397,24 @@ function O(n, u, t, i, r, o, e, f, c, s) {
         if (n.then) {
           for (u.__u |= c ? 160 : 128; f && 8 == f.nodeType && f.nextSibling; ) f = f.nextSibling;
           ((o[o.indexOf(f)] = null), (u.__e = f));
-        } else for (T = o.length; T--; ) g(o[T]);
-      else ((u.__e = t.__e), (u.__k = t.__k));
+        } else {
+          for (T = o.length; T--; ) g(o[T]);
+          z(u);
+        }
+      else ((u.__e = t.__e), (u.__k = t.__k), n.then || z(u));
       l.__e(n, u, t);
     }
   else
     null == o && u.__v == t.__v
       ? ((u.__k = t.__k), (u.__e = t.__e))
-      : (f = u.__e = V(t.__e, u, t, i, r, o, e, c, s));
+      : (f = u.__e = q(t.__e, u, t, i, r, o, e, c, s));
   return ((a = l.diffed) && a(u), 128 & u.__u ? void 0 : f);
 }
-function z(n, u, t) {
-  for (var i = 0; i < t.length; i++) q(t[i], t[++i], t[++i]);
+function z(n) {
+  (n && n.__c && (n.__c.__e = !0), n && n.__k && n.__k.forEach(z));
+}
+function N(n, u, t) {
+  for (var i = 0; i < t.length; i++) B(t[i], t[++i], t[++i]);
   (l.__c && l.__c(u, n),
     n.some(function (u) {
       try {
@@ -423,10 +428,10 @@ function z(n, u, t) {
       }
     }));
 }
-function N(n) {
-  return "object" != typeof n || null == n || (n.__b && n.__b > 0) ? n : w(n) ? n.map(N) : d({}, n);
+function V(n) {
+  return "object" != typeof n || null == n || (n.__b && n.__b > 0) ? n : w(n) ? n.map(V) : d({}, n);
 }
-function V(u, t, i, r, o, e, f, c, s) {
+function q(u, t, i, r, o, e, f, c, s) {
   var a,
     h,
     v,
@@ -512,7 +517,7 @@ function V(u, t, i, r, o, e, f, c, s) {
   }
   return u;
 }
-function q(n, u, t) {
+function B(n, u, t) {
   try {
     if ("function" == typeof n) {
       var i = "function" == typeof n.__u;
@@ -522,11 +527,11 @@ function q(n, u, t) {
     l.__e(n, t);
   }
 }
-function B(n, u, t) {
+function D(n, u, t) {
   var i, r;
   if (
     (l.unmount && l.unmount(n),
-    (i = n.ref) && ((i.current && i.current != n.__e) || q(i, null, u)),
+    (i = n.ref) && ((i.current && i.current != n.__e) || B(i, null, u)),
     null != (i = n.__c))
   ) {
     if (i.componentWillUnmount)
@@ -538,13 +543,13 @@ function B(n, u, t) {
     i.base = i.__P = null;
   }
   if ((i = n.__k))
-    for (r = 0; r < i.length; r++) i[r] && B(i[r], u, t || "function" != typeof n.type);
+    for (r = 0; r < i.length; r++) i[r] && D(i[r], u, t || "function" != typeof n.type);
   (t || g(n.__e), (n.__c = n.__ = n.__e = void 0));
 }
-function D(n, l, u) {
+function E(n, l, u) {
   return this.constructor(n, u);
 }
-function E(u, t, i) {
+function G(u, t, i) {
   var r, o, e, f;
   (t == document && (t = document.documentElement),
     l.__ && l.__(u, t),
@@ -563,12 +568,12 @@ function E(u, t, i) {
       r,
       f
     ),
-    z(e, u, f));
+    N(e, u, f));
 }
-function G(n, l) {
-  E(n, l, G);
+function J(n, l) {
+  G(n, l, J);
 }
-function J(l, u, t) {
+function K(l, u, t) {
   var i,
     r,
     o,
@@ -585,7 +590,7 @@ function J(l, u, t) {
     m(l.type, f, i || l.key, r || l.ref, null)
   );
 }
-function K(n) {
+function Q(n) {
   function l(n) {
     var u, t;
     return (
@@ -675,15 +680,15 @@ function K(n) {
 export {
   x as Component,
   k as Fragment,
-  J as cloneElement,
-  K as createContext,
+  K as cloneElement,
+  Q as createContext,
   _ as createElement,
   b as createRef,
   _ as h,
-  G as hydrate,
+  J as hydrate,
   t as isValidElement,
   l as options,
-  E as render,
+  G as render,
   H as toChildArray,
 };
 //# sourceMappingURL=preact.module.js.map
