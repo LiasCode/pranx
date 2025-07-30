@@ -1,14 +1,16 @@
 import kleur from "kleur";
-import { SERVER_OUTPUT_DIR } from "../build/constants.js";
+import { FLAGS, SERVER_OUTPUT_DIR } from "../build/constants.js";
 import type { InternalPageMapResult } from "../build/generate_pages_map.js";
 import { Logger } from "../logger/index.js";
 import type { RouterComponent } from "../types.js";
 import { filePathToRoutingPath } from "./filePathToRoutingPath.js";
+import { measureTime } from "./time-perf.js";
 
 export const printPagesMapsAsAsciTree = async (info: {
   page_map_internal: InternalPageMapResult;
   handlers: RouterComponent<any>[];
 }) => {
+  measureTime("print-pages-maps-as-asci-tree");
   Logger.info(kleur.underline("Server:"));
 
   for (let index = 0; index < info.handlers.length; index++) {
@@ -23,7 +25,7 @@ export const printPagesMapsAsAsciTree = async (info: {
     );
   }
 
-  Logger.info(kleur.underline("Pages:"));
+  Logger.info(kleur.underline("\nPages:"));
 
   const pagesEntries = Object.entries(info.page_map_internal);
 
@@ -42,4 +44,12 @@ export const printPagesMapsAsAsciTree = async (info: {
   console.log(
     "\n○ (Static)  prerendered as static content \nƒ (Dynamic) server-rendered on demand\n"
   );
+
+  if (FLAGS.SHOW_TIMES) {
+    console.log(
+      kleur.bold().blue("* Pages maps printed in"),
+      measureTime("print-pages-maps-as-asci-tree"),
+      "ms\n"
+    );
+  }
 };

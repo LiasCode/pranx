@@ -11,3 +11,7 @@ export const VENDOR_SOURCE_DIR = path.resolve(
 );
 
 export const VENDOR_BUNDLE_OUTPUT_PATH = path.join(CLIENT_OUTPUT_DIR, "vendor");
+
+export const FLAGS = {
+  SHOW_TIMES: Boolean(process.env.SHOW_TIMES === "true"),
+};

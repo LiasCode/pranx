@@ -24,9 +24,13 @@ export async function bundle_hydrate_script(options: HydrateBundleOptions) {
 
     minify: options.mode === "prod",
     sourcemap: options.mode !== "prod",
+    treeShaking: true,
 
     jsxFactory: "h",
     jsxFragment: "Fragment",
+    jsx: "automatic",
+    jsxImportSource: "preact",
+
     loader: {
       ".js": "jsx",
       ".jsx": "jsx",

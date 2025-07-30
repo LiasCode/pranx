@@ -3,7 +3,7 @@ import { serveStatic } from "hono/serve-static";
 import kleur from "kleur";
 import * as fs from "node:fs/promises";
 import { build, type PranxBuildMode } from "./build/build.js";
-import { CLIENT_OUTPUT_DIR } from "./build/constants.js";
+import { CLIENT_OUTPUT_DIR, FLAGS } from "./build/constants.js";
 import { process_pages } from "./build/process_pages.js";
 import { load_user_config } from "./config/config.js";
 import { attach_api_handler } from "./hono/attach-api-handler.js";
@@ -38,10 +38,11 @@ type InitOptions = {
 const PRANX_RUNNING_TAG_TIME = "PRANX_RUNNING_TAG_TIME" as const;
 
 export async function init(options?: InitOptions): Promise<Hono> {
-  console.log(kleur.bold().magenta("Pranx Start"));
-
   measureTime(PRANX_RUNNING_TAG_TIME);
 
+  console.log(kleur.bold().magenta("Pranx Start\n"));
+
+  measureTime("load-user-config");
   const options_parsed: InitOptions = {
     mode: "dev",
     watch: true,
@@ -55,18 +56,31 @@ export async function init(options?: InitOptions): Promise<Hono> {
     process.exit(1);
   }
 
+  if (FLAGS.SHOW_TIMES) {
+    console.log(
+      kleur.bold().blue("* User config loaded in"),
+      measureTime("load-user-config"),
+      "ms"
+    );
+  }
+
   // Build and bundle
   const build_result = await build(config, options_parsed.mode);
 
   // Process and generate public files
+  measureTime("process-pages");
   const { page_map_internal, hydrationData } = await process_pages({
     mode: options_parsed.mode || "dev",
     pages_bundle_result: build_result.pages,
     user_config: config,
     server_bundle_result: build_result.server,
   });
+  if (FLAGS.SHOW_TIMES) {
+    console.log(kleur.bold().blue("* Pages processed in"), measureTime("process-pages"), "ms");
+  }
 
   // Attach endpoints to hono server
+  measureTime("attach-server-handlers");
   const server = options_parsed?.server || new Hono();
 
   const handlers = await group_api_handlers();
@@ -111,16 +125,26 @@ export async function init(options?: InitOptions): Promise<Hono> {
     })
   );
 
-  printPagesMapsAsAsciTree({
+  if (FLAGS.SHOW_TIMES) {
+    console.log(
+      kleur.bold().blue("* Server handlers attached in"),
+      measureTime("attach-server-handlers"),
+      "ms\n"
+    );
+  }
+
+  await printPagesMapsAsAsciTree({
     handlers,
     page_map_internal,
   });
 
-  Logger.info(
-    `Pranx started in ${kleur
-      .bold()
-      .underline()
-      .green(measureTime(PRANX_RUNNING_TAG_TIME) || 0)} ms`
+  console.log(
+    kleur.bold().magenta(
+      `Pranx started in ${kleur
+        .bold()
+        .underline()
+        .green(measureTime(PRANX_RUNNING_TAG_TIME) || 0)} ms \n`
+    )
   );
 
   return server;

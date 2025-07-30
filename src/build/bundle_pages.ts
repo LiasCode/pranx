@@ -19,7 +19,7 @@ export async function bundle_pages(options: PagesBundleOptions) {
     format: "esm",
     splitting: true,
     treeShaking: true,
-    platform: "node",
+    platform: "browser",
     chunkNames: "_chunks/[name]-[hash]",
     assetNames: "_assets/[name]-[hash]",
 
