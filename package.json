@@ -5,6 +5,7 @@
   "description": "The next of preact. A light-weight, Next.js-like framework with Preact, Hono, and esbuild for static site generation and hydration.",
   "main": "dist/index.js",
   "type": "module",
+  "bin": "dist/bin/index.js",
   "scripts": {
     "build": "tsx ./scripts/build.ts",
     "dev": "tsx ./scripts/watch.ts",
