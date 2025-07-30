@@ -1,9 +1,15 @@
+import * as fse from "fs-extra";
 import { Hono } from "hono";
 import { serveStatic } from "hono/serve-static";
 import kleur from "kleur";
 import * as fs from "node:fs/promises";
 import { build, type PranxBuildMode } from "./build/build.js";
-import { CLIENT_OUTPUT_DIR, FLAGS } from "./build/constants.js";
+import {
+  CLIENT_OUTPUT_DIR,
+  FLAGS,
+  PRANX_OUTPUT_DIR,
+  SERVER_OUTPUT_DIR,
+} from "./build/constants.js";
 import { process_pages } from "./build/process_pages.js";
 import { load_user_config } from "./config/config.js";
 import { attach_api_handler } from "./hono/attach-api-handler.js";
@@ -39,6 +45,11 @@ const PRANX_RUNNING_TAG_TIME = "PRANX_RUNNING_TAG_TIME" as const;
 
 export async function init(options?: InitOptions): Promise<Hono> {
   measureTime(PRANX_RUNNING_TAG_TIME);
+
+  // Clean and prepare .pranx folder
+  await fse.emptyDir(PRANX_OUTPUT_DIR);
+  await fse.emptyDir(CLIENT_OUTPUT_DIR);
+  await fse.emptyDir(SERVER_OUTPUT_DIR);
 
   console.log(kleur.bold().magenta("Pranx Start\n"));
 
