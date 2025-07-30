@@ -4,7 +4,6 @@ import type { bundle_pages } from "./bundle_pages.js";
 import type { bundle_server } from "./bundle_server.js";
 import { generate_pages_map } from "./generate_pages_map.js";
 import { group_pages_bundle_by_path } from "./group_pages_bundle_by_path.js";
-import { write_pages_html } from "./write_pages_html.js";
 
 export type ProcessPagesOptions = {
   user_config: PranxConfig;
@@ -20,8 +19,6 @@ export async function process_pages(options: ProcessPagesOptions) {
   });
 
   const { page_map_internal, hydrationData } = await generate_pages_map(groupResult);
-
-  await write_pages_html(page_map_internal, hydrationData);
 
   return {
     groupResult,

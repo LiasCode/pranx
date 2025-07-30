@@ -11,10 +11,13 @@ import {
   SERVER_OUTPUT_DIR,
 } from "./build/constants.js";
 import { process_pages } from "./build/process_pages.js";
+import { write_pages_html } from "./build/write_pages_html.js";
 import { load_user_config } from "./config/config.js";
 import { attach_api_handler } from "./hono/attach-api-handler.js";
 import { attach_page_handler } from "./hono/attach-page-handler.js";
 import { Logger } from "./logger/index.js";
+import "./plugins/mdx.js";
+import "./plugins/sass.js";
 import { printPagesMapsAsAsciTree } from "./utils/printPagesMapsAsAsciTree.js";
 import { group_api_handlers } from "./utils/resolve.js";
 import { measureTime } from "./utils/time-perf.js";
@@ -86,8 +89,21 @@ export async function init(options?: InitOptions): Promise<Hono> {
     user_config: config,
     server_bundle_result: build_result.server,
   });
+
   if (FLAGS.SHOW_TIMES) {
     console.log(kleur.bold().blue("* Pages processed in"), measureTime("process-pages"), "ms");
+  }
+
+  // Write Pages as Html
+  measureTime("write-pages-html");
+  await write_pages_html(page_map_internal, hydrationData);
+
+  if (FLAGS.SHOW_TIMES) {
+    console.log(
+      kleur.bold().blue("* Write pages as html in"),
+      measureTime("write-pages-html"),
+      "ms"
+    );
   }
 
   // Attach endpoints to hono server
