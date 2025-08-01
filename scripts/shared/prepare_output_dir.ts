@@ -1,6 +1,6 @@
 import * as fse from "fs-extra";
 import { measureTime } from "../../src/utils/time-perf";
-import { OUTPUT_DIR, OUTPUT_VENDORS_DIR, TYPES_OUT_DIR, TYPES_SRC_DIR } from "./config";
+import { OUTPUT_DIR, OUTPUT_VENDORS_DIR, TYPES_OUT_DIR, TYPES_SRC_DIR } from "./constants";
 
 export async function prepare_output_dir() {
   measureTime("build-prepare");

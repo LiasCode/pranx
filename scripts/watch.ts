@@ -1,15 +1,21 @@
-import * as esbuild from "esbuild";
-import { exec } from "node:child_process";
+import chokidar from "chokidar";
+import kleur from "kleur";
+import path from "node:path";
 import { Logger } from "../src/logger/index";
-import { build_config_dev } from "./shared/config";
-import { prepare_output_dir } from "./shared/prepare_output_dir";
+import { SOURCE_DIR } from "./shared/constants";
+import { build_dev, build_start } from "./watch/build-dev";
 
-Logger.info("Starting watch mode for development build");
+Logger.success("Starting watch mode for development build");
 
-await prepare_output_dir();
+const watcher = chokidar.watch(SOURCE_DIR);
 
-const ctx = await esbuild.context(build_config_dev);
+// Watcher start
+watcher.on("ready", async () => {
+  build_start();
+});
 
-await ctx.watch();
-
-exec("tsc --watch");
+// Files Changes
+watcher.on("change", async (file) => {
+  console.log(kleur.bold().yellow(`[change]: ${path.relative(process.cwd(), file)}`));
+  build_dev();
+});

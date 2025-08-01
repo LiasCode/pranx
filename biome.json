@@ -20,13 +20,7 @@
     }
   },
   "files": {
-    "ignore": [
-      "./dist/**/*",
-      "node_modules/**/*",
-      "examples/**/*",
-      "coverage/**/*",
-      "test-results/**/*",
-      "./src/client/vendor/**/*"
-    ]
+    "include": ["./src/**/*", "./scripts/**/*"],
+    "ignore": ["./dist/**/*", "node_modules/**/*", "examples/**/*", "./src/client/vendor/**/*"]
   }
 }

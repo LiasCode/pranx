@@ -1,12 +1,6 @@
 import type * as esbuild from "esbuild";
 import { glob } from "glob";
-import path from "node:path";
-
-export const OUTPUT_DIR = path.resolve(path.join(process.cwd(), "dist"));
-export const OUTPUT_VENDORS_DIR = path.join(OUTPUT_DIR, "client");
-
-export const TYPES_SRC_DIR = path.join(process.cwd(), "src", "types");
-export const TYPES_OUT_DIR = path.join(OUTPUT_DIR, "types");
+import { OUTPUT_DIR } from "./constants";
 
 export const entryPoints = await glob("./src/**/*.{ts,tsx}", {
   ignore: ["src/client/**/*", "src/types/**/*"],
