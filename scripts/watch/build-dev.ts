@@ -8,16 +8,24 @@ import { generate_types } from "./generate_types";
 
 export const build_dev = async () => {
   Logger.info("Rebuilding...");
+
   measureTime("build_dev");
+
   await prepare_output_dir();
+
   await bundle();
+
   generate_types();
+
   console.log(`Rebuilded in ${measureTime("build_dev")} ms`);
 };
 
 export const build_start = async () => {
   await prepare_output_dir();
+
   await bundle();
+
   generate_types();
+
   console.log(`Watching path ${kleur.bold().underline(SOURCE_DIR)}`);
 };

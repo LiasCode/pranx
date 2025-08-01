@@ -1,50 +1,42 @@
 import * as fse from "fs-extra";
+import kleur from "kleur";
 import * as fs from "node:fs/promises";
 import path from "node:path";
+import { measureTime } from "../src/utils/time-perf";
 
-console.time("build - make-vendors");
+measureTime("make-vendors");
 
 const VENDORS_OUTPUT_DIR = path.resolve(path.join(process.cwd(), "src", "client", "vendor"));
 
 await fse.emptyDir(VENDORS_OUTPUT_DIR);
 
-const PREACT_FILE_DIR = path.resolve(
-  path.join(process.cwd(), "node_modules", "preact", "dist", "preact.module.js")
-);
+const PREACT_PATH = path.resolve(path.join(process.cwd(), "node_modules", "preact"));
 
-const COMPAT_FILE_DIR = path.resolve(
-  path.join(process.cwd(), "node_modules", "preact", "compat", "dist", "compat.module.js")
-);
+const PREACT_FILE = path.join(PREACT_PATH, "dist", "preact.module.js");
 
-const DEBUG_FILE_DIR = path.resolve(
-  path.join(process.cwd(), "node_modules", "preact", "debug", "dist", "debug.module.js")
-);
+const COMPAT_FILE = path.join(PREACT_PATH, "compat", "dist", "compat.module.js");
 
-const DEVTOOLS_FILE_DIR = path.resolve(
-  path.join(process.cwd(), "node_modules", "preact", "devtools", "dist", "devtools.module.js")
-);
+const DEBUG_FILE = path.join(PREACT_PATH, "debug", "dist", "debug.module.js");
 
-const HOOKS_FILE_DIR = path.resolve(
-  path.join(process.cwd(), "node_modules", "preact", "hooks", "dist", "hooks.module.js")
-);
+const DEVTOOLS_FILE = path.join(PREACT_PATH, "devtools", "dist", "devtools.module.js");
 
-const JSX_RUNTIME_FILE_DIR = path.resolve(
-  path.join(process.cwd(), "node_modules", "preact", "jsx-runtime", "dist", "jsxRuntime.module.js")
-);
+const HOOKS_FILE = path.join(PREACT_PATH, "hooks", "dist", "hooks.module.js");
 
-await fse.copy(PREACT_FILE_DIR, path.join(VENDORS_OUTPUT_DIR, "preact.js"));
+const JSX_RUNTIME_FILE = path.join(PREACT_PATH, "jsx-runtime", "dist", "jsxRuntime.module.js");
 
-await fse.copy(COMPAT_FILE_DIR, path.join(VENDORS_OUTPUT_DIR, "compat.js"));
+await fse.copy(PREACT_FILE, path.join(VENDORS_OUTPUT_DIR, "preact.js"));
 
-await fse.copy(DEBUG_FILE_DIR, path.join(VENDORS_OUTPUT_DIR, "debug.js"));
+await fse.copy(COMPAT_FILE, path.join(VENDORS_OUTPUT_DIR, "compat.js"));
 
-await fse.copy(DEVTOOLS_FILE_DIR, path.join(VENDORS_OUTPUT_DIR, "devtools.js"));
+await fse.copy(DEBUG_FILE, path.join(VENDORS_OUTPUT_DIR, "debug.js"));
 
-await fse.copy(HOOKS_FILE_DIR, path.join(VENDORS_OUTPUT_DIR, "hooks.js"));
+await fse.copy(DEVTOOLS_FILE, path.join(VENDORS_OUTPUT_DIR, "devtools.js"));
 
-await fse.copy(JSX_RUNTIME_FILE_DIR, path.join(VENDORS_OUTPUT_DIR, "jsxRuntime.js"));
+await fse.copy(HOOKS_FILE, path.join(VENDORS_OUTPUT_DIR, "hooks.js"));
 
-const routerSrcContent = `
+await fse.copy(JSX_RUNTIME_FILE, path.join(VENDORS_OUTPUT_DIR, "jsxRuntime.js"));
+
+const ROUTER_FILE_SOURCE = `
 import {
   ErrorBoundary,
   LocationProvider,
@@ -69,6 +61,6 @@ export {
   useRoute,
 };`;
 
-await fs.writeFile(path.join(VENDORS_OUTPUT_DIR, "router.js"), routerSrcContent);
+await fs.writeFile(path.join(VENDORS_OUTPUT_DIR, "router.js"), ROUTER_FILE_SOURCE);
 
-console.timeEnd("build - make-vendors");
+console.log(kleur.green().bold(`Make vendors in ${measureTime("make-vendors")} ms`));
