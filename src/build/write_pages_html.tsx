@@ -20,7 +20,7 @@ export const imports_map = JSON.stringify({
 export async function write_pages_html(
   pages_map: InternalPageMapResult,
   hydration_data: HydrationData,
-  mode: PranxBuildMode = "dev"
+  mode: PranxBuildMode
 ) {
   for (const [route_path, value] of Object.entries(pages_map)) {
     if (value.have_server_side_props) continue;
