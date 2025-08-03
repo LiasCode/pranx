@@ -17,6 +17,7 @@
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.13",
     "embla-carousel-react": "^8.6.0",
+    "esbuild-plugin-sass": "^1.0.1",
     "hono": "^4.8.3",
     "input-otp": "^1.4.2",
     "lucide-preact": "^0.528.0",
