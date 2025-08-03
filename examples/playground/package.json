@@ -8,8 +8,8 @@
     "format": "prettier --write --cache ./src"
   },
   "dependencies": {
-    "@floating-ui/react-dom": "^2.1.4",
-    "@hono/node-server": "^1.14.4",
+    "@floating-ui/react-dom": "^2.1.5",
+    "@hono/node-server": "^1.18.1",
     "@preact/signals": "^2.2.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -18,15 +18,15 @@
     "dayjs": "^1.11.13",
     "embla-carousel-react": "^8.6.0",
     "esbuild-plugin-sass": "^1.0.1",
-    "hono": "^4.8.3",
+    "hono": "^4.8.12",
     "input-otp": "^1.4.2",
     "lucide-preact": "^0.528.0",
     "pranx": "file://../../",
-    "preact": "^10.26.9",
+    "preact": "^10.27.0",
     "preact-render-to-string": "^6.5.13",
     "react-day-picker": "^9.8.1",
     "react-hot-toast": "^2.5.2",
-    "react-resizable-panels": "^3.0.3",
+    "react-resizable-panels": "^3.0.4",
     "recharts": "^3.1.0",
     "tailwind-merge": "^3.3.1",
     "tailwindcss-animate": "^1.0.7",
@@ -34,14 +34,14 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.11",
-    "@types/node": "^20.11.17",
+    "@types/node": "^20.19.9",
     "autoprefixer": "^10.4.21",
     "esbuild-plugin-tailwindcss": "1.2.3",
     "postcss": "^8.5.6",
     "prettier": "^3.6.2",
-    "prettier-plugin-organize-imports": "^4.1.0",
+    "prettier-plugin-organize-imports": "^4.2.0",
     "tailwindcss": "3.4.17",
-    "tsx": "^4.7.1",
-    "typescript": "^5.8.3"
+    "tsx": "^4.20.3",
+    "typescript": "^5.9.2"
   }
 }
