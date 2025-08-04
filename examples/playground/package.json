@@ -2,7 +2,7 @@
   "name": "playground",
   "type": "module",
   "scripts": {
-    "dev": "tsx watch --include \"./src/**/*\" --clear-screen=false ./src/index.ts",
+    "dev": "tsx ./src/index.ts",
     "build": "tsc",
     "start": "NODE_ENV=production node dist/index.js",
     "format": "prettier --write --cache ./src"

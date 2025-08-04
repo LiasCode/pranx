@@ -15,6 +15,10 @@ export const Layout = (props: PropsWithChildren) => {
           </li>
 
           <li className="hover:text-purple-300">
+            <a href="/config">Config</a>
+          </li>
+
+          <li className="hover:text-purple-300">
             <a href="/docs">Docs</a>
           </li>
 

@@ -6,8 +6,9 @@ import { prepare_output_dir } from "../shared/prepare_output_dir";
 import { bundle } from "./bundle";
 import { generate_types } from "./generate_types";
 
+let rebuild_count = 1;
 export const build_dev = async () => {
-  Logger.info("Rebuilding...");
+  Logger.info(`Rebuilding... ${rebuild_count++}`);
 
   measureTime("build_dev");
 
