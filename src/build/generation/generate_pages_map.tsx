@@ -1,13 +1,13 @@
 import path from "node:path";
 import { renderToString } from "preact-render-to-string";
-import { Logger } from "../logger/index.js";
+import { Logger } from "../../logger/index.js";
 import type {
   GetServerSideProps,
   GetStaticProps,
   GetStaticPropsResult,
   HydrationData,
-} from "../types.js";
-import { CLIENT_OUTPUT_DIR } from "./constants.js";
+} from "../../types.js";
+import { CLIENT_OUTPUT_DIR } from "../constants.js";
 import type { PagesGroupByPath } from "./group_pages_bundle_by_path.js";
 
 export type InternalPageMapResult = Record<

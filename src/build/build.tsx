@@ -1,18 +1,18 @@
 import kleur from "kleur";
 import type { PranxConfig } from "../config/pranx-config.js";
 import { measureTime } from "../utils/time-perf.js";
-import { bundle_hydrate_script } from "./bundle_hydrate_script.js";
-import { bundle_pages } from "./bundle_pages.js";
-import { bundle_server } from "./bundle_server.js";
-import { bundle_vendors } from "./bundle_vendors.js";
 import { FLAGS } from "./constants.js";
+import { bundle_hydrate } from "./hydrate/bundle.js";
+import { bundle_pages } from "./pages/bundle.js";
+import { bundle_server } from "./server/bundle.js";
+import { bundle_vendors } from "./vendors/bundle.js";
 
 export type PranxBuildMode = "dev" | "prod";
 
 export async function build(user_config: PranxConfig, mode: PranxBuildMode = "prod") {
   // Bundle hydrate script
   measureTime("hydrate-bundle");
-  const hydrate_bundle_result = await bundle_hydrate_script({
+  const hydrate_bundle_result = await bundle_hydrate({
     user_config,
     mode,
   });

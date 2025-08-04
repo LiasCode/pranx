@@ -1,18 +1,20 @@
-import * as esbuild from "esbuild";
-import type { PranxConfig } from "../config/pranx-config.js";
-import { getPageFiles } from "../utils/resolve.js";
-import type { PranxBuildMode } from "./build.js";
-import { CLIENT_OUTPUT_DIR } from "./constants.js";
+import type { BuildOptions } from "esbuild";
+import type { PranxConfig } from "../../config/pranx-config.js";
+import { getPageFiles } from "../../utils/resolve.js";
+import type { PranxBuildMode } from "../build.js";
+import { CLIENT_OUTPUT_DIR } from "../constants.js";
 
-type PagesBundleOptions = {
+export type PagesBundleOptions = {
   user_config: PranxConfig;
   mode: PranxBuildMode;
 };
 
-export async function bundle_pages(options: PagesBundleOptions) {
+export const get_pages_config = async (
+  options: PagesBundleOptions
+): Promise<BuildOptions & { metafile: true }> => {
   const pages_entry_points = await getPageFiles(options.user_config);
 
-  const pagesBuildResult = await esbuild.build({
+  return {
     entryPoints: pages_entry_points,
     bundle: true,
     outdir: CLIENT_OUTPUT_DIR,
@@ -58,7 +60,5 @@ export async function bundle_pages(options: PagesBundleOptions) {
     },
 
     plugins: options.user_config.esbuild?.plugins,
-  });
-
-  return pagesBuildResult;
-}
+  };
+};

@@ -1,6 +1,6 @@
 import kleur from "kleur";
 import { FLAGS, SERVER_OUTPUT_DIR } from "../build/constants.js";
-import type { InternalPageMapResult } from "../build/generate_pages_map.js";
+import type { InternalPageMapResult } from "../build/generation/generate_pages_map.js";
 import { Logger } from "../logger/index.js";
 import type { RouterComponent } from "../types.js";
 import { filePathToRoutingPath } from "./filePathToRoutingPath.js";

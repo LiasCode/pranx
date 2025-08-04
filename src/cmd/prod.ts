@@ -10,8 +10,8 @@ import {
   PRANX_OUTPUT_DIR,
   SERVER_OUTPUT_DIR,
 } from "../build/constants.js";
-import { process_pages } from "../build/process_pages.js";
-import { write_pages_html } from "../build/write_pages_html.js";
+import { process_pages } from "../build/generation/process_pages.js";
+import { write_pages_html } from "../build/generation/write_pages_html.js";
 import { load_user_config } from "../config/config.js";
 import { attach_api_handler } from "../hono/attach-api-handler.js";
 import { attach_page_handler } from "../hono/attach-page-handler.js";

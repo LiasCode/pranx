@@ -1,9 +1,9 @@
 import * as swcHtml from "@swc/html";
 import * as fs from "node:fs/promises";
 import path from "node:path";
-import type { HydrationData } from "../types.js";
-import type { PranxBuildMode } from "./build.js";
-import { CLIENT_OUTPUT_DIR } from "./constants.js";
+import type { HydrationData } from "../../types.js";
+import type { PranxBuildMode } from "../build.js";
+import { CLIENT_OUTPUT_DIR } from "../constants.js";
 import type { InternalPageMapResult } from "./generate_pages_map.js";
 
 export const imports_map = JSON.stringify({

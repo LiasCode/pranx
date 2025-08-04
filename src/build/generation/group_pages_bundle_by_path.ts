@@ -1,7 +1,7 @@
 import path from "node:path";
-import type { PranxLoaderModule, PranxMetaModule, PranxPageModule } from "../types.js";
-import { getModule } from "../utils/resolve.js";
-import { CLIENT_OUTPUT_DIR, SERVER_OUTPUT_DIR } from "./constants.js";
+import type { PranxLoaderModule, PranxMetaModule, PranxPageModule } from "../../types.js";
+import { getModule } from "../../utils/resolve.js";
+import { CLIENT_OUTPUT_DIR, SERVER_OUTPUT_DIR } from "../constants.js";
 import type { ProcessPagesOptions } from "./process_pages.js";
 
 export type PagesGroupByPath = Map<

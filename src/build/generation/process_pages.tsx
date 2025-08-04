@@ -1,7 +1,7 @@
-import type { PranxConfig } from "../config/pranx-config.js";
-import type { PranxBuildMode } from "./build.js";
-import type { bundle_pages } from "./bundle_pages.js";
-import type { bundle_server } from "./bundle_server.js";
+import type { PranxConfig } from "../../config/pranx-config.js";
+import type { PranxBuildMode } from "../build.js";
+import type { bundle_pages } from "../pages/bundle.js";
+import type { bundle_server } from "../server/bundle.js";
 import { generate_pages_map } from "./generate_pages_map.js";
 import { group_pages_bundle_by_path } from "./group_pages_bundle_by_path.js";
 

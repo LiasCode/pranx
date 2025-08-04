@@ -1,20 +1,22 @@
-import * as esbuild from "esbuild";
-import type { PranxConfig } from "../config/pranx-config.js";
-import { getLoadersFiles, getMetaFiles, getRoutesHandlersFiles } from "../utils/resolve.js";
-import type { PranxBuildMode } from "./build.js";
-import { SERVER_OUTPUT_DIR } from "./constants.js";
+import type { BuildOptions } from "esbuild";
+import type { PranxConfig } from "../../config/pranx-config.js";
+import { getLoadersFiles, getMetaFiles, getRoutesHandlersFiles } from "../../utils/resolve.js";
+import type { PranxBuildMode } from "../build.js";
+import { SERVER_OUTPUT_DIR } from "../constants.js";
 
-type ServerBundleOptions = {
+export type ServerBundleOptions = {
   user_config: PranxConfig;
   mode: PranxBuildMode;
 };
 
-export async function bundle_server(options: ServerBundleOptions) {
+export const get_server_config = async (
+  options: ServerBundleOptions
+): Promise<BuildOptions & { metafile: true }> => {
   const handlers_entry_points = await getRoutesHandlersFiles(options.user_config);
   const loader_entry_points = await getLoadersFiles(options.user_config);
   const meta_entry_points = await getMetaFiles(options.user_config);
 
-  const result = await esbuild.build({
+  return {
     entryPoints: [...handlers_entry_points, ...loader_entry_points, ...meta_entry_points],
     bundle: true,
     outdir: SERVER_OUTPUT_DIR,
@@ -49,7 +51,5 @@ export async function bundle_server(options: ServerBundleOptions) {
     sourcemap: false,
     minify: false,
     metafile: true,
-  });
-
-  return result;
-}
+  };
+};
