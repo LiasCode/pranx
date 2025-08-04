@@ -1,6 +1,6 @@
 import type { Handler, Hono } from "hono";
-import type { RouterComponent } from "../types.js";
-import { filePathToRoutingPath } from "../utils/filePathToRoutingPath.js";
+import type { RouterComponent } from "../../types.js";
+import { filePathToRoutingPath } from "../../utils/filePathToRoutingPath.js";
 
 export async function attach_api_handler(server: Hono, route_component: RouterComponent<Handler>) {
   const path_resolved = filePathToRoutingPath(route_component.file_path);

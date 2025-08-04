@@ -1,8 +1,8 @@
 import type { Handler, Hono } from "hono";
-import type { InternalPageMapResult } from "../build/generation/generate_pages_map.js";
-import { html_page_template } from "../build/generation/write_pages_html.js";
-import type { HydrationData } from "../types.js";
-import { filePathToRoutingPath } from "../utils/filePathToRoutingPath.js";
+import type { InternalPageMapResult } from "../../build/generation/generate_pages_map.js";
+import { html_page_template } from "../../build/generation/write_pages_html.js";
+import type { HydrationData } from "../../types.js";
+import { filePathToRoutingPath } from "../../utils/filePathToRoutingPath.js";
 
 export async function attach_page_handler(
   server: Hono,
