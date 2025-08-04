@@ -9,15 +9,15 @@ A light-weight, Next.js-like framework with Preact, Hono, esbuild and swc for st
 - [x] File-System Based Routing
 - [x] Api handlers
 - [x] Static Site Generation (SSG)
+- [x] Server Side Rendering (SSR)
 - [x] Client Side Routing
-- [x] Client-Side Hydration
+- [x] Automatic Hydration
 - [x] Fully typescript support
 - [x] Fast compilation with esbuild
 - [x] CSS importing and automatic bundle
 - [x] Extensible esbuild config with plugins
 - [x] Markdown and .mdx support
 - [x] Sass support
-- [x] SSR
 - [x] Tailwindcss support
 - [ ] Hot Module Replacement (HMR)
 
@@ -66,6 +66,7 @@ The file path also represent the final url path that will be generated:
 - `pages/product/[id]/page.tsx`: `/product/:id`
 
 > Work in progress for pages
+
 - `pages/product/[...id]/page.tsx`: `/product/:id*`
 
 #### page.tsx
