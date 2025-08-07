@@ -2,7 +2,6 @@ import { Hono } from "hono";
 import type { PranxBuildMode } from "./build/build.js";
 import { start_dev } from "./cmd/dev.js";
 import { start_prod } from "./cmd/prod.js";
-import "./plugins/index.js";
 
 export type PranxMode = PranxBuildMode;
 

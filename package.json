@@ -11,7 +11,6 @@
     "dev": "tsx ./scripts/watch.ts",
     "test": "vitest run",
     "test:watch": "vitest",
-    "coverage": "vitest run --coverage",
     "lint": "biome lint . --fix --unsafe",
     "check": "tsc --noEmit -p ./tsconfig.json",
     "format": "prettier --write --cache \"./src\" \"./scripts\"",
@@ -30,11 +29,6 @@
       "module": "./dist/index.js",
       "import": "./dist/index.js"
     },
-    "./plugins": {
-      "types": "./dist/plugins/index.d.ts",
-      "module": "./dist/plugins/index.js",
-      "import": "./dist/plugins/index.js"
-    },
     "./types/*": {
       "types": "./dist/types/*"
     }
@@ -48,14 +42,16 @@
   "keywords": [
     "preact",
     "next",
-    "hono",
-    "framework",
     "ssr",
     "ssg",
-    "http",
-    "efficient",
-    "small",
-    "esbuild"
+    "csr",
+    "file-based-router",
+    "server",
+    "hono",
+    "esbuild",
+    "framework",
+    "metaframework",
+    "fullstack"
   ],
   "author": {
     "name": "LiasCode",
@@ -63,43 +59,33 @@
     "url": "https://lias-code.pages.dev"
   },
   "license": "MIT",
-  "workspaces": [
-    "./examples/*"
-  ],
   "devDependencies": {
     "@biomejs/biome": "1.8.3",
     "@types/fs-extra": "^11.0.4",
-    "@types/html-minifier": "^4.0.5",
     "@types/node": "^20.19.9",
-    "@vitest/coverage-v8": "3.2.1",
     "prettier": "^3.6.2",
     "prettier-plugin-organize-imports": "^4.2.0",
-    "simple-git-hooks": "^2.13.1",
     "tsx": "^4.20.3",
     "typescript": "^5.9.2",
     "vitest": "^3.2.4",
-    "zod": "^3.25.76"
+    "@types/chokidar": "^2.1.7"
   },
   "dependencies": {
+    "zod": "^3.25.76",
     "@hono/node-server": "^1.18.1",
     "@mdx-js/esbuild": "^3.1.0",
     "@swc/html": "^1.13.3",
-    "@types/chokidar": "^2.1.7",
     "chokidar": "^4.0.3",
     "esbuild": "^0.25.8",
     "fs-extra": "^11.3.0",
     "glob": "^11.0.3",
     "hono": "^4.8.12",
     "kleur": "^4.1.5",
-    "postcss": "^8.5.6",
     "preact": "^10.27.0",
     "preact-iso": "^2.9.2",
-    "preact-render-to-string": "^6.5.13",
-    "sass": "^1.89.2"
+    "preact-render-to-string": "^6.5.13"
   },
   "trustedDependencies": [
-    "@biomejs/biome",
-    "@parcel/watcher",
-    "playground"
+    "@biomejs/biome"
   ]
 }
