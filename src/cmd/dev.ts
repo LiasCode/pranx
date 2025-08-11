@@ -3,6 +3,7 @@ import type { Hono } from "hono";
 import { serveStatic } from "hono/serve-static";
 import kleur from "kleur";
 import * as fs from "node:fs/promises";
+import path from "node:path";
 import { build } from "../build/build.js";
 import {
   CLIENT_OUTPUT_DIR,
@@ -98,6 +99,12 @@ export async function start_dev(server_instance: Hono): Promise<Hono> {
     "*",
     serveStatic({
       root: CLIENT_OUTPUT_DIR,
+      rewriteRequestPath(request_path) {
+        if (path.extname(request_path)) {
+          return request_path;
+        }
+        return path.join(request_path, "index.html");
+      },
       getContent: async (path) => {
         try {
           const content = await fs.readFile(path, "utf-8");
@@ -113,6 +120,12 @@ export async function start_dev(server_instance: Hono): Promise<Hono> {
     "*",
     serveStatic({
       root: config.public_dir,
+      rewriteRequestPath(request_path) {
+        if (path.extname(request_path)) {
+          return request_path;
+        }
+        return path.join(request_path, "index.html");
+      },
       getContent: async (path) => {
         try {
           const content = await fs.readFile(path, "utf-8");
