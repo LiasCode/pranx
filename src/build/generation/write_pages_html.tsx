@@ -52,20 +52,19 @@ export const html_page_template = (
   page_value: InternalPageMapResult[1],
   hydration_data: HydrationData
 ) => {
-  return `
-    <!doctype html>
-    <html>
-      <head>
-        ${page_value.meta}
-      </head>
+  const hydration_data_as_json = JSON.stringify(hydration_data);
+  return `<!doctype html>
+<html>
+  <head>
+    ${page_value.meta}
+  </head>
 
-      <body>${page_value.page_rendered_result}</body>
+  <body>${page_value.page_rendered_result}</body>
 
-      <script type="importmap">${imports_map}</script>
+  <script type="importmap">${imports_map}</script>
 
-      <script id="__PRANX_DATA__" type="application/json">${JSON.stringify(hydration_data)}</script>
+  <script id="__PRANX_DATA__" type="application/json">${hydration_data_as_json}</script>
 
-      <script id="__PRANX_HYDRATE_SCRIPT__" type="module" src="/hydrate.js"></script>
-    </html>
-  `;
+  <script id="__PRANX_HYDRATE_SCRIPT__" type="module" src="/hydrate.js"></script>
+</html>`;
 };

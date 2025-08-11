@@ -1,0 +1,32 @@
+{
+  "name": "playground",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch --include \"./src/**/*\" --clear-screen=false ./src/index.ts ",
+    "build": "tsc",
+    "start": "NODE_ENV=production node dist/index.js",
+    "format": "prettier --write --cache ./src"
+  },
+  "dependencies": {
+    "pranx": "file://../../",
+    "preact": "^10.27.0",
+    "@preact/signals": "^2.2.1",
+    "preact-iso": "^2.9.2",
+    "hono": "^4.8.12",
+    "@hono/node-server": "^1.18.1",
+    "@mdx-js/esbuild": "^3.1.0",
+    "esbuild-plugin-sass": "^1.0.1",
+    "esbuild-plugin-tailwindcss": "1.2.3",
+    "github-markdown-css": "^5.8.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.9",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "prettier": "^3.6.2",
+    "prettier-plugin-organize-imports": "^4.2.0",
+    "tailwindcss": "3.4.17",
+    "tsx": "^4.20.3",
+    "typescript": "^5.9.2"
+  }
+}
