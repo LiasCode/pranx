@@ -1,7 +1,7 @@
 {
   "$schema": "https://biomejs.dev/schemas/1.8.3/schema.json",
   "organizeImports": {
-    "enabled": false
+    "enabled": true
   },
   "formatter": {
     "enabled": false,
@@ -20,7 +20,7 @@
     }
   },
   "files": {
-    "include": ["./src/**/*", "./scripts/**/*"],
-    "ignore": ["./dist/**/*", "node_modules/**/*", "examples/**/*", "./src/client/vendor/**/*"]
+    "include": ["./src/**/*"],
+    "ignore": ["./dist/**/*", "node_modules/**/*"]
   }
 }

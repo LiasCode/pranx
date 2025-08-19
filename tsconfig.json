@@ -1,16 +1,23 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
+
   "compilerOptions": {
     "target": "ESNext",
     "module": "NodeNext",
     "moduleResolution": "nodenext",
-    "resolveJsonModule": true,
-    "declaration": true,
+
     "outDir": "./dist",
+    "declaration": true,
+
+    // resolution
+    "resolveJsonModule": true,
     "removeComments": false,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
+
+    // strict
+    "strict": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
     "noUnusedLocals": true,
@@ -18,21 +25,19 @@
     "noImplicitThis": true,
     "noUncheckedIndexedAccess": true,
     "noUnusedParameters": true,
-    "strict": true,
 
-    "jsx": "react-jsx",
-    "jsxImportSource": "preact",
+    // jsx
+    "jsx": "react",
+    "jsxFactory": "h",
+    "jsxFragmentFactory": "Fragment",
 
-    "skipLibCheck": true,
     "checkJs": true,
-
-    "emitDeclarationOnly": true,
 
     "paths": {
       "react": ["./node_modules/preact/compat/"],
       "react-dom": ["./node_modules/preact/compat/"]
     }
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "**/*.spec.ts", "**/*.test.ts", "src/client/**/*", "src/types/**/*"]
+  "include": ["src"],
+  "exclude": ["node_modules", "dist", "scripts", "test", "tests", "coverage", "vendor"]
 }

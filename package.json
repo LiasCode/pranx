@@ -1,39 +1,32 @@
 {
-  "$schema": "https://json.schemastore.org/package",
   "name": "pranx",
   "version": "0.0.57",
-  "description": "The next of preact. A light-weight, Next.js-like framework with Preact, Hono, and esbuild for static site generation and hydration.",
-  "main": "dist/index.js",
+  "description": "The next of preact. A light-weight, Next.js-like fullstack metaframework",
   "type": "module",
-  "bin": "dist/bin/index.js",
-  "workspaces": [
-    "./examples/*"
-  ],
   "scripts": {
-    "build": "tsx ./scripts/build.ts",
-    "dev": "tsx ./scripts/watch.ts",
+    "build": "tsc -p ./tsconfig.json",
+    "dev": "tsc --watch -p ./tsconfig.json",
     "test": "vitest run",
-    "test:watch": "vitest",
     "lint": "biome lint . --fix --unsafe",
     "check": "tsc --noEmit -p ./tsconfig.json",
-    "format": "prettier --write --cache \"./src\" \"./scripts\"",
-    "make-vendors": "tsx ./scripts/make-vendors.ts",
+    "format": "prettier --write --cache src",
     "prepublishOnly": "npm run build",
-    "push": "npm version patch && git push",
-    "push-minor": "npm version minor && git push",
-    "push-major": "npm version major && git push"
+    "patch": "bun pm version patch && git push",
+    "minor": "bun pm version minor && git push",
+    "major": "bun pm version major && git push",
+    "release": "changelogen --release --push && bun publish"
   },
   "repository": "https://github.com/LiasCode/pranx",
   "bugs": "https://github.com/LiasCode/pranx/issues",
   "homepage": "https://github.com/LiasCode/pranx",
+  "bin": {
+    "pranx": "dist/bin/index.js"
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "module": "./dist/index.js",
       "import": "./dist/index.js"
-    },
-    "./types/*": {
-      "types": "./dist/types/*"
     }
   },
   "files": [
@@ -47,12 +40,11 @@
     "next",
     "ssr",
     "ssg",
+    "isg",
     "csr",
     "file-based-router",
     "server",
-    "hono",
     "esbuild",
-    "framework",
     "metaframework",
     "fullstack"
   ],
@@ -63,31 +55,25 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@hono/node-server": "^1.18.1",
     "@swc/html": "^1.13.3",
     "chokidar": "^4.0.3",
     "esbuild": "^0.25.8",
-    "fs-extra": "^11.3.1",
     "glob": "^11.0.3",
-    "kleur": "^4.1.5",
-    "hono": "^4.9.0",
     "preact": "^10.27.0",
-    "preact-iso": "^2.9.2",
     "preact-render-to-string": "^6.5.13"
   },
   "devDependencies": {
     "@biomejs/biome": "1.8.3",
-    "@types/fs-extra": "^11.0.4",
+    "@types/chokidar": "^2.1.7",
     "@types/node": "^20.19.10",
+    "changelogen": "^0.6.2",
     "prettier": "^3.6.2",
     "prettier-plugin-organize-imports": "^4.2.0",
     "tsx": "^4.20.3",
     "typescript": "^5.9.2",
-    "vitest": "^3.2.4",
-    "@types/chokidar": "^2.1.7"
+    "vitest": "^3.2.4"
   },
   "trustedDependencies": [
-    "@biomejs/biome",
-    "esbuild"
+    "@biomejs/biome"
   ]
 }

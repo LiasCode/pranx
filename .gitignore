@@ -3,7 +3,6 @@ built
 dist
 package-lock.json
 coverage
-
 bun.lock
-
 .pranx
+.env

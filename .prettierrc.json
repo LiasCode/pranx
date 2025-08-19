@@ -11,5 +11,6 @@
   "arrowParens": "always",
   "endOfLine": "lf",
   "singleAttributePerLine": true,
-  "plugins": ["prettier-plugin-organize-imports"]
+  "plugins": ["prettier-plugin-organize-imports"],
+  "organizeImportsSkipDestructiveCodeActions": true
 }
