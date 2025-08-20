@@ -5,6 +5,8 @@
     "moduleResolution": "nodenext",
 
     "declaration": true,
+    "emitDeclarationOnly": true,
+    "outFile": "./dist/index.d.ts",
 
     // resolution
     "resolveJsonModule": true,
@@ -39,6 +41,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src", "types", "scripts"],
-  "exclude": ["node_modules"]
+  "include": ["./src/index.ts", "types"],
+  "exclude": ["node_modules", "dist", "scripts", "test"]
 }
