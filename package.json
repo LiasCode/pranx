@@ -25,6 +25,9 @@
   "bin": {
     "pranx": "dist/bin/index.js"
   },
+  "workspaces": [
+    "./playground/*"
+  ],
   "types": "./types/css.d.ts",
   "exports": {
     ".": {

@@ -1,0 +1,16 @@
+{
+  "name": "basic",
+  "version": "0.0.1",
+  "scripts": {
+    "build": "pranx --build",
+    "dev": "pranx --dev",
+    "start": "pranx --start"
+  },
+  "author": "LiasCode <liascode.dev@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "pranx": "link:pranx",
+    "preact": "^10.27.1",
+    "preact-render-to-string": "^6.6.0"
+  }
+}
