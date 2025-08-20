@@ -1,7 +1,6 @@
 import { logger } from "@/utils/logger.js";
-import { measureTime } from "@/utils/time-perf.js";
+import kleur from "kleur";
 
 export function dev() {
-  logger.info("Pranx Dev");
-  measureTime("");
+  logger.log(kleur.bold().magenta("Pranx Dev"));
 }

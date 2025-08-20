@@ -1,5 +1,6 @@
 import { logger } from "@/utils/logger.js";
+import kleur from "kleur";
 
 export function build() {
-  logger.info("Pranx Build");
+  logger.log(kleur.bold().magenta("Pranx Build"));
 }
