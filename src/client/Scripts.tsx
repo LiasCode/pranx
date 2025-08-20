@@ -1,3 +1,5 @@
+export const SCRIPTS_TAG = `__PRANX_SCRIPTS__-${Math.random()}`;
+
 export function Scripts() {
-  return "__PRANX_SCRIPTS__";
+  return SCRIPTS_TAG;
 }

@@ -27,9 +27,8 @@
     "baseUrl": "./",
 
     // jsx
-    "jsx": "react",
-    "jsxFactory": "h",
-    "jsxFragmentFactory": "Fragment",
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact",
 
     "checkJs": true,
 

@@ -1,4 +1,3 @@
-import { h } from "preact";
 import { lazy, LocationProvider, Route, Router } from "preact-iso";
 
 export function StartApp() {

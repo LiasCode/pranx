@@ -15,7 +15,7 @@ await esbuild.build({
   format: "esm",
 
   keepNames: true,
-  minify: false,
+  minify: true,
   metafile: false,
 
   chunkNames: "_chunks/[name]-[hash]",
@@ -28,9 +28,8 @@ await esbuild.build({
   packages: "external",
   splitting: true,
 
-  jsx: "transform",
-  jsxFactory: "h",
-  jsxFragment: "Fragment",
+  jsx: "automatic",
+  jsxImportSource: "preact",
 
   platform: "node",
 

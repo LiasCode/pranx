@@ -1,5 +1,5 @@
 import type { HYDRATE_DATA } from "@/client/mount.js";
-import { logger } from "@/utils/logger.js";
+import { SCRIPTS_TAG } from "@/client/Scripts.js";
 import esbuild from "esbuild";
 import fse from "fs-extra";
 import { glob } from "glob";
@@ -80,7 +80,7 @@ export async function bundle_dev() {
     bundle: true,
     outdir: OUTPUT_BUNDLE_BROWSER_DIR,
     format: "esm",
-    sourcemap: false,
+    sourcemap: true,
 
     target: "esnext",
     platform: "browser",
@@ -157,14 +157,14 @@ export async function bundle_dev() {
     const page_module = (await import(file_absolute)) as PageModule;
 
     const page_prerendered = renderToString(
-      h(layout_module.default, {}, h(page_module.default, {}, null))
+      h(layout_module.default, {}, h(page_module.default, null, null))
     );
 
     await fse.writeFile(
       file_absolute.replace("page.js", "index.html"),
       `<!DOCTYPE html>${page_prerendered
         .replace(
-          "__PRANX_SCRIPTS__",
+          SCRIPTS_TAG,
           `
         <script
           id="__PRANX_HYDRATE_DATA__"
