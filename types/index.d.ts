@@ -1,4 +1,7 @@
-// CSS modules
+// Pranx --------------------------------------------
+export type GetStaticProps = () => void;
+
+// CSS modules --------------------------------------------
 type CSSModuleClasses = { readonly [key: string]: string };
 
 declare module "*.module.css" {

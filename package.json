@@ -5,11 +5,10 @@
   "type": "module",
   "scripts": {
     "build": "tsx ./scripts/build.ts",
-    "build:prod": "bun run build && bun run check && bun run types",
+    "build:prod": "bun run check && bun run build",
     "dev": "tsx watch --include \"./src/**/*\" --clear-screen=false ./scripts/build.ts",
     "test": "vitest run",
     "check": "tsc --noEmit -p ./tsconfig.json",
-    "types": "tsc -p ./tsconfig.lib.json",
     "style": "bun run format && bun run lint",
     "format": "prettier --write --cache src scripts",
     "lint": "biome lint . --fix --unsafe",
@@ -28,12 +27,10 @@
   "workspaces": [
     "./playground/*"
   ],
-  "types": "./types/css.d.ts",
   "exports": {
     ".": {
       "import": "./dist/index.js",
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
+      "types": "./types/index.d.ts"
     },
     "./package.json": "./package.json"
   },

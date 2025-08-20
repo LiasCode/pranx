@@ -39,6 +39,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src", "types", "scripts"],
-  "exclude": ["node_modules"]
+  "include": ["src", "scripts"],
+  "exclude": ["node_modules", "dist"]
 }
