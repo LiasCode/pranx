@@ -1,8 +1,12 @@
 import type { GetStaticProps } from "pranx";
-import "./home.css";
 
 export default function HomePage() {
-  return <div>Home Page</div>;
+  return (
+    <div>
+      <a href="/about">Go to About Page</a>
+      <h1 style={{ fontSize: "4rem" }}>Home Page</h1>
+    </div>
+  );
 }
 
 export const getStaticProps: GetStaticProps = () => {

@@ -31,13 +31,13 @@ const main = defineCommand({
       logger.error("The args must be only one", `current args: ${args}`);
     }
     if (args.build) {
-      build();
+      await build();
     }
     if (args.dev) {
-      dev();
+      await dev();
     }
     if (args.start) {
-      start();
+      await start();
     }
   },
 });
