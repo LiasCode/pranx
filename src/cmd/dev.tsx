@@ -1,7 +1,5 @@
-import { h } from "preact";
+import { logger } from "@/utils/logger.js";
 
 export function dev() {
-  console.log("Dev Start");
+  logger.info("Pranx Dev");
 }
-
-export const Home = () => <h1>Hola Mundo</h1>;

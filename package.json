@@ -57,6 +57,7 @@
   "dependencies": {
     "@swc/html": "^1.13.3",
     "chokidar": "^4.0.3",
+    "consola": "^3.4.2",
     "esbuild": "^0.25.8",
     "glob": "^11.0.3",
     "preact": "^10.27.0",
