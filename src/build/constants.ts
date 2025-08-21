@@ -4,7 +4,7 @@ const CWD = process.cwd();
 
 const OUTPUT_PRANX_DIR = join(CWD, ".pranx");
 
-const OUTPUT_PAGES_DIR = join(OUTPUT_PRANX_DIR, "bundle");
+const OUTPUT_PAGES_DIR = join(OUTPUT_PRANX_DIR);
 const OUTPUT_BUNDLE_BROWSER_DIR = join(OUTPUT_PAGES_DIR, "browser");
 const OUTPUT_BUNDLE_SERVER_DIR = join(OUTPUT_PAGES_DIR, "server");
 

@@ -134,7 +134,7 @@ export async function bundle_dev() {
     routes: [],
   };
 
-  const pranx_bundle_replace_path = join(".pranx", "bundle", "browser");
+  const pranx_bundle_replace_path = join(".pranx", "browser");
 
   for (const [file, _output] of Object.entries(browser_bundle_metafile.metafile.outputs)) {
     if (!file.endsWith("page.js")) continue;
