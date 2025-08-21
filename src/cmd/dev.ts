@@ -1,6 +1,7 @@
 import { bundle_dev } from "@/build/bundle_dev.js";
-import { OUTPUT_BUNDLE_BROWSER_DIR } from "@/build/constants.js";
+import { OUTPUT_BUNDLE_BROWSER_DIR, PUBLIC_USER_DIR } from "@/build/constants.js";
 import { logger } from "@/utils/logger.js";
+import fse from "fs-extra";
 import { getRandomPort } from "get-port-please";
 import { H3, serve, serveStatic } from "h3";
 import kleur from "kleur";
@@ -14,12 +15,23 @@ app.use("**", (event) => {
     indexNames: ["/index.html"],
 
     getContents: async (id) => {
-      const buffer = await readFile(join(OUTPUT_BUNDLE_BROWSER_DIR, id));
+      const target_file = join(OUTPUT_BUNDLE_BROWSER_DIR, id);
+      const target_public_file = join(PUBLIC_USER_DIR, id);
+
+      const existsTargetFile = await fse.exists(target_file);
+
+      const buffer = await readFile(existsTargetFile ? target_file : target_public_file);
+
       return new Uint8Array(buffer);
     },
 
     getMeta: async (id) => {
-      const stats = await stat(join(OUTPUT_BUNDLE_BROWSER_DIR, id)).catch(() => {});
+      const target_file = join(OUTPUT_BUNDLE_BROWSER_DIR, id);
+      const target_public_file = join(PUBLIC_USER_DIR, id);
+
+      const existsTargetFile = await fse.exists(target_file);
+
+      const stats = await stat(existsTargetFile ? target_file : target_public_file).catch(() => {});
 
       if (stats?.isFile()) {
         return {

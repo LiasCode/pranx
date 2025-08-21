@@ -1,4 +1,4 @@
-import { VNode } from "preact";
+import { ComponentChildren, VNode } from "preact";
 import { PropsWithChildren } from "preact/compat";
 
 // Pranx --------------------------------------------
@@ -6,13 +6,14 @@ export type GetStaticProps = () => void;
 
 export function mount(app: any, root: Element | DocumentFragment): void;
 
-export const StartApp: () => VNode<any>;
-export const Scripts: () => VNode<any>;
+export function StartApp(): VNode<any>;
+export function Scripts(): VNode<any>;
+export function Meta(): VNode<any>;
 
-export type LayoutProps = PropsWithChildren & { data: any };
+export type ServerEntryProps = PropsWithChildren;
 
-export type LayoutModule = {
-  default(): VNode<LayoutProps>;
+export type ServerEntryModule = {
+  default(): VNode<ServerEntryProps>;
 };
 
 export type PageModule = {

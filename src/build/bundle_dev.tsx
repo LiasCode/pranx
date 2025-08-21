@@ -1,3 +1,4 @@
+import { META_TAG } from "@/client/Meta.js";
 import type { HYDRATE_DATA } from "@/client/mount.js";
 import { SCRIPTS_TAG } from "@/client/Scripts.js";
 import esbuild from "esbuild";
@@ -7,7 +8,7 @@ import { join, resolve } from "pathe";
 import { h } from "preact";
 import { renderToString } from "preact-render-to-string";
 import type { PropsWithChildren } from "preact/compat";
-import type { LayoutModule, PageModule } from "../../types/index.js";
+import type { PageModule, ServerEntryModule } from "../../types/index.js";
 import {
   OUTPUT_BUNDLE_BROWSER_DIR,
   OUTPUT_BUNDLE_SERVER_DIR,
@@ -19,10 +20,13 @@ import {
 export async function bundle_dev() {
   await fse.emptyDir(OUTPUT_PRANX_DIR);
 
-  const server_entries = await glob(join(SOURCE_PAGES_DIR, "**", "*.{js,ts,tsx,jsx}"), {
-    nodir: true,
-    absolute: true,
-  });
+  const server_entries = await glob(
+    [join(SOURCE_PAGES_DIR, "**", "*.{js,ts,tsx,jsx}"), join(SOURCE_DIR, "entry-server.tsx")],
+    {
+      nodir: true,
+      absolute: true,
+    }
+  );
 
   await esbuild.build({
     entryPoints: server_entries,
@@ -51,6 +55,8 @@ export async function bundle_dev() {
     mainFields: ["module", "main"], // Prefer ESM versions
     conditions: ["import", "module", "require"], // Module resolution conditions
 
+    outbase: SOURCE_DIR,
+
     alias: {
       "react": "preact/compat",
       "react-dom": "preact/compat",
@@ -65,15 +71,13 @@ export async function bundle_dev() {
     },
   });
 
-  const browser_entries = (
-    await glob(
-      [join(SOURCE_PAGES_DIR, "**", "*.{js,ts,tsx,jsx}"), join(SOURCE_DIR, "entry-client.tsx")],
-      {
-        nodir: true,
-        absolute: true,
-      }
-    )
-  ).filter((p) => !p.endsWith("layout.tsx"));
+  const browser_entries = await glob(
+    [join(SOURCE_PAGES_DIR, "**", "*.{js,ts,tsx,jsx}"), join(SOURCE_DIR, "entry-client.tsx")],
+    {
+      nodir: true,
+      absolute: true,
+    }
+  );
 
   const browser_bundle_metafile = await esbuild.build({
     entryPoints: browser_entries,
@@ -118,16 +122,16 @@ export async function bundle_dev() {
     },
   });
 
-  let layout_module = {
+  let server_entry_module = {
     default(props: PropsWithChildren) {
       return props.children;
     },
-  } as LayoutModule;
+  } as ServerEntryModule;
 
-  const layout_path = join(OUTPUT_BUNDLE_SERVER_DIR, "layout.js");
+  const server_entry_path = join(OUTPUT_BUNDLE_SERVER_DIR, "entry-server.js");
 
-  if (fse.existsSync(layout_path)) {
-    layout_module = (await import(layout_path)) as LayoutModule;
+  if (fse.existsSync(server_entry_path)) {
+    server_entry_module = (await import(server_entry_path)) as ServerEntryModule;
   }
 
   const hydrate_data: HYDRATE_DATA = {
@@ -153,16 +157,17 @@ export async function bundle_dev() {
   );
 
   for (const route of hydrate_data.routes) {
-    const file_absolute = resolve(join(OUTPUT_BUNDLE_BROWSER_DIR, route.module));
+    const file_absolute = resolve(join(OUTPUT_BUNDLE_SERVER_DIR, "pages", route.module));
     const page_module = (await import(file_absolute)) as PageModule;
 
     const page_prerendered = renderToString(
-      h(layout_module.default, {}, h(page_module.default, null, null))
+      h(server_entry_module.default, {}, h(page_module.default, null, null))
     );
 
     await fse.writeFile(
-      file_absolute.replace("page.js", "index.html"),
+      join(OUTPUT_BUNDLE_BROWSER_DIR, route.path, "index.html"),
       `<!DOCTYPE html>${page_prerendered
+        .replace(META_TAG, "")
         .replace(
           SCRIPTS_TAG,
           `
