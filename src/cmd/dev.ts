@@ -1,7 +1,6 @@
 import { bundle_dev } from "@/build/bundle_dev.js";
 import { OUTPUT_BUNDLE_BROWSER_DIR } from "@/build/constants.js";
 import { logger } from "@/utils/logger.js";
-import consola from "consola";
 import { getRandomPort } from "get-port-please";
 import { H3, serve, serveStatic } from "h3";
 import kleur from "kleur";
@@ -42,6 +41,4 @@ export async function dev() {
   const PORT = await getRandomPort();
 
   serve(app, { port: PORT });
-
-  consola.success(`server listen on http://localhost:${PORT}`);
 }
