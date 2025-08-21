@@ -24,9 +24,6 @@
   "bin": {
     "pranx": "dist/bin/index.js"
   },
-  "workspaces": [
-    "./playground/*"
-  ],
   "exports": {
     ".": {
       "import": "./dist/index.js",
@@ -64,7 +61,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@swc/html": "^1.13.3",
+    "@swc/html": "^1.13.4",
     "chokidar": "^4.0.3",
     "citty": "^0.1.6",
     "consola": "^3.4.2",
@@ -79,7 +76,7 @@
   },
   "peerDependencies": {
     "preact": "^10.27.1",
-    "preact-render-to-string": "^6.6.0"
+    "preact-render-to-string": "^6.6.1"
   },
   "devDependencies": {
     "@biomejs/biome": "1.8.3",
