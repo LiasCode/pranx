@@ -22,7 +22,7 @@ export async function bundle_dev() {
   await fse.emptyDir(OUTPUT_PRANX_DIR);
 
   const server_entries = await glob(
-    [join(SOURCE_PAGES_DIR, "**", "*.{js,ts,tsx,jsx}"), join(SOURCE_DIR, "entry-server.tsx")],
+    [join(SOURCE_PAGES_DIR, "**/*page.{js,ts,tsx,jsx}"), join(SOURCE_DIR, "entry-server.tsx")],
     {
       nodir: true,
       absolute: true,
@@ -75,7 +75,7 @@ export async function bundle_dev() {
   });
 
   const browser_entries = await glob(
-    [join(SOURCE_PAGES_DIR, "**", "*.{js,ts,tsx,jsx}"), join(SOURCE_DIR, "entry-client.tsx")],
+    [join(SOURCE_PAGES_DIR, "**/*page.{js,ts,tsx,jsx}"), join(SOURCE_DIR, "entry-client.tsx")],
     {
       nodir: true,
       absolute: true,
