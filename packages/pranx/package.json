@@ -61,6 +61,8 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@babel/core": "^7.28.3",
+    "@babel/parser": "^7.28.3",
     "@mdx-js/esbuild": "^3.1.0",
     "@swc/html": "^1.13.4",
     "chokidar": "^4.0.3",
@@ -72,6 +74,7 @@
     "glob": "^11.0.3",
     "h3": "2.0.0-beta.3",
     "kleur": "^4.1.5",
+    "magic-string": "^0.30.18",
     "pathe": "^2.0.3",
     "preact-iso": "^2.10.0"
   },

@@ -10,6 +10,7 @@ export default function HomePage() {
       <Header />
       <h1 style={{ fontSize: "4rem" }}>Home Page</h1>
       <button
+        type="button"
         onClick={() => {
           setCount(count + 1);
         }}

@@ -1,6 +1,7 @@
 import { META_TAG } from "@/client/Meta.js";
 import type { HYDRATE_DATA } from "@/client/mount.js";
 import { SCRIPTS_TAG } from "@/client/Scripts.js";
+import { strip_server_only_from_pages } from "@/plugins/strip-server-only-from-pages.js";
 import { minifySync } from "@swc/html";
 import esbuild from "esbuild";
 import fse from "fs-extra";
@@ -125,6 +126,15 @@ export async function bundle_dev() {
       ".css": "css",
       ".json": "json",
     },
+
+    plugins: [
+      strip_server_only_from_pages([
+        "getServerSideProps",
+        "getStaticProps",
+        "getInitialProps",
+        "meta",
+      ]),
+    ],
   });
 
   let server_entry_module = {

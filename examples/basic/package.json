@@ -17,6 +17,7 @@
     "preact-render-to-string": "^6.6.1"
   },
   "devDependencies": {
+    "@types/node": "^20.19.11",
     "prettier": "^3.6.2",
     "prettier-plugin-organize-imports": "^4.2.0"
   }
