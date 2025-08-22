@@ -1,0 +1,23 @@
+{
+  "name": "playground",
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "pranx --dev",
+    "build": "pranx --build",
+    "start": "pranx --start",
+    "check": "tsc --noEmit -p ./tsconfig.json",
+    "format": "prettier --write --cache src"
+  },
+  "author": "LiasCode <liascode.dev@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "pranx": "workspace:^",
+    "preact": "^10.27.1",
+    "preact-render-to-string": "^6.6.0"
+  },
+  "devDependencies": {
+    "prettier": "^3.6.2",
+    "prettier-plugin-organize-imports": "^4.2.0"
+  }
+}
