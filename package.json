@@ -1,56 +1,10 @@
 {
   "name": "pranx",
-  "version": "0.0.57",
   "description": "The next of preact. A light-weight, Next.js-like fullstack metaframework",
   "type": "module",
-  "scripts": {
-    "build": "tsx ./scripts/build.ts",
-    "build:prod": "bun run check && bun run build",
-    "dev": "tsx watch --include \"./src/**/*\" --clear-screen=false ./scripts/build.ts",
-    "test": "vitest run",
-    "check": "tsc --noEmit -p ./tsconfig.json",
-    "style": "bun run format && bun run lint",
-    "format": "prettier --write --cache src scripts",
-    "lint": "biome lint . --fix --unsafe",
-    "prepublishOnly": "bun run build:prod",
-    "patch": "bun pm version patch && git push",
-    "minor": "bun pm version minor && git push",
-    "major": "bun pm version major && git push",
-    "release": "changelogen --release --push && bun publish"
-  },
   "repository": "https://github.com/LiasCode/pranx",
   "bugs": "https://github.com/LiasCode/pranx/issues",
   "homepage": "https://github.com/LiasCode/pranx",
-  "bin": {
-    "pranx": "dist/bin/index.js"
-  },
-  "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "types": "./types/index.d.ts"
-    },
-    "./package.json": "./package.json"
-  },
-  "files": [
-    "dist",
-    "types",
-    "README.md",
-    "tsconfig.json",
-    "LICENSE"
-  ],
-  "keywords": [
-    "preact",
-    "next",
-    "ssr",
-    "ssg",
-    "isg",
-    "csr",
-    "file-based-router",
-    "server",
-    "esbuild",
-    "metaframework",
-    "fullstack"
-  ],
   "author": {
     "name": "LiasCode",
     "email": "liascode.dev@gmail.com",
@@ -59,40 +13,5 @@
   "engines": {
     "node": ">=18.0.0"
   },
-  "license": "MIT",
-  "dependencies": {
-    "@mdx-js/esbuild": "^3.1.0",
-    "@swc/html": "^1.13.4",
-    "chokidar": "^4.0.3",
-    "citty": "^0.1.6",
-    "consola": "^3.4.2",
-    "esbuild": "^0.25.9",
-    "fs-extra": "^11.3.1",
-    "get-port-please": "^3.2.0",
-    "glob": "^11.0.3",
-    "h3": "^2.0.0",
-    "kleur": "^4.1.5",
-    "pathe": "^2.0.3",
-    "preact-iso": "^2.10.0"
-  },
-  "peerDependencies": {
-    "preact": "^10.27.1",
-    "preact-render-to-string": "^6.6.1"
-  },
-  "devDependencies": {
-    "@biomejs/biome": "1.8.3",
-    "@types/chokidar": "^2.1.7",
-    "@types/fs-extra": "^11.0.4",
-    "@types/node": "^20.19.11",
-    "changelogen": "^0.6.2",
-    "prettier": "^3.6.2",
-    "prettier-plugin-organize-imports": "^4.2.0",
-    "tsx": "^4.20.4",
-    "typescript": "^5.9.2",
-    "vitest": "^3.2.4"
-  },
-  "trustedDependencies": [
-    "@biomejs/biome",
-    "esbuild"
-  ]
+  "license": "MIT"
 }
