@@ -1,6 +1,6 @@
 {
   "name": "pranx",
-  "version": "0.0.57",
+  "version": "0.1.0-beta.0",
   "description": "The next of preact. A light-weight, Next.js-like fullstack metaframework",
   "type": "module",
   "scripts": {
@@ -13,10 +13,7 @@
     "format": "prettier --write --cache src scripts",
     "lint": "biome lint . --fix --unsafe",
     "prepublishOnly": "bun run build:prod",
-    "patch": "bun pm version patch && git push",
-    "minor": "bun pm version minor && git push",
-    "major": "bun pm version major && git push",
-    "release": "changelogen --release --push && bun publish"
+    "release": "pnpm run build:prod && changelogen --release --prerelease --publish -publishTag beta && git push --follow-tags"
   },
   "repository": "https://github.com/LiasCode/pranx",
   "bugs": "https://github.com/LiasCode/pranx/issues",
