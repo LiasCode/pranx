@@ -1,6 +1,7 @@
 import { META_TAG } from "@/client/Meta.js";
 import type { HYDRATE_DATA } from "@/client/mount.js";
 import { SCRIPTS_TAG } from "@/client/Scripts.js";
+import { minifySync } from "@swc/html";
 import esbuild from "esbuild";
 import fse from "fs-extra";
 import { glob } from "glob";
@@ -67,6 +68,8 @@ export async function bundle_dev() {
       ".jsx": "jsx",
       ".ts": "tsx",
       ".tsx": "tsx",
+      ".module.css": "local-css",
+      ".css": "css",
       ".json": "json",
     },
   });
@@ -118,6 +121,8 @@ export async function bundle_dev() {
       ".jsx": "jsx",
       ".ts": "tsx",
       ".tsx": "tsx",
+      ".module.css": "local-css",
+      ".css": "css",
       ".json": "json",
     },
   });
@@ -164,13 +169,10 @@ export async function bundle_dev() {
       h(server_entry_module.default, {}, h(page_module.default, null, null))
     );
 
-    await fse.writeFile(
-      join(OUTPUT_BUNDLE_BROWSER_DIR, route.path, "index.html"),
-      `<!DOCTYPE html>${page_prerendered
-        .replace(META_TAG, "")
-        .replace(
-          SCRIPTS_TAG,
-          `
+    const page_as_html = `<!DOCTYPE html>
+      ${page_prerendered.replace(META_TAG, "").replace(
+        SCRIPTS_TAG,
+        `
         <script
           id="__PRANX_HYDRATE_DATA__"
           type="application/json"
@@ -181,8 +183,19 @@ export async function bundle_dev() {
           type="module"
           src="/_.._/entry-client.js"
         ></script>`
-        )
-        .trim()}`
+      )}`;
+
+    await fse.writeFile(
+      join(OUTPUT_BUNDLE_BROWSER_DIR, route.path, "index.html"),
+      minifySync(page_as_html, {
+        collapseBooleanAttributes: true,
+        collapseWhitespaces: "smart",
+        normalizeAttributes: true,
+        sortAttributes: true,
+        removeRedundantAttributes: "smart",
+        quotes: true,
+        selfClosingVoidElements: false,
+      }).code
     );
   }
 }
