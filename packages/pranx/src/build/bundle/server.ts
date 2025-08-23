@@ -53,7 +53,7 @@ export async function bundle_server(options: { optimize: boolean }) {
       ".ts": "tsx",
       ".tsx": "tsx",
       ".module.css": "local-css",
-      ".css": "css",
+      ".css": "empty",
       ".json": "json",
     },
 

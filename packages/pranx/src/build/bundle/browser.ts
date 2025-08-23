@@ -53,9 +53,9 @@ export async function bundle_browser(options: { optimize: boolean }) {
       ".jsx": "jsx",
       ".ts": "tsx",
       ".tsx": "tsx",
-      ".module.css": "local-css",
-      ".css": "css",
       ".json": "json",
+      ".css": "css",
+      ".module.css": "local-css",
     },
 
     plugins: [

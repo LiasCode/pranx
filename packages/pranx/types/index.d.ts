@@ -70,6 +70,7 @@ export type SERVER_MANIFEST = {
     revalidate: number;
     is_dynamic: boolean;
     dynamic_params: Array<string>;
+    css: string[];
   }>;
 };
 
@@ -79,6 +80,7 @@ export type HYDRATE_DATA = {
     module: string;
     props: Record<string, any>;
     rendering_kind: RouteRenderingKind;
+    css: string[];
   }[];
 };
 

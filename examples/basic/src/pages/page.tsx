@@ -10,6 +10,7 @@ export default function HomePage(props: InferProps<typeof getStaticProps>) {
     <div>
       <Header />
       <h1 style={{ fontSize: "4rem" }}>Home Page</h1>
+      <h2 style={{ fontSize: "2rem" }}>Titulo h2</h2>
       <button
         type="button"
         onClick={() => {
@@ -25,9 +26,7 @@ export default function HomePage(props: InferProps<typeof getStaticProps>) {
   );
 }
 
-export const getStaticProps: GetStaticPropsFunction<{ title: string }> = async (props) => {
-  console.log("getStaticProps", props);
-
+export const getStaticProps: GetStaticPropsFunction<{ title: string }> = async () => {
   return {
     props: {
       title: "hola",

@@ -1,8 +1,5 @@
-import { META_TAG } from "@/client/Meta.js";
-import { SCRIPTS_TAG } from "@/client/Scripts.js";
 import { logger } from "@/utils/logger.js";
 import { measureTime } from "@/utils/time-perf.js";
-import { minifySync } from "@swc/html";
 import fse from "fs-extra";
 import kleur from "kleur";
 import { join, resolve } from "pathe";
@@ -22,6 +19,7 @@ import {
   OUTPUT_BUNDLE_SERVER_DIR,
   OUTPUT_PRANX_DIR,
 } from "../build/constants.js";
+import { generate_html_template } from "../build/generate_html_template.js";
 
 export async function build() {
   logger.log(kleur.bold().magenta("Pranx Build\n"));
@@ -48,6 +46,30 @@ export async function build() {
   server_entry_module = (await import(site_manifest.entry_server)) as ServerEntryModule;
 
   const pranx_bundle_replace_path = join(".pranx", "browser");
+
+  const css_output: {
+    entry: string;
+    [key: string]: string;
+  } = {
+    entry: "",
+  };
+
+  for (const [file, _output] of Object.entries(browser_bundle_metafile.metafile.outputs)) {
+    if (file.endsWith("entry-client.css")) {
+      css_output.entry = file.replace(pranx_bundle_replace_path, "");
+      continue;
+    }
+
+    if (file.endsWith(".css")) {
+      const pages_relative_path = file.replace(pranx_bundle_replace_path, "");
+
+      const path_splitted = pages_relative_path.replace("page.css", "").split("/");
+      path_splitted.pop();
+      const final_path = path_splitted.join("/") || "/";
+
+      css_output[final_path] = pages_relative_path;
+    }
+  }
 
   for (const [file, _output] of Object.entries(browser_bundle_metafile.metafile.outputs)) {
     if (!file.endsWith("page.js")) continue;
@@ -119,6 +141,7 @@ path: ${final_path}`);
       revalidate: statics_fn_result.revalidate || -1,
       is_dynamic: isUrlDynamic,
       dynamic_params: dynamic_params,
+      css: [css_output.entry, css_output[final_path] || ""].filter(Boolean) as string[],
     });
   }
 
@@ -129,6 +152,7 @@ path: ${final_path}`);
         path: r.path,
         props: r.props,
         rendering_kind: r.rendering_kind,
+        css: r.css,
       };
     }),
   };
@@ -149,6 +173,7 @@ path: ${final_path}`);
       page_prerendered,
       hydrate_data_as_string,
       minify: true,
+      css: route.css,
     });
 
     const output_html_path = join(OUTPUT_BUNDLE_BROWSER_DIR, route.path, "index.html");
@@ -174,34 +199,3 @@ path: ${final_path}`);
   console.log();
   logger.success(`Project builded in ${measureTime("build_measure_time")} ms\n`);
 }
-
-export const generate_html_template = ({
-  hydrate_data_as_string,
-  page_prerendered,
-  minify = false,
-}: {
-  page_prerendered: string;
-  hydrate_data_as_string: string;
-  minify: boolean;
-}) => {
-  const template = `
-      <!DOCTYPE html>
-      ${page_prerendered.replace(META_TAG, "").replace(
-        SCRIPTS_TAG,
-        `
-        <script>window.__PRANX_HYDRATE_DATA__=${hydrate_data_as_string}</script>
-        <script type="module" src="/_.._/entry-client.js"></script>`
-      )}`;
-
-  if (!minify) return template;
-
-  return minifySync(template, {
-    collapseBooleanAttributes: true,
-    collapseWhitespaces: "smart",
-    normalizeAttributes: true,
-    sortAttributes: true,
-    removeRedundantAttributes: "smart",
-    quotes: true,
-    selfClosingVoidElements: false,
-  }).code;
-};

@@ -2,12 +2,13 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { GetStaticPropsFunction, InferProps } from "pranx";
 import { Header } from "src/components/Header";
+import aboutStyles from "./about.module.css";
 
 export default function AboutPage(props: InferProps<typeof getStaticProps>) {
   return (
     <div>
       <Header />
-      <h1 style={{ fontSize: "4rem" }}>About Page</h1>
+      <h1 className={aboutStyles.title}>About Page</h1>
       <pre>{props.file_content}</pre>
     </div>
   );
