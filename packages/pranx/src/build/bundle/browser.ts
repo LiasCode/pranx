@@ -1,4 +1,4 @@
-import { strip_server_only_from_pages } from "@/plugins/strip-server-only-from-pages.js";
+import { strip_server_only_from_pages_plugin } from "@/plugins/strip-server-only-from-pages.js";
 import esbuild from "esbuild";
 import { glob } from "glob";
 import { join } from "pathe";
@@ -58,7 +58,7 @@ export async function bundle_browser(options: { optimize: boolean }) {
     },
 
     plugins: [
-      strip_server_only_from_pages([
+      strip_server_only_from_pages_plugin([
         "getServerSideProps",
         "getStaticProps",
         "getStaticPaths",

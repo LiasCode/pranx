@@ -3,7 +3,7 @@ import type { Plugin } from "esbuild";
 import fse from "fs-extra";
 import { basename } from "pathe";
 
-export const strip_server_only_from_pages = (ids: string[]): Plugin => {
+export const strip_server_only_from_pages_plugin = (ids: string[]): Plugin => {
   return {
     name: "pranx-remove-server-only",
     setup(build) {
