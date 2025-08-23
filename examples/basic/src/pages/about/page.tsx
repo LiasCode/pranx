@@ -1,6 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
-import { GetStaticPropsFunction, InferProps } from "pranx";
+import type { GetStaticPropsFunction, InferProps } from "pranx";
 import { Header } from "src/components/Header";
 import aboutStyles from "./about.module.css";
 

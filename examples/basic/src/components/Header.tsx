@@ -1,8 +1,10 @@
+import "./Header.css";
+
 export function Header() {
   return (
     <header>
       <h1>Pranx Basic</h1>
-      <ul style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+      <ul>
         <a href="/">Home</a>
         <a href="/about">About</a>
         <a href="/products">Products</a>

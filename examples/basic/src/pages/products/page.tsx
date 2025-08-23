@@ -1,5 +1,6 @@
 import type { GetStaticPropsFunction, InferProps } from "pranx";
 import { Header } from "src/components/Header";
+import "./products.css";
 
 export default function ProductsPage(props: InferProps<typeof getStaticProps>) {
   return (

@@ -1,4 +1,6 @@
 import { ErrorBoundary, lazy, LocationProvider, Route, Router } from "preact-iso";
+import { useHead } from "unhead";
+import { head_instance } from "./head.js";
 
 export function StartApp() {
   const HYDRATE_DATA = window.__PRANX_HYDRATE_DATA__;
@@ -6,7 +8,24 @@ export function StartApp() {
   return (
     <LocationProvider>
       <ErrorBoundary onError={console.error}>
-        <Router>
+        <Router
+          onRouteChange={() => {
+            const current_route =
+              window.__PRANX_HYDRATE_DATA__.routes.find((r) => r.path === window.location.pathname)
+                ?.css || [];
+
+            console.log(current_route);
+
+            useHead(head_instance, {
+              link: current_route.map((p) => {
+                return {
+                  href: p,
+                  rel: "stylesheet",
+                };
+              }),
+            });
+          }}
+        >
           {HYDRATE_DATA.routes.map((r) => {
             const Page = lazy(() => import(r.module));
 
