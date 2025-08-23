@@ -1,6 +1,28 @@
 # Changelog
 
 
+## v0.1.0-beta.2
+
+[compare changes](https://github.com/LiasCode/pranx/compare/v0.1.0-beta.1...v0.1.0-beta.2)
+
+### 🚀 Enhancements
+
+- Add build and start commands starting points ([be51cb5](https://github.com/LiasCode/pranx/commit/be51cb5))
+- Improve client side routing with error boundaries and not found default route ([6c81d5d](https://github.com/LiasCode/pranx/commit/6c81d5d))
+- Enhance static site generation with dynamic routing and props handling ([02bce0d](https://github.com/LiasCode/pranx/commit/02bce0d))
+
+### 🩹 Fixes
+
+- Update root readme.md ([ffc901a](https://github.com/LiasCode/pranx/commit/ffc901a))
+
+### 📖 Documentation
+
+- Update readme ([e3596c8](https://github.com/LiasCode/pranx/commit/e3596c8))
+
+### ❤️ Contributors
+
+- LiasCode <liasraul00@gmail.com>
+
 ## v0.1.0-beta.1
 
 [compare changes](https://github.com/LiasCode/pranx/compare/v0.0.57...v0.1.0-beta.1)
