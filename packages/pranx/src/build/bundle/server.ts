@@ -1,3 +1,4 @@
+import { mdx_pranx_plugin } from "@/plugins/mdx.js";
 import esbuild from "esbuild";
 import { glob } from "glob";
 import { join } from "pathe";
@@ -55,6 +56,8 @@ export async function bundle_server(options: { optimize: boolean }) {
       ".css": "css",
       ".json": "json",
     },
+
+    plugins: [mdx_pranx_plugin()],
   });
 
   return server_bundle_result;

@@ -24,6 +24,9 @@ importers:
         specifier: ^10.27.1
         version: 10.27.1
     devDependencies:
+      '@types/mdx':
+        specifier: ^2.0.13
+        version: 2.0.13
       '@types/node':
         specifier: ^20.19.11
         version: 20.19.11
@@ -106,6 +109,9 @@ importers:
       '@types/fs-extra':
         specifier: ^11.0.4
         version: 11.0.4
+      '@types/mdx':
+        specifier: ^2.0.13
+        version: 2.0.13
       '@types/node':
         specifier: ^20.19.11
         version: 20.19.11

@@ -1,3 +1,4 @@
+import { mdx_pranx_plugin } from "@/plugins/mdx.js";
 import { strip_server_only_from_pages_plugin } from "@/plugins/strip-server-only-from-pages.js";
 import esbuild from "esbuild";
 import { glob } from "glob";
@@ -65,6 +66,7 @@ export async function bundle_browser(options: { optimize: boolean }) {
         "getInitialProps",
         "meta",
       ]),
+      mdx_pranx_plugin(),
     ],
   });
 

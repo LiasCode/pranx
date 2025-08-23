@@ -16,6 +16,7 @@
     "preact": "^10.27.1"
   },
   "devDependencies": {
+    "@types/mdx": "^2.0.13",
     "@types/node": "^20.19.11",
     "prettier": "^3.6.2",
     "prettier-plugin-organize-imports": "^4.2.0"

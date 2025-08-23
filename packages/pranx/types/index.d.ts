@@ -17,25 +17,26 @@ export type ServerEntryModule = {
 // Page Module
 
 // Static
-interface GetStaticPathsResult<T extends Record<string, any> = Record<string, string>> {
-  paths: Array<{ params: T }>;
+interface GetStaticPathsResult<Params extends Record<string, any> = {}> {
+  paths: Array<{ params: Params }>;
   fallback: boolean | "blocking";
 }
 
 export type GetStaticPathsFunction = () => Promise<GetStaticPathsResult>;
 
-interface GetStaticPropsResult<T> {
-  props: T;
+interface GetStaticPropsResult<Props> {
+  props: Props;
   revalidate?: number;
 }
 
 export type GetStaticPropsFunction<
-  T extends Record<string, any> = {},
-  P extends GetStaticPathsResult = GetStaticPathsResult,
-> = (props: P) => Promise<GetStaticPropsResult<T>>;
+  Props extends Record<string, any> = {},
+  Params extends GetStaticPathsResult = GetStaticPathsResult,
+> = (props: Params) => Promise<GetStaticPropsResult<Props>>;
 
 // Server Side
-export type GetServerSidePropsFunction<T extends unknown = unknown> = () => Promise<T>;
+export type GetServerSidePropsFunction<Props extends Record<string, any> = {}> =
+  () => Promise<Props>;
 
 // Meta
 export type MetaFunction = typeof useHead;
