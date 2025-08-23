@@ -60,6 +60,9 @@ importers:
       consola:
         specifier: ^3.4.2
         version: 3.4.2
+      destr:
+        specifier: ^2.0.5
+        version: 2.0.5
       esbuild:
         specifier: ^0.25.9
         version: 0.25.9

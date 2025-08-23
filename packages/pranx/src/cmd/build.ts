@@ -2,6 +2,7 @@ import { META_TAG } from "@/client/Meta.js";
 import type { HYDRATE_DATA } from "@/client/mount.js";
 import { SCRIPTS_TAG } from "@/client/Scripts.js";
 import { logger } from "@/utils/logger.js";
+import { measureTime } from "@/utils/time-perf.js";
 import { minifySync } from "@swc/html";
 import fse from "fs-extra";
 import kleur from "kleur";
@@ -18,7 +19,9 @@ import {
 } from "../build/constants.js";
 
 export async function build() {
-  logger.log(kleur.bold().magenta("Pranx Build"));
+  logger.log(kleur.bold().magenta("Pranx Build\n"));
+
+  measureTime("build_measure_time");
 
   await fse.emptyDir(OUTPUT_PRANX_DIR);
 
@@ -58,6 +61,8 @@ export async function build() {
     JSON.stringify(hydrate_data.routes, null, 2)
   );
 
+  const hydrate_data_as_string = JSON.stringify(hydrate_data);
+
   for (const route of hydrate_data.routes) {
     const file_absolute = resolve(join(OUTPUT_BUNDLE_SERVER_DIR, "pages", route.module));
     const page_module = (await import(file_absolute)) as PageModule;
@@ -69,17 +74,10 @@ export async function build() {
     const page_as_html = `<!DOCTYPE html>
       ${page_prerendered.replace(META_TAG, "").replace(
         SCRIPTS_TAG,
-        `
-        <script
-          id="__PRANX_HYDRATE_DATA__"
-          type="application/json"
-        >
-          ${JSON.stringify(hydrate_data, null, 2)}
+        `<script id="__PRANX_HYDRATE_DATA__" type="application/json">
+          ${hydrate_data_as_string}
         </script>
-        <script
-          type="module"
-          src="/_.._/entry-client.js"
-        ></script>`
+        <script type="module" src="/_.._/entry-client.js"></script>`
       )}`;
 
     await fse.writeFile(
@@ -95,4 +93,16 @@ export async function build() {
       }).code
     );
   }
+
+  const build_measure_time = measureTime("build_measure_time");
+
+  logger.log(kleur.bold().blue().underline("Routes"));
+  for (const route of hydrate_data.routes) {
+    const routesPath = route.path.split("/");
+    routesPath.pop();
+    logger.log(`- ${routesPath.join("/") || "/"}`);
+  }
+
+  console.log();
+  logger.success(`Project builded in ${build_measure_time} ms\n`);
 }
