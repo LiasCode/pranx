@@ -61,6 +61,7 @@ export async function bundle_browser(options: { optimize: boolean }) {
       strip_server_only_from_pages([
         "getServerSideProps",
         "getStaticProps",
+        "getStaticPaths",
         "getInitialProps",
         "meta",
       ]),

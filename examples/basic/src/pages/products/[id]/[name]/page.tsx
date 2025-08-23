@@ -12,7 +12,7 @@ export default function ProductIdPage() {
 
 export const getStaticPaths: GetStaticPathsFunction = async () => {
   return {
-    paths: [{ params: { id: "1" } }, { params: { id: "2" } }],
+    paths: [{ params: { name: "1" } }, { params: { name: "2" } }],
     fallback: false,
   };
 };

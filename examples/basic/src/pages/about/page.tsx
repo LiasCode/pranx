@@ -1,23 +1,26 @@
 import { readFile } from "node:fs/promises";
-import type { GetStaticProps } from "pranx";
+import { join } from "node:path";
+import { GetStaticPropsFunction, InferProps } from "pranx";
 import { Header } from "src/components/Header";
 
-export default function AboutPage() {
+export default function AboutPage(props: InferProps<typeof getStaticProps>) {
   return (
     <div>
       <Header />
       <h1 style={{ fontSize: "4rem" }}>About Page</h1>
+      <pre>{props.file_content}</pre>
     </div>
   );
 }
 
-export const getStaticProps: GetStaticProps = () => {
+export const getStaticProps: GetStaticPropsFunction<{ file_content: string }> = async () => {
+  const res = await readFile(join(process.cwd(), "package.json"), {
+    encoding: "utf-8",
+  });
+
   return {
-    title: "hola",
+    props: {
+      file_content: JSON.stringify(JSON.parse(res), null, 2),
+    },
   };
 };
-
-export async function getServerSideProps() {
-  const res = readFile("", { encoding: "utf-8" });
-  return res;
-}

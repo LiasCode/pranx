@@ -1,8 +1,8 @@
-import type { GetStaticProps } from "pranx";
+import type { GetStaticPropsFunction, InferProps } from "pranx";
 import { useState } from "preact/hooks";
 import { Header } from "src/components/Header";
 
-export default function HomePage() {
+export default function HomePage(props: InferProps<typeof getStaticProps>) {
   const [count, setCount] = useState(0);
 
   return (
@@ -17,12 +17,17 @@ export default function HomePage() {
       >
         Counter +1 {"--->"} {count}
       </button>
+      <h1>Title {props.title}</h1>
     </div>
   );
 }
 
-export const getStaticProps: GetStaticProps = () => {
+export const getStaticProps: GetStaticPropsFunction<{ title: string }> = async (props) => {
+  console.log("getStaticProps", props);
+
   return {
-    title: "hola",
+    props: {
+      title: "hola",
+    },
   };
 };
