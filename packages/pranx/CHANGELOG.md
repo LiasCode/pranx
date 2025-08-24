@@ -1,6 +1,30 @@
 # Changelog
 
 
+## v0.1.0-beta.3
+
+[compare changes](https://github.com/LiasCode/pranx/compare/v0.1.0-beta.2...v0.1.0-beta.3)
+
+### 🚀 Enhancements
+
+- Add support for markdown ([f3d8216](https://github.com/LiasCode/pranx/commit/f3d8216))
+- Enhance styling and structure of pages with CSS modules and templates ([1266611](https://github.com/LiasCode/pranx/commit/1266611))
+- Move Meta and Scripts components to server directory and update imports ([a8ababd](https://github.com/LiasCode/pranx/commit/a8ababd))
+- Add useHead for starting point for metadata management ([22ef2e5](https://github.com/LiasCode/pranx/commit/22ef2e5))
+- Add support for tailwindcss. fix: differents modules classes for server and browser bundles ([0cc149d](https://github.com/LiasCode/pranx/commit/0cc149d))
+
+### 💅 Refactors
+
+- Rename strip_server_only_from_pages to strip_server_only_from_pages_plugin for consistency ([96a2c36](https://github.com/LiasCode/pranx/commit/96a2c36))
+
+### 🏡 Chore
+
+- Bump deps ([3cd6827](https://github.com/LiasCode/pranx/commit/3cd6827))
+
+### ❤️ Contributors
+
+- LiasCode <liasraul00@gmail.com>
+
 ## v0.1.0-beta.2
 
 [compare changes](https://github.com/LiasCode/pranx/compare/v0.1.0-beta.1...v0.1.0-beta.2)
