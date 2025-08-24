@@ -1,3 +1,4 @@
+import { filePathToRoutingPath } from "@/build/filepath-to-routing-path.js";
 import { logger } from "@/utils/logger.js";
 import { measureTime } from "@/utils/time-perf.js";
 import fse from "fs-extra";
@@ -130,6 +131,18 @@ path: ${final_path}`);
       const static_paths_result = await getStaticPaths();
       const new_final_path = final_path;
 
+      site_manifest.routes.push({
+        path: final_path,
+        module: pages_relative_path,
+        props: statics_fn_result.props,
+        rendering_kind: "static",
+        revalidate: statics_fn_result.revalidate || -1,
+        is_dynamic: isUrlDynamic,
+        dynamic_params: dynamic_params,
+        css: [css_output.entry, css_output[final_path] || ""].filter(Boolean),
+        static_generated_routes: [],
+      });
+
       for (const static_path of static_paths_result.paths) {
         const params: Record<string, string> = static_path.params || {};
 
@@ -158,19 +171,16 @@ params returned by getStaticPaths: ${JSON.stringify(static_path.params)}`);
           });
         }
 
-        site_manifest.routes.push({
+        site_manifest.routes.at(-1)?.static_generated_routes.push({
           path: replaced_path,
-          module: pages_relative_path,
-          props: statics_fn_result.props,
-          rendering_kind: "static",
+          props: statics_fn_result.props || {},
           revalidate: statics_fn_result.revalidate || -1,
-          is_dynamic: isUrlDynamic,
-          dynamic_params: dynamic_params,
-          css: [css_output.entry, css_output[final_path] || ""].filter(Boolean) as string[],
         });
       }
       continue;
-    } else if (isStatic && !isUrlDynamic && getStaticProps) {
+    }
+
+    if (isStatic && !isUrlDynamic && getStaticProps) {
       statics_fn_result = await getStaticProps({
         params: {},
       });
@@ -182,6 +192,7 @@ params returned by getStaticPaths: ${JSON.stringify(static_path.params)}`);
       props: statics_fn_result.props,
       rendering_kind: isStatic ? "static" : "server-side",
       revalidate: statics_fn_result.revalidate || -1,
+      static_generated_routes: [],
       is_dynamic: isUrlDynamic,
       dynamic_params: dynamic_params,
       css: [css_output.entry, css_output[final_path] || ""].filter(Boolean) as string[],
@@ -196,6 +207,14 @@ params returned by getStaticPaths: ${JSON.stringify(static_path.params)}`);
         props: r.props,
         rendering_kind: r.rendering_kind,
         css: r.css,
+        is_dynamic: r.is_dynamic,
+        path_parsed_for_routing: filePathToRoutingPath(r.path),
+        static_generated_routes: r.static_generated_routes.map((r) => {
+          return {
+            path: r.path,
+            props: r.props,
+          };
+        }),
       };
     }),
   };
@@ -207,6 +226,32 @@ params returned by getStaticPaths: ${JSON.stringify(static_path.params)}`);
 
     const file_absolute = resolve(join(OUTPUT_BUNDLE_SERVER_DIR, "pages", route.module));
     const page_module = (await import(file_absolute)) as PageModule;
+
+    if (route.static_generated_routes.length > 0) {
+      for (const static_route of route.static_generated_routes) {
+        const page_prerendered = await renderToStringAsync(
+          h(
+            server_entry_module?.default || Fragment,
+            {},
+            h(page_module.default, static_route.props, null)
+          )
+        );
+
+        const html = generate_html_template({
+          page_prerendered,
+          hydrate_data_as_string,
+          minify: true,
+          css: route.css,
+        });
+
+        const output_html_path = join(OUTPUT_BUNDLE_BROWSER_DIR, static_route.path, "index.html");
+
+        await fse.ensureDir(join(OUTPUT_BUNDLE_BROWSER_DIR, static_route.path));
+
+        await fse.writeFile(output_html_path, html);
+      }
+      continue;
+    }
 
     const page_prerendered = await renderToStringAsync(
       h(server_entry_module?.default || Fragment, {}, h(page_module.default, route.props, null))

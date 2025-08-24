@@ -62,28 +62,40 @@ type InferStaticProps<F> = F extends (...args: any[]) => infer R
 export type RouteRenderingKind = "static" | "server-side";
 
 // Manifest
+export type ServerManifestRoute = {
+  path: string;
+  module: string;
+  props: Record<string, any>;
+  static_generated_routes: Array<{
+    path: string;
+    props: Record<string, any>;
+    revalidate: number;
+  }>;
+  rendering_kind: RouteRenderingKind;
+  revalidate: number;
+  is_dynamic: boolean;
+  dynamic_params: Array<string>;
+  css: string[];
+};
+
 export type SERVER_MANIFEST = {
   entry_server: string;
-  routes: Array<{
-    path: string;
-    module: string;
-    props: Record<string, any>;
-    rendering_kind: RouteRenderingKind;
-    revalidate: number;
-    is_dynamic: boolean;
-    dynamic_params: Array<string>;
-    css: string[];
-  }>;
+  routes: ServerManifestRoute[];
+};
+
+export type HydrateDataRoute = {
+  path: string;
+  module: string;
+  props: Record<string, any>;
+  rendering_kind: RouteRenderingKind;
+  is_dynamic: boolean;
+  css: string[];
+  path_parsed_for_routing: string;
+  static_generated_routes: Array<{ path: string; props: Record<string, any> }>;
 };
 
 export type HYDRATE_DATA = {
-  routes: {
-    path: string;
-    module: string;
-    props: Record<string, any>;
-    rendering_kind: RouteRenderingKind;
-    css: string[];
-  }[];
+  routes: HydrateDataRoute[];
 };
 
 declare global {

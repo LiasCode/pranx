@@ -21,6 +21,6 @@
   },
   "files": {
     "include": ["./src/**/*"],
-    "ignore": ["./dist/**/*", "node_modules/**/*"]
+    "ignore": ["./dist/**/*", "./src/client/exec-match.ts", "node_modules/**/*"]
   }
 }
