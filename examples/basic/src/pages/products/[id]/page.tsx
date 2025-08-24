@@ -13,7 +13,12 @@ export default function ProductIdPage(props: InferStaticProps<typeof getStaticPr
 
 export const getStaticPaths: GetStaticPathsFunction<{ id: string }> = async () => {
   return {
-    paths: [{ params: { id: "1" } }, { params: { id: "2" } }],
+    paths: [
+      { params: { id: "1" } },
+      { params: { id: "2" } },
+      { params: { id: "3" } },
+      { params: { id: "4" } },
+    ],
     fallback: false,
   };
 };
