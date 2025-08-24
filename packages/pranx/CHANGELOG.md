@@ -1,6 +1,27 @@
 # Changelog
 
 
+## v0.1.0-beta.5
+
+[compare changes](https://github.com/LiasCode/pranx/compare/v0.1.0-beta.4...v0.1.0-beta.5)
+
+### 🚀 Enhancements
+
+- Add matching for static generated routes in server and client ([845d419](https://github.com/LiasCode/pranx/commit/845d419))
+
+### 🩹 Fixes
+
+- Add additional static paths for product detail pages to git ([54fef03](https://github.com/LiasCode/pranx/commit/54fef03))
+
+### 🏡 Chore
+
+- **release:** V0.1.0-beta.4 ([e63ebef](https://github.com/LiasCode/pranx/commit/e63ebef))
+- Improve routes tree printing ([424a0b7](https://github.com/LiasCode/pranx/commit/424a0b7))
+
+### ❤️ Contributors
+
+- LiasCode <liasraul00@gmail.com>
+
 ## v0.1.0-beta.4
 
 [compare changes](https://github.com/LiasCode/pranx/compare/v0.1.0-beta.3...v0.1.0-beta.4)
