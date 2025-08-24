@@ -24,6 +24,9 @@ importers:
         specifier: ^10.27.1
         version: 10.27.1
     devDependencies:
+      '@tailwindcss/postcss':
+        specifier: ^4.1.12
+        version: 4.1.12
       '@types/mdx':
         specifier: ^2.0.13
         version: 2.0.13
@@ -33,12 +36,18 @@ importers:
       github-markdown-css:
         specifier: ^5.8.1
         version: 5.8.1
+      postcss:
+        specifier: ^8.5.6
+        version: 8.5.6
       prettier:
         specifier: ^3.6.2
         version: 3.6.2
       prettier-plugin-organize-imports:
         specifier: ^4.2.0
         version: 4.2.0(prettier@3.6.2)(typescript@5.9.2)
+      tailwindcss:
+        specifier: ^4.1.12
+        version: 4.1.12
       typescript:
         specifier: ^5.9.2
         version: 5.9.2
