@@ -1,7 +1,7 @@
 import { OUTPUT_BUNDLE_BROWSER_DIR, PUBLIC_USER_DIR } from "@/build/constants.js";
 import { logger } from "@/utils/logger.js";
+import { measureTime } from "@/utils/time-perf.js";
 import fse from "fs-extra";
-import { checkPort, getRandomPort } from "get-port-please";
 import { H3, serve, serveStatic } from "h3";
 import kleur from "kleur";
 import { readFile, stat } from "node:fs/promises";
@@ -10,10 +10,9 @@ import { join } from "node:path";
 export async function start() {
   logger.log(kleur.bold().magenta("Pranx Start"));
 
-  const DEFAULT_PORT = 3030;
-  const isPortUsed = await checkPort(DEFAULT_PORT);
+  measureTime("pranx-start");
 
-  const PORT = !isPortUsed ? await getRandomPort() : DEFAULT_PORT;
+  const PORT = Number(process.env.PORT) || 3030;
 
   const app = new H3();
 
@@ -51,5 +50,11 @@ export async function start() {
     });
   });
 
-  serve(app, { port: PORT });
+  const SERVER = serve(app, { port: PORT });
+
+  await SERVER.ready();
+
+  const START_TIME = measureTime("pranx-start");
+
+  logger.success(`Start in ${START_TIME} ms`);
 }
