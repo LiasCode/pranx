@@ -1,3 +1,3 @@
 import { createHead } from "unhead/client";
 
-export const head_instance = createHead();
+export const UNHEAD_INSTANCE = createHead();
