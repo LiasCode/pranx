@@ -15,7 +15,10 @@
     "prepublishOnly": "bun run build:prod",
     "release": "pnpm run build:prod && changelogen --release --prerelease --publish -publishTag beta && git push --follow-tags"
   },
-  "repository": "https://github.com/LiasCode/pranx",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LiasCode/pranx.git"
+  },
   "bugs": "https://github.com/LiasCode/pranx/issues",
   "homepage": "https://github.com/LiasCode/pranx",
   "bin": {
