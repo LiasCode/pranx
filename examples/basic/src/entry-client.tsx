@@ -1,6 +1,6 @@
+import "github-markdown-css";
 import { mount, StartApp } from "pranx";
-import "./styles/base.css";
 import "./styles/styles.css";
 
-// biome-ignore lint/style/noNonNullAssertion
+// biome-ignore lint/style/noNonNullAssertion: <explanation>
 mount(<StartApp />, document.querySelector("#app")!);

@@ -67,6 +67,7 @@
     "consola": "^3.4.2",
     "destr": "^2.0.5",
     "esbuild": "^0.25.9",
+    "esbuild-plugin-tailwindcss": "^2.1.0",
     "fs-extra": "^11.3.1",
     "get-port-please": "^3.2.0",
     "glob": "^11.0.3",
@@ -78,12 +79,12 @@
     "unhead": "^2.0.14"
   },
   "peerDependencies": {
+    "postcss": "^8.5.6",
     "preact": "^10.27.1",
     "preact-render-to-string": "^6.6.1"
   },
   "devDependencies": {
     "@biomejs/biome": "1.8.3",
-    "@types/chokidar": "^2.1.7",
     "@types/fs-extra": "^11.0.4",
     "@types/mdx": "^2.0.13",
     "@types/node": "^20.19.11",

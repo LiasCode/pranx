@@ -1,4 +1,5 @@
-import { mdx_pranx_plugin } from "@/plugins/mdx.js";
+import { mdx_pranx_plugin } from "@/plugins/mdx-plugin.js";
+import { tailwindcss_plugin } from "@/plugins/tailwind-plugin.js";
 import esbuild from "esbuild";
 import { glob } from "glob";
 import { join } from "pathe";
@@ -57,7 +58,7 @@ export async function bundle_server(options: { optimize: boolean }) {
       ".json": "json",
     },
 
-    plugins: [mdx_pranx_plugin()],
+    plugins: [mdx_pranx_plugin(), tailwindcss_plugin()],
   });
 
   return server_bundle_result;

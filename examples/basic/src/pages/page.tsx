@@ -7,21 +7,27 @@ export default function HomePage(props: InferProps<typeof getStaticProps>) {
   const [count, setCount] = useState(0);
 
   return (
-    <div>
+    <div className="flex flex-col min-h-screen">
       <Header />
-      <h1 style={{ fontSize: "4rem" }}>Home Page</h1>
-      <h2 style={{ fontSize: "2rem" }}>Titulo h2</h2>
-      <button
-        type="button"
-        onClick={() => {
-          setCount(count + 1);
-        }}
-      >
-        Counter +1 {"--->"} {count}
-      </button>
-      <h1>Title {props.title}</h1>
 
-      <Docs />
+      <div class="flex flex-col gap-4 p-6 max-w-3xl mx-auto">
+        <h1 class="text-3xl">Home Page</h1>
+        <button
+          class="p-2 border rounded-3xl text-white w-fit"
+          type="button"
+          onClick={() => {
+            setCount(count + 1);
+          }}
+        >
+          Counter +1: {count}
+        </button>
+
+        <h1>Title {props.title}</h1>
+
+        <div class="markdown-body">
+          <Docs />
+        </div>
+      </div>
     </div>
   );
 }
