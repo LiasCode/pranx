@@ -12,6 +12,7 @@ import type {
   PageModule,
   SERVER_MANIFEST,
   ServerEntryModule,
+  ServerManifestRoute,
 } from "../../types/index.js";
 import { bundle_browser } from "../build/bundle/browser.js";
 import { bundle_server } from "../build/bundle/server.js";
@@ -283,13 +284,19 @@ params returned by getStaticPaths: ${JSON.stringify(static_path.params)}`);
 
   const BUILD_TIME = measureTime("build_measure_time");
 
+  printRoutesTreeForUser(site_manifest.routes);
+
+  logger.success(`Project builded in ${BUILD_TIME} ms\n`);
+}
+
+export function printRoutesTreeForUser(input_routes: ServerManifestRoute[]) {
   // Loggin Routes
   logger.log(kleur.bold().blue().underline("Routes"));
 
-  function buildTree(routes: typeof site_manifest.routes) {
+  function buildTree(routes: ServerManifestRoute[]) {
     const tree: any = {};
     for (const route of routes) {
-      const parts = route.path.split("/").filter(Boolean);
+      const parts = route.path === "/" ? [] : route.path.split("/").filter(Boolean);
       let node = tree;
       for (const part of parts) {
         node.children = node.children || {};
@@ -301,11 +308,20 @@ params returned by getStaticPaths: ${JSON.stringify(static_path.params)}`);
     return tree;
   }
 
-  logger.log(`${kleur.white(".")}`);
   function printTree(node: any, prefix = "", isLast = true) {
     if (node.route) {
       const icon = node.route.rendering_kind === "static" ? "●" : kleur.yellow("λ");
-      logger.log(`${prefix}${isLast ? "└-" : "├-"} ${icon} ${kleur.white(node.route.path)}`);
+      let extra = "";
+      if (
+        node.route.rendering_kind === "static" &&
+        node.route.static_generated_routes &&
+        node.route.static_generated_routes.length > 0
+      ) {
+        extra = ` (${kleur.cyan(`${node.route.static_generated_routes.length}`)})`;
+      }
+      logger.log(
+        `${prefix}${isLast ? "└-" : "├-"} ${icon} ${kleur.white(node.route.path)}${extra}`
+      );
     }
     if (node.children) {
       const keys = Object.keys(node.children);
@@ -315,16 +331,12 @@ params returned by getStaticPaths: ${JSON.stringify(static_path.params)}`);
     }
   }
 
-  const tree = buildTree(site_manifest.routes);
+  const tree = buildTree(input_routes);
 
-  if (tree.children) {
-    const keys = Object.keys(tree.children);
-    keys.forEach((key, idx) => {
-      printTree(tree.children[key], "", idx === keys.length - 1);
-    });
-  }
+  logger.log(".");
+  printTree(tree, "", true);
 
-  logger.log(`\n● Static Page \n${kleur.yellow("λ")} Server-side Page\n`);
-
-  logger.success(`Project builded in ${BUILD_TIME} ms\n`);
+  logger.log(`\n${kleur.yellow("λ")} Server-side Page`);
+  logger.log("● Static Page");
+  logger.log(`${kleur.cyan("(#)")} Count of Static Generated Routes\n`);
 }
