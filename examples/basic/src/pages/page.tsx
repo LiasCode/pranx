@@ -1,9 +1,9 @@
-import type { GetStaticPropsFunction, InferProps } from "pranx";
+import type { GetStaticPropsFunction, InferStaticProps } from "pranx";
 import { useState } from "preact/hooks";
 import { Header } from "src/components/Header";
 import Docs from "../components/Docs.md";
 
-export default function HomePage(props: InferProps<typeof getStaticProps>) {
+export default function HomePage(props: InferStaticProps<typeof getStaticProps>) {
   const [count, setCount] = useState(0);
 
   return (

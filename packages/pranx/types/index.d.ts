@@ -51,7 +51,7 @@ export type PageModule = {
   meta?: MetaFunction;
 };
 
-type InferProps<F> = F extends (...args: any[]) => infer R
+type InferStaticProps<F> = F extends (...args: any[]) => infer R
   ? Awaited<R> extends { props: infer P }
     ? P
     : never

@@ -1,8 +1,8 @@
-import type { GetStaticPropsFunction, InferProps } from "pranx";
 import { Header } from "src/components/Header";
+import { GetServerSidePropsFunction } from "../../../../../packages/pranx/types/index";
 import "./products.css";
 
-export default function ProductsPage(props: InferProps<typeof getStaticProps>) {
+export default function ProductsPage(props: { cuantity: number }) {
   return (
     <div>
       <Header />
@@ -12,10 +12,10 @@ export default function ProductsPage(props: InferProps<typeof getStaticProps>) {
   );
 }
 
-export const getStaticProps: GetStaticPropsFunction<{ cuantity: number }> = async () => {
+export const getServerSideProps: GetServerSidePropsFunction<{
+  cuantity: number;
+}> = async () => {
   return {
-    props: {
-      cuantity: 2,
-    },
+    cuantity: 1,
   };
 };

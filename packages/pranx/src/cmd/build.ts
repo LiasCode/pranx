@@ -4,7 +4,7 @@ import fse from "fs-extra";
 import kleur from "kleur";
 import { join, resolve } from "pathe";
 import { Fragment, h } from "preact";
-import { renderToString } from "preact-render-to-string";
+import { renderToStringAsync } from "preact-render-to-string";
 import type {
   GetStaticPropsResult,
   HYDRATE_DATA,
@@ -165,7 +165,7 @@ path: ${final_path}`);
     const file_absolute = resolve(join(OUTPUT_BUNDLE_SERVER_DIR, "pages", route.module));
     const page_module = (await import(file_absolute)) as PageModule;
 
-    const page_prerendered = renderToString(
+    const page_prerendered = await renderToStringAsync(
       h(server_entry_module?.default || Fragment, {}, h(page_module.default, route.props, null))
     );
 
@@ -191,11 +191,48 @@ path: ${final_path}`);
     JSON.stringify(hydrate_data)
   );
 
+  // Loggin Routes
   logger.log(kleur.bold().blue().underline("Routes"));
-  for (const route of site_manifest.routes) {
-    logger.log(`- ${route.path}`);
+
+  function buildTree(routes: typeof site_manifest.routes) {
+    const tree: any = {};
+    for (const route of routes) {
+      const parts = route.path.split("/").filter(Boolean);
+      let node = tree;
+      for (const part of parts) {
+        node.children = node.children || {};
+        node.children[part] = node.children[part] || {};
+        node = node.children[part];
+      }
+      node.route = route;
+    }
+    return tree;
   }
 
-  console.log();
+  logger.log(`${kleur.white(".")}`);
+  function printTree(node: any, prefix = "", isLast = true) {
+    if (node.route) {
+      const icon = node.route.rendering_kind === "static" ? "●" : kleur.yellow("λ");
+      logger.log(`${prefix}${isLast ? "└-" : "├-"} ${icon} ${kleur.white(node.route.path)}`);
+    }
+    if (node.children) {
+      const keys = Object.keys(node.children);
+      keys.forEach((key, idx) => {
+        printTree(node.children[key], prefix + (node.route ? "|  " : ""), idx === keys.length - 1);
+      });
+    }
+  }
+
+  const tree = buildTree(site_manifest.routes);
+
+  if (tree.children) {
+    const keys = Object.keys(tree.children);
+    keys.forEach((key, idx) => {
+      printTree(tree.children[key], "", idx === keys.length - 1);
+    });
+  }
+
+  logger.log(`\n"●" Static Page ${kleur.yellow("λ")} Server-side Page\n`);
+
   logger.success(`Project builded in ${measureTime("build_measure_time")} ms\n`);
 }

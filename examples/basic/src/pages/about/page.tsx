@@ -1,10 +1,10 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
-import type { GetStaticPropsFunction, InferProps } from "pranx";
+import type { GetStaticPropsFunction, InferStaticProps } from "pranx";
 import { Header } from "src/components/Header";
 import aboutStyles from "./about.module.css";
 
-export default function AboutPage(props: InferProps<typeof getStaticProps>) {
+export default function AboutPage(props: InferStaticProps<typeof getStaticProps>) {
   return (
     <div>
       <Header />
