@@ -1,6 +1,31 @@
 # Changelog
 
 
+## v0.1.0-beta.4
+
+[compare changes](https://github.com/LiasCode/pranx/compare/v0.1.0-beta.3...v0.1.0-beta.4)
+
+### 🚀 Enhancements
+
+- Implements getStaticPaths ([cfaf61c](https://github.com/LiasCode/pranx/commit/cfaf61c))
+
+### 🩹 Fixes
+
+- Update repository field to use object format ([0557ca4](https://github.com/LiasCode/pranx/commit/0557ca4))
+- Client head css links should only be present of the current page ([604da90](https://github.com/LiasCode/pranx/commit/604da90))
+
+### 💅 Refactors
+
+- Rename InferProps to InferStaticProps for consistency ([aab8208](https://github.com/LiasCode/pranx/commit/aab8208))
+
+### 🏡 Chore
+
+- Add tailwindcss to basic example ([c828a5b](https://github.com/LiasCode/pranx/commit/c828a5b))
+
+### ❤️ Contributors
+
+- LiasCode <liasraul00@gmail.com>
+
 ## v0.1.0-beta.3
 
 [compare changes](https://github.com/LiasCode/pranx/compare/v0.1.0-beta.2...v0.1.0-beta.3)
