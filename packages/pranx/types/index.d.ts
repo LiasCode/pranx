@@ -17,12 +17,14 @@ export type ServerEntryModule = {
 // Page Module
 
 // Static
-interface GetStaticPathsResult<Params extends Record<string, any> = {}> {
+interface GetStaticPathsResult<Params extends Record<string, any>> {
   paths: Array<{ params: Params }>;
   fallback: boolean | "blocking";
 }
 
-export type GetStaticPathsFunction = () => Promise<GetStaticPathsResult>;
+export type GetStaticPathsFunction<Params extends Record<string, any>> = () => Promise<
+  GetStaticPathsResult<Params>
+>;
 
 interface GetStaticPropsResult<Props> {
   props: Props;
@@ -32,7 +34,7 @@ interface GetStaticPropsResult<Props> {
 export type GetStaticPropsFunction<
   Props extends Record<string, any> = {},
   Params extends GetStaticPathsResult = GetStaticPathsResult,
-> = (props: Params) => Promise<GetStaticPropsResult<Props>>;
+> = (context: { params: Params }) => Promise<GetStaticPropsResult<Props>>;
 
 // Server Side
 export type GetServerSidePropsFunction<Props extends Record<string, any> = {}> =

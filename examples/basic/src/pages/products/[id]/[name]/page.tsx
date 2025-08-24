@@ -10,9 +10,9 @@ export default function ProductIdPage() {
   );
 }
 
-export const getStaticPaths: GetStaticPathsFunction = async () => {
+export const getStaticPaths: GetStaticPathsFunction<{ id: string; name: string }> = async () => {
   return {
-    paths: [{ params: { name: "1" } }, { params: { name: "2" } }],
+    paths: [{ params: { name: "Pedro", id: "1" } }, { params: { name: "Juan", id: "2" } }],
     fallback: false,
   };
 };

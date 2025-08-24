@@ -115,7 +115,7 @@ path: ${final_path}`);
 
     if (!isStatic && isUrlDynamic && !getServerSideProps) {
       logger.error(`
-msg: "getServerSideProps must be present on pages with dynamic params"
+msg: "getServerSideProps must be present on server pages with dynamic params"
 file: ${module_path}
 path: ${final_path}`);
       process.exit(1);
@@ -126,10 +126,53 @@ path: ${final_path}`);
       revalidate: -1,
     };
 
-    if (isStatic && getStaticProps) {
+    if (isStatic && isUrlDynamic && getStaticPaths) {
+      const static_paths_result = await getStaticPaths();
+      const new_final_path = final_path;
+
+      for (const static_path of static_paths_result.paths) {
+        const params: Record<string, string> = static_path.params || {};
+
+        const replaced_path = new_final_path.replace(
+          /\[([^\]]+)\]/g,
+          (_, p1) => params[p1] || `[${p1}]`
+        );
+
+        if (replaced_path.includes("[")) {
+          logger.error(`
+msg: "getStaticPaths did not return all the necessary params"
+file: ${module_path}
+path: ${final_path}
+params returned by getStaticPaths: ${JSON.stringify(static_path.params)}`);
+          process.exit(1);
+        }
+
+        let statics_fn_result: GetStaticPropsResult<any> = {
+          props: {},
+          revalidate: -1,
+        };
+
+        if (getStaticProps) {
+          statics_fn_result = await getStaticProps({
+            params: static_path.params,
+          });
+        }
+
+        site_manifest.routes.push({
+          path: replaced_path,
+          module: pages_relative_path,
+          props: statics_fn_result.props,
+          rendering_kind: "static",
+          revalidate: statics_fn_result.revalidate || -1,
+          is_dynamic: isUrlDynamic,
+          dynamic_params: dynamic_params,
+          css: [css_output.entry, css_output[final_path] || ""].filter(Boolean) as string[],
+        });
+      }
+      continue;
+    } else if (isStatic && !isUrlDynamic && getStaticProps) {
       statics_fn_result = await getStaticProps({
-        fallback: false,
-        paths: [],
+        params: {},
       });
     }
 
@@ -178,6 +221,8 @@ path: ${final_path}`);
 
     const output_html_path = join(OUTPUT_BUNDLE_BROWSER_DIR, route.path, "index.html");
 
+    await fse.ensureDir(join(OUTPUT_BUNDLE_BROWSER_DIR, route.path));
+
     await fse.writeFile(output_html_path, html);
   }
 
@@ -190,6 +235,8 @@ path: ${final_path}`);
     join(OUTPUT_BUNDLE_BROWSER_DIR, "site.manifest.json"),
     JSON.stringify(hydrate_data)
   );
+
+  const BUILD_TIME = measureTime("build_measure_time");
 
   // Loggin Routes
   logger.log(kleur.bold().blue().underline("Routes"));
@@ -232,7 +279,7 @@ path: ${final_path}`);
     });
   }
 
-  logger.log(`\n"●" Static Page ${kleur.yellow("λ")} Server-side Page\n`);
+  logger.log(`\n● Static Page \n${kleur.yellow("λ")} Server-side Page\n`);
 
-  logger.success(`Project builded in ${measureTime("build_measure_time")} ms\n`);
+  logger.success(`Project builded in ${BUILD_TIME} ms\n`);
 }
