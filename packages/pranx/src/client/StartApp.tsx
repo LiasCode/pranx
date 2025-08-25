@@ -1,4 +1,6 @@
+import type { VNode } from "preact";
 import { ErrorBoundary, lazy, LocationProvider, Route, Router } from "preact-iso";
+import { Children, cloneElement, type PropsWithChildren } from "preact/compat";
 import type { HydrateDataRoute } from "types/index.js";
 import { useHead } from "unhead";
 import { exec_route_match } from "./exec-match.js";
@@ -57,7 +59,13 @@ export function StartApp() {
                   let props = r.props;
 
                   if (!r.is_dynamic) {
-                    return <Page {...props} />;
+                    return (
+                      <ServerSidePage
+                        // biome-ignore lint/correctness/noChildrenProp: <>
+                        children={<Page />}
+                        route_data={r}
+                      />
+                    );
                   }
 
                   for (const route of r.static_generated_routes) {
@@ -81,3 +89,9 @@ export function StartApp() {
     </LocationProvider>
   );
 }
+
+const ServerSidePage = (props: PropsWithChildren & { route_data: HydrateDataRoute }) => {
+  const child = Children.only(props.children);
+
+  return cloneElement(child as VNode, props.route_data.props);
+};

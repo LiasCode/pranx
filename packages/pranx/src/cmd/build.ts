@@ -3,7 +3,7 @@ import { logger } from "@/utils/logger.js";
 import { measureTime } from "@/utils/time-perf.js";
 import fse from "fs-extra";
 import kleur from "kleur";
-import { join, resolve } from "pathe";
+import { join } from "pathe";
 import { Fragment, h } from "preact";
 import { renderToStringAsync } from "preact-render-to-string";
 import type {
@@ -20,6 +20,8 @@ import {
   OUTPUT_BUNDLE_BROWSER_DIR,
   OUTPUT_BUNDLE_SERVER_DIR,
   OUTPUT_PRANX_DIR,
+  SERVER_MANIFEST_OUTPUT_PATH,
+  SITE_MANIFEST_OUTPUT_PATH,
 } from "../build/constants.js";
 import { generate_html_template } from "../build/generate_html_template.js";
 
@@ -38,14 +40,14 @@ export async function build() {
     optimize: true,
   });
 
-  const site_manifest: SERVER_MANIFEST = {
+  const server_site_manifest: SERVER_MANIFEST = {
     entry_server: join(OUTPUT_BUNDLE_SERVER_DIR, "entry-server.js"),
     routes: [],
   };
 
   let server_entry_module: ServerEntryModule | null = null;
 
-  server_entry_module = (await import(site_manifest.entry_server)) as ServerEntryModule;
+  server_entry_module = (await import(server_site_manifest.entry_server)) as ServerEntryModule;
 
   const pranx_bundle_replace_path = join(".pranx", "browser");
 
@@ -56,6 +58,7 @@ export async function build() {
     entry: "",
   };
 
+  // Calculating css files
   for (const [file, _output] of Object.entries(browser_bundle_metafile.metafile.outputs)) {
     if (file.endsWith("entry-client.css")) {
       css_output.entry = file.replace(pranx_bundle_replace_path, "");
@@ -73,6 +76,7 @@ export async function build() {
     }
   }
 
+  // Generating Manifest and generating static pages
   for (const [file, _output] of Object.entries(browser_bundle_metafile.metafile.outputs)) {
     if (!file.endsWith("page.js")) continue;
 
@@ -132,7 +136,7 @@ path: ${final_path}`);
       const static_paths_result = await getStaticPaths();
       const new_final_path = final_path;
 
-      site_manifest.routes.push({
+      server_site_manifest.routes.push({
         path: final_path,
         module: pages_relative_path,
         props: statics_fn_result.props,
@@ -142,6 +146,7 @@ path: ${final_path}`);
         dynamic_params: dynamic_params,
         css: [css_output.entry, css_output[final_path] || ""].filter(Boolean),
         static_generated_routes: [],
+        absolute_module_path: module_path,
       });
 
       for (const static_path of static_paths_result.paths) {
@@ -172,7 +177,7 @@ params returned by getStaticPaths: ${JSON.stringify(static_path.params)}`);
           });
         }
 
-        site_manifest.routes.at(-1)?.static_generated_routes.push({
+        server_site_manifest.routes.at(-1)?.static_generated_routes.push({
           path: replaced_path,
           props: statics_fn_result.props || {},
           revalidate: statics_fn_result.revalidate || -1,
@@ -187,7 +192,7 @@ params returned by getStaticPaths: ${JSON.stringify(static_path.params)}`);
       });
     }
 
-    site_manifest.routes.push({
+    server_site_manifest.routes.push({
       path: final_path,
       module: pages_relative_path,
       props: statics_fn_result.props,
@@ -197,11 +202,12 @@ params returned by getStaticPaths: ${JSON.stringify(static_path.params)}`);
       is_dynamic: isUrlDynamic,
       dynamic_params: dynamic_params,
       css: [css_output.entry, css_output[final_path] || ""].filter(Boolean) as string[],
+      absolute_module_path: module_path,
     });
   }
 
   const hydrate_data: HYDRATE_DATA = {
-    routes: site_manifest.routes.map((r) => {
+    routes: server_site_manifest.routes.map((r) => {
       return {
         module: r.module,
         path: r.path,
@@ -222,11 +228,11 @@ params returned by getStaticPaths: ${JSON.stringify(static_path.params)}`);
 
   const hydrate_data_as_string = JSON.stringify(hydrate_data);
 
-  for (const route of site_manifest.routes) {
+  // Writing static files and prerender pages
+  for (const route of server_site_manifest.routes) {
     if (route.rendering_kind === "server-side") continue;
 
-    const file_absolute = resolve(join(OUTPUT_BUNDLE_SERVER_DIR, "pages", route.module));
-    const page_module = (await import(file_absolute)) as PageModule;
+    const page_module = (await import(route.absolute_module_path)) as PageModule;
 
     if (route.static_generated_routes.length > 0) {
       for (const static_route of route.static_generated_routes) {
@@ -272,19 +278,12 @@ params returned by getStaticPaths: ${JSON.stringify(static_path.params)}`);
     await fse.writeFile(output_html_path, html);
   }
 
-  await fse.writeFile(
-    join(OUTPUT_BUNDLE_SERVER_DIR, "server.manifest.json"),
-    JSON.stringify(site_manifest)
-  );
-
-  await fse.writeFile(
-    join(OUTPUT_BUNDLE_BROWSER_DIR, "site.manifest.json"),
-    JSON.stringify(hydrate_data)
-  );
+  await fse.writeFile(SERVER_MANIFEST_OUTPUT_PATH, JSON.stringify(server_site_manifest));
+  await fse.writeFile(SITE_MANIFEST_OUTPUT_PATH, JSON.stringify(hydrate_data));
 
   const BUILD_TIME = measureTime("build_measure_time");
 
-  printRoutesTreeForUser(site_manifest.routes);
+  printRoutesTreeForUser(server_site_manifest.routes);
 
   logger.success(`Project builded in ${BUILD_TIME} ms\n`);
 }

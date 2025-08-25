@@ -65,6 +65,7 @@ export type RouteRenderingKind = "static" | "server-side";
 export type ServerManifestRoute = {
   path: string;
   module: string;
+  absolute_module_path: string;
   props: Record<string, any>;
   static_generated_routes: Array<{
     path: string;
