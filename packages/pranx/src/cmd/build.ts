@@ -3,6 +3,7 @@ import { logger } from "@/utils/logger.js";
 import { measureTime } from "@/utils/time-perf.js";
 import fse from "fs-extra";
 import kleur from "kleur";
+import crypto from "node:crypto";
 import { join } from "pathe";
 import { Fragment, h } from "preact";
 import { renderToStringAsync } from "preact-render-to-string";
@@ -147,6 +148,7 @@ path: ${final_path}`);
         css: [css_output.entry, css_output[final_path] || ""].filter(Boolean),
         static_generated_routes: [],
         absolute_module_path: module_path,
+        server_data_api_key: "",
       });
 
       for (const static_path of static_paths_result.paths) {
@@ -197,6 +199,7 @@ params returned by getStaticPaths: ${JSON.stringify(static_path.params)}`);
       module: pages_relative_path,
       props: statics_fn_result.props,
       rendering_kind: isStatic ? "static" : "server-side",
+      server_data_api_key: crypto.randomUUID(),
       revalidate: statics_fn_result.revalidate || -1,
       static_generated_routes: [],
       is_dynamic: isUrlDynamic,
@@ -216,6 +219,7 @@ params returned by getStaticPaths: ${JSON.stringify(static_path.params)}`);
         css: r.css,
         is_dynamic: r.is_dynamic,
         path_parsed_for_routing: filePathToRoutingPath(r.path),
+        server_data_api_url: `/_internal_/${r.server_data_api_key}`,
         static_generated_routes: r.static_generated_routes.map((r) => {
           return {
             path: r.path,

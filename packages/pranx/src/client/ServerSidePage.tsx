@@ -14,13 +14,13 @@ export const ServerSidePage = (props: PropsWithChildren & { route_data: HydrateD
       const abortController = new AbortController();
 
       try {
-        const props_result = await ofetch<{ props: Record<string, any> }>(props.route_data.path, {
-          method: "GET",
-          query: {
-            props: true,
-          },
-          signal: abortController.signal,
-        });
+        const props_result = await ofetch<{ props: Record<string, any> }>(
+          props.route_data.server_data_api_url,
+          {
+            method: "GET",
+            signal: abortController.signal,
+          }
+        );
 
         set("props", props_result.props);
       } catch (error) {

@@ -77,6 +77,7 @@ export type ServerManifestRoute = {
   is_dynamic: boolean;
   dynamic_params: Array<string>;
   css: string[];
+  server_data_api_key: string;
 };
 
 export type SERVER_MANIFEST = {
@@ -93,6 +94,7 @@ export type HydrateDataRoute = {
   css: string[];
   path_parsed_for_routing: string;
   static_generated_routes: Array<{ path: string; props: Record<string, any> }>;
+  server_data_api_url: string;
 };
 
 export type HYDRATE_DATA = {

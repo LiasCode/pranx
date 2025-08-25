@@ -36,6 +36,16 @@ export function Header() {
               Products 2
             </a>
           </li>
+
+          <li>
+            <a
+              href="/products/3/agustin"
+              className="text-white hover:text-indigo-200 transition-colors font-medium"
+            >
+              Product/:id/:name
+            </a>
+          </li>
+
           <li>
             <a
               href="/not-found"
