@@ -17,6 +17,7 @@ import { join, resolve } from "pathe";
 import { Fragment, h } from "preact";
 import { renderToStringAsync } from "preact-render-to-string";
 import type { HYDRATE_DATA, PageModule, SERVER_MANIFEST, ServerEntryModule } from "types/index.js";
+import * as ufo from "ufo";
 
 export async function start() {
   measureTime("pranx-start");
@@ -31,6 +32,12 @@ export async function start() {
 
   for (const route of server_manifest.routes) {
     if (route.rendering_kind === "server-side") {
+      let server_entry_module: ServerEntryModule | null = null;
+      server_entry_module = (await import(server_manifest.entry_server)) as ServerEntryModule;
+
+      const file_absolute = resolve(join(OUTPUT_BUNDLE_SERVER_DIR, "pages", route.module));
+      const { default: page, getServerSideProps } = (await import(file_absolute)) as PageModule;
+
       app.on(
         "GET",
         filePathToRoutingPath(route.path, false),
@@ -38,15 +45,9 @@ export async function start() {
           middleware: [],
           meta: {},
           handler: async (event) => {
-            let server_entry_module: ServerEntryModule | null = null;
-
-            server_entry_module = (await import(server_manifest.entry_server)) as ServerEntryModule;
-
-            const file_absolute = resolve(join(OUTPUT_BUNDLE_SERVER_DIR, "pages", route.module));
-
-            const { default: page, getServerSideProps } = (await import(
-              file_absolute
-            )) as PageModule;
+            const url_parsed = ufo.parseURL(event.req.url);
+            const params = new URLSearchParams(url_parsed.search);
+            const return_only_props = Boolean(params.get("props"));
 
             let props = {};
 
@@ -54,9 +55,16 @@ export async function start() {
               props = await getServerSideProps();
             }
 
+            if (return_only_props) {
+              return {
+                props,
+              };
+            }
+
             const hydrate_data = (await fse.readJSON(SITE_MANIFEST_OUTPUT_PATH)) as HYDRATE_DATA;
 
             const target_route = hydrate_data.routes.find((r) => r.path === route.path);
+
             if (!target_route) {
               logger.error(`Route not found in hydrate data: ${route.path}`);
               event.res.status = 500;
