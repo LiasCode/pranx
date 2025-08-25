@@ -1,6 +1,28 @@
 # Changelog
 
 
+## v0.1.0-beta.6
+
+[compare changes](https://github.com/LiasCode/pranx/compare/v0.1.0-beta.5...v0.1.0-beta.6)
+
+### 🚀 Enhancements
+
+- Add server and site manifest output paths, enhance server-side rendering handling ([0d0eef5](https://github.com/LiasCode/pranx/commit/0d0eef5))
+- Implement AppContext and ServerSidePage for improved server-side rendering and state management ([713232a](https://github.com/LiasCode/pranx/commit/713232a))
+- Enhance server-side rendering and context management and initial props load ([ae1daec](https://github.com/LiasCode/pranx/commit/ae1daec))
+
+### 🩹 Fixes
+
+- GetServerSideProps fails when a file request match a router path pattern ([5155028](https://github.com/LiasCode/pranx/commit/5155028))
+
+### 💅 Refactors
+
+- Streamline server start process and improve port handling ([4a4b119](https://github.com/LiasCode/pranx/commit/4a4b119))
+
+### ❤️ Contributors
+
+- LiasCode <liasraul00@gmail.com>
+
 ## v0.1.0-beta.5
 
 [compare changes](https://github.com/LiasCode/pranx/compare/v0.1.0-beta.4...v0.1.0-beta.5)
