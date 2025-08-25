@@ -38,6 +38,8 @@ export async function start() {
       const file_absolute = resolve(join(OUTPUT_BUNDLE_SERVER_DIR, "pages", route.module));
       const { default: page, getServerSideProps } = (await import(file_absolute)) as PageModule;
 
+      const hydrate_data = (await fse.readJSON(SITE_MANIFEST_OUTPUT_PATH)) as HYDRATE_DATA;
+
       app.on(
         "GET",
         filePathToRoutingPath(route.path, false),
@@ -49,30 +51,30 @@ export async function start() {
             const params = new URLSearchParams(url_parsed.search);
             const return_only_props = Boolean(params.get("props"));
 
-            let props = {};
+            let props_to_return = {};
 
             if (getServerSideProps) {
-              props = await getServerSideProps();
+              props_to_return = await getServerSideProps();
             }
 
             if (return_only_props) {
               return {
-                props,
+                props: props_to_return,
               };
             }
 
-            const hydrate_data = (await fse.readJSON(SITE_MANIFEST_OUTPUT_PATH)) as HYDRATE_DATA;
+            const target_route_index = hydrate_data.routes.findIndex((r) => r.path === route.path);
 
-            const target_route = hydrate_data.routes.find((r) => r.path === route.path);
-
-            if (!target_route) {
+            if (target_route_index === -1 || !hydrate_data.routes[target_route_index]) {
               logger.error(`Route not found in hydrate data: ${route.path}`);
               event.res.status = 500;
               return html(event, "Internal Server Error");
             }
 
+            hydrate_data.routes[target_route_index].props = props_to_return;
+
             const page_prerendered = await renderToStringAsync(
-              h(server_entry_module?.default || Fragment, {}, h(page, props, null))
+              h(server_entry_module?.default || Fragment, {}, h(page, props_to_return, null))
             );
 
             const html_string = generate_html_template({

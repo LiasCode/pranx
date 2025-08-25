@@ -1,6 +1,7 @@
 import { createContext } from "preact";
 import type { PropsWithChildren } from "preact/compat";
-import { useContext, useState } from "preact/hooks";
+import { useCallback, useContext, useState } from "preact/hooks";
+import { find_current_route } from "./StartApp.js";
 
 export type AppContext = {
   _params: Record<string, string> | null;
@@ -8,14 +9,14 @@ export type AppContext = {
   set(key: "params" | "props", data: any): void;
 };
 
-const AppContextInstance = createContext<AppContext>({
+const _app_context = createContext<AppContext>({
   _params: {},
   _props: {},
   set() {},
 });
 
 export const useAppContext = () => {
-  const c = useContext(AppContextInstance);
+  const c = useContext(_app_context);
   if (!c) {
     throw new Error("useAppContext must be used within a AppContextProvider");
   }
@@ -23,24 +24,29 @@ export const useAppContext = () => {
 };
 
 export const AppContextProvider = (props: PropsWithChildren) => {
-  const [current_props, setCurrentProps] = useState<AppContext["_props"]>(null);
+  const [current_props, setCurrentProps] = useState<AppContext["_props"]>(() => {
+    const current_route = find_current_route();
+    return current_route?.props || null;
+  });
   const [current_params, setCurrentParams] = useState<AppContext["_params"]>(null);
 
+  const set: AppContext["set"] = useCallback((key, data) => {
+    if (key === "params") {
+      setCurrentParams(data);
+    } else {
+      setCurrentProps(data);
+    }
+  }, []);
+
   return (
-    <AppContextInstance.Provider
+    <_app_context.Provider
       value={{
         _params: current_params,
         _props: current_props,
-        set(key, data) {
-          if (key === "params") {
-            setCurrentParams(data);
-          } else {
-            setCurrentProps(data);
-          }
-        },
+        set,
       }}
     >
       {props.children}
-    </AppContextInstance.Provider>
+    </_app_context.Provider>
   );
 };

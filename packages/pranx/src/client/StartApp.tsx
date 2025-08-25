@@ -9,27 +9,13 @@ import { ServerSidePage } from "./ServerSidePage.js";
 let headUsed: ReturnType<typeof useHead> | null = null;
 
 export function StartApp() {
-  const HYDRATE_DATA = window.__PRANX_HYDRATE_DATA__;
-
   return (
     <AppContextProvider>
       <LocationProvider>
         <ErrorBoundary onError={console.error}>
           <Router
             onRouteChange={() => {
-              let current_route: HydrateDataRoute | null = null;
-
-              for (const r of window.__PRANX_HYDRATE_DATA__.routes) {
-                const exec_result = exec_route_match(
-                  window.location.pathname,
-                  r.path_parsed_for_routing
-                );
-
-                if (exec_result) {
-                  current_route = r;
-                  break;
-                }
-              }
+              const current_route = find_current_route();
 
               const head_css_config_links = current_route?.css.map((p) => {
                 return {
@@ -49,7 +35,7 @@ export function StartApp() {
               }
             }}
           >
-            {HYDRATE_DATA.routes.map((r) => {
+            {window.__PRANX_HYDRATE_DATA__.routes.map((r) => {
               const Page = lazy(() => import(r.module));
 
               return (
@@ -92,3 +78,18 @@ export function StartApp() {
     </AppContextProvider>
   );
 }
+
+export const find_current_route = () => {
+  let current_route: HydrateDataRoute | null = null;
+
+  for (const r of window.__PRANX_HYDRATE_DATA__.routes) {
+    const exec_result = exec_route_match(window.location.pathname, r.path_parsed_for_routing);
+
+    if (exec_result) {
+      current_route = r;
+      break;
+    }
+  }
+
+  return current_route;
+};

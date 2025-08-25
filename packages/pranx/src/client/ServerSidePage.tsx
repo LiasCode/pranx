@@ -22,9 +22,7 @@ export const ServerSidePage = (props: PropsWithChildren & { route_data: HydrateD
           signal: abortController.signal,
         });
 
-        setTimeout(() => {
-          set("props", props_result.props);
-        }, 2000);
+        set("props", props_result.props);
       } catch (error) {
         if (!(error instanceof Error)) return;
 
@@ -41,5 +39,5 @@ export const ServerSidePage = (props: PropsWithChildren & { route_data: HydrateD
     props_fetch_handler();
   }, []);
 
-  return cloneElement(child as VNode, _props || props.route_data.props);
+  return cloneElement(child as VNode, _props ?? props.route_data.props);
 };
