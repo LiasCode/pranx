@@ -1,4 +1,4 @@
-import { GetStaticPathsFunction, GetStaticPropsFunction, InferStaticProps } from "pranx";
+import type { GetStaticPathsFunction, GetStaticPropsFunction, InferStaticProps } from "pranx";
 import { Header } from "src/components/Header";
 
 export default function ProductIdPage(props: InferStaticProps<typeof getStaticProps>) {

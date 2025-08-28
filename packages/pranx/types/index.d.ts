@@ -1,4 +1,4 @@
-import { VNode } from "preact";
+import { ComponentProps, VNode } from "preact";
 import { PropsWithChildren } from "preact/compat";
 import { useHead } from "unhead";
 
@@ -106,3 +106,9 @@ declare global {
     __PRANX_HYDRATE_DATA__: HYDRATE_DATA;
   }
 }
+
+type LinkProps = ComponentProps<"a"> & {
+  to: string;
+};
+
+export function Link(props: LinkProps): VNode<any>;

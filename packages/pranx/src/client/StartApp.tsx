@@ -1,40 +1,13 @@
 import { ErrorBoundary, lazy, LocationProvider, Route, Router } from "preact-iso";
-import type { HydrateDataRoute } from "types/index.js";
-import { useHead } from "unhead";
 import { AppContextProvider } from "./AppContext.js";
-import { exec_route_match } from "./exec-match.js";
-import { UNHEAD_INSTANCE } from "./head.js";
-import { ServerSidePage } from "./ServerSidePage.js";
-
-let headUsed: ReturnType<typeof useHead> | null = null;
+import { ServerPage } from "./ServerPage.js";
 
 export function StartApp() {
   return (
     <AppContextProvider>
       <LocationProvider>
         <ErrorBoundary onError={console.error}>
-          <Router
-            onRouteChange={() => {
-              const current_route = find_current_route();
-
-              const head_css_config_links = current_route?.css.map((p) => {
-                return {
-                  href: p,
-                  rel: "stylesheet",
-                };
-              });
-
-              if (headUsed !== null) {
-                headUsed.patch({
-                  link: head_css_config_links,
-                });
-              } else {
-                headUsed = useHead(UNHEAD_INSTANCE, {
-                  link: head_css_config_links,
-                });
-              }
-            }}
-          >
+          <Router>
             {window.__PRANX_HYDRATE_DATA__.routes.map((r) => {
               const Page = lazy(() => import(r.module));
 
@@ -47,14 +20,17 @@ export function StartApp() {
 
                     if (r.rendering_kind === "server-side") {
                       return (
-                        <ServerSidePage
-                          // biome-ignore lint/correctness/noChildrenProp: <>
-                          children={<Page />}
-                          route_data={r}
-                        />
+                        <ServerPage>
+                          <Page />
+                        </ServerPage>
                       );
                     }
 
+                    if (r.static_generated_routes.length === 0) {
+                      return <Page {...props} />;
+                    }
+
+                    // For substatic generated routes
                     for (const route of r.static_generated_routes) {
                       if (route.path === window.location.pathname) {
                         props = route.props;
@@ -78,18 +54,3 @@ export function StartApp() {
     </AppContextProvider>
   );
 }
-
-export const find_current_route = () => {
-  let current_route: HydrateDataRoute | null = null;
-
-  for (const r of window.__PRANX_HYDRATE_DATA__.routes) {
-    const exec_result = exec_route_match(window.location.pathname, r.path_parsed_for_routing);
-
-    if (exec_result) {
-      current_route = r;
-      break;
-    }
-  }
-
-  return current_route;
-};

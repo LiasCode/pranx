@@ -1,3 +1,5 @@
+import { Link } from "pranx";
+
 export function Header() {
   return (
     <header className="bg-gradient-to-r from-blue-600 to-indigo-700 shadow-md py-4 px-6">
@@ -5,54 +7,54 @@ export function Header() {
       <nav>
         <ul className="flex gap-6">
           <li>
-            <a
-              href="/"
+            <Link
+              to="/"
               className="text-white hover:text-indigo-200 transition-colors font-medium"
             >
               Home
-            </a>
+            </Link>
           </li>
           <li>
-            <a
-              href="/about"
+            <Link
+              to="/about"
               className="text-white hover:text-indigo-200 transition-colors font-medium"
             >
               About
-            </a>
+            </Link>
           </li>
           <li>
-            <a
-              href="/products"
+            <Link
+              to="/products"
               className="text-white hover:text-indigo-200 transition-colors font-medium"
             >
               Products
-            </a>
+            </Link>
           </li>
           <li>
-            <a
-              href="/products/2"
+            <Link
+              to="/products/2"
               className="text-white hover:text-indigo-200 transition-colors font-medium"
             >
               Products 2
-            </a>
+            </Link>
           </li>
 
           <li>
-            <a
-              href="/products/3/agustin"
+            <Link
+              to="/products/3/agustin"
               className="text-white hover:text-indigo-200 transition-colors font-medium"
             >
               Product/:id/:name
-            </a>
+            </Link>
           </li>
 
           <li>
-            <a
-              href="/not-found"
+            <Link
+              to="/not-found"
               className="text-white hover:text-indigo-200 transition-colors font-medium"
             >
               Not Found
-            </a>
+            </Link>
           </li>
         </ul>
       </nav>

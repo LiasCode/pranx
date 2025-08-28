@@ -1,4 +1,4 @@
-import { GetServerSidePropsFunction } from "pranx";
+import type { GetServerSidePropsFunction } from "pranx";
 import { Header } from "src/components/Header";
 
 export default function ProductIdPage(props: { id: string; name: string }) {

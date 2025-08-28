@@ -1,5 +1,5 @@
+import type { GetServerSidePropsFunction } from "pranx";
 import { Header } from "src/components/Header";
-import { GetServerSidePropsFunction } from "../../../../../packages/pranx/types/index";
 import "./products.css";
 
 export default function ProductsPage(props: { cuantity: number }) {
@@ -16,6 +16,6 @@ export const getServerSideProps: GetServerSidePropsFunction<{
   cuantity: number;
 }> = async () => {
   return {
-    cuantity: 1,
+    cuantity: Math.trunc(Math.random() * 10 * 5),
   };
 };
