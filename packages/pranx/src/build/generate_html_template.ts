@@ -18,13 +18,7 @@ export const generate_html_template = ({
       ${page_prerendered
         .replace(
           META_TAG,
-          `
-          <style>
-            span[role=link] {
-              cursor:pointer;
-            }
-          </style>
-          ${css.map((css_path) => `<link rel="stylesheet" href="${css_path}" />`).join("\n")}`
+          `${css.map((css_path) => `<link rel="stylesheet" href="${css_path}" />`).join("\n")}`
         )
         .replace(
           SCRIPTS_TAG,
