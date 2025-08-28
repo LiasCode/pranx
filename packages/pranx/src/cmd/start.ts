@@ -79,6 +79,7 @@ const createServeStatic = (event: H3Event<EventHandlerRequest>) =>
 
       return undefined;
     },
+
     headers: {
       "Cache-Control": "public, max-age=2592000, immutable", // agresive caching
       "Expires": new Date(Date.now() + 2592000000).toUTCString(), // one month
@@ -109,7 +110,17 @@ const attach_server_side_pages_to_app = async (server_manifest: SERVER_MANIFEST,
           let props_to_return = {};
 
           if (getServerSideProps) {
-            props_to_return = await getServerSideProps();
+            props_to_return = await getServerSideProps({
+              event,
+            });
+          }
+
+          event.res.headers.set("Cache-Control", "private, no-cache, no-store, must-revalidate");
+
+          if (event.url.searchParams.get("props") === "only") {
+            return {
+              props: props_to_return,
+            };
           }
 
           const target_route_index = hydrate_data.routes.findIndex((r) => r.path === route.path);
@@ -133,26 +144,7 @@ const attach_server_side_pages_to_app = async (server_manifest: SERVER_MANIFEST,
             css: route.css,
           });
 
-          event.res.headers.set("Cache-Control", "private, no-cache, no-store, must-revalidate");
           return html(event, html_string);
-        })
-      );
-
-      app.on(
-        "GET",
-        `/_internal_/${route.server_data_api_key}`,
-        defineHandler(async (event) => {
-          let props_to_return = {};
-
-          if (getServerSideProps) {
-            props_to_return = await getServerSideProps();
-          }
-
-          event.res.headers.set("Cache-Control", "no-store");
-
-          return {
-            props: props_to_return,
-          };
         })
       );
     }

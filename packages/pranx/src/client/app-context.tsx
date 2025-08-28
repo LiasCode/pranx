@@ -52,7 +52,10 @@ export const AppContextProvider = (props: PropsWithChildren) => {
     }
 
     try {
-      const response = await fetch(next_route_data.server_data_api_url);
+      const targetUrl = new URL(window.location.href);
+      targetUrl.searchParams.set("props", "only");
+
+      const response = await fetch(targetUrl);
       const json_data = (await response.json()) as { props: Record<string, any> };
       set_page_props(json_data.props);
       onRouteChangeUpdateHead(next_route_data);

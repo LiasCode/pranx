@@ -17,9 +17,6 @@ export default function ProductIdPage(props: { id: string; name: string }) {
 export const getServerSideProps: GetServerSidePropsFunction<{
   id: string;
   name: string;
-}> = async () => {
-  return {
-    id: Math.random().toFixed(10),
-    name: "Pedro",
-  };
+}> = async ({ event }) => {
+  return event.context.params as { id: string; name: string };
 };

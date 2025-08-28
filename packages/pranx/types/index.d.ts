@@ -1,3 +1,4 @@
+import { EventHandlerRequest, H3Event } from "h3";
 import { VNode } from "preact";
 import { PropsWithChildren } from "preact/compat";
 import { useHead } from "unhead";
@@ -29,8 +30,9 @@ export type GetStaticPropsFunction<
 > = (context: { params: Params }) => Promise<GetStaticPropsResult<Props>>;
 
 // Server Side
-export type GetServerSidePropsFunction<Props extends Record<string, any> = {}> =
-  () => Promise<Props>;
+export type GetServerSidePropsFunction<Props extends Record<string, any> = {}> = (context: {
+  event: H3Event<EventHandlerRequest>;
+}) => Promise<Props>;
 
 // Meta
 export type MetaFunction = typeof useHead;
@@ -69,7 +71,6 @@ export type ServerManifestRoute = {
   is_dynamic: boolean;
   dynamic_params: Array<string>;
   css: string[];
-  server_data_api_key: string;
 };
 
 export type SERVER_MANIFEST = {
@@ -86,7 +87,6 @@ export type HydrateDataRoute = {
   css: string[];
   path_parsed_for_routing: string;
   static_generated_routes: Array<{ path: string; props: Record<string, any> }>;
-  server_data_api_url: string;
 };
 
 export type HYDRATE_DATA = {
