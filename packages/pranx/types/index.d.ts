@@ -1,20 +1,12 @@
-import { FunctionalComponent, Ref, VNode } from "preact";
+import { VNode } from "preact";
 import { PropsWithChildren } from "preact/compat";
 import { useHead } from "unhead";
-
-export function mount(app: any, root: Element | DocumentFragment): void;
-
-export function StartApp(): VNode<any>;
-export function Scripts(): VNode<any>;
-export function Meta(): VNode<any>;
 
 export type ServerEntryProps = PropsWithChildren;
 
 export type ServerEntryModule = {
   default(): VNode<ServerEntryProps>;
 };
-
-// Page Module
 
 // Static
 interface GetStaticPathsResult<Params extends Record<string, any>> {
@@ -106,18 +98,3 @@ declare global {
     __PRANX_HYDRATE_DATA__: HYDRATE_DATA;
   }
 }
-
-export type LinkProps = ComponentProps<"a"> & {
-  to: string;
-};
-
-export declare const Link: FunctionalComponent<
-  React.PropsWithoutRef<LinkProps> & {
-    ref?: Ref<HTMLAnchorElement> | undefined;
-  }
->;
-
-export declare const useAppContext: () => {
-  props: Record<string, any> | null;
-  props_status: "ready" | "loading" | "error";
-};

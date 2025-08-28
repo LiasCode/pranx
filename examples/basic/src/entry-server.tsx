@@ -1,4 +1,5 @@
-import { Meta, Scripts, type ServerEntryProps } from "pranx";
+import { type ServerEntryProps } from "pranx";
+import { Meta, Scripts } from "pranx/server";
 
 export default function ServerEntry({ children }: ServerEntryProps) {
   return (
@@ -34,7 +35,7 @@ export default function ServerEntry({ children }: ServerEntryProps) {
         <Meta />
       </head>
       <body>
-        <div id="app">{children}</div>
+        {children}
         <Scripts />
       </body>
     </html>

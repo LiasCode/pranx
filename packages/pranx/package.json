@@ -10,7 +10,7 @@
     "test": "vitest run",
     "check": "tsc --noEmit -p ./tsconfig.json",
     "style": "bun run format && bun run lint",
-    "format": "prettier --write --cache src scripts",
+    "format": "prettier --write --cache src scripts types",
     "lint": "biome lint . --fix --unsafe",
     "prepublishOnly": "bun run build:prod",
     "release": "pnpm run build:prod && changelogen --release --prerelease --publish -publishTag beta && git push --follow-tags"
@@ -28,6 +28,14 @@
     ".": {
       "import": "./dist/index.js",
       "types": "./types/index.d.ts"
+    },
+    "./client": {
+      "import": "./dist/client/index.js",
+      "types": "./types/client.d.ts"
+    },
+    "./server": {
+      "import": "./dist/server/index.js",
+      "types": "./types/server.d.ts"
     },
     "./package.json": "./package.json"
   },

@@ -1,10 +1,12 @@
-import { useAppContext, type GetServerSidePropsFunction } from "pranx";
+import { type GetServerSidePropsFunction } from "pranx";
+import { useAppContext } from "pranx/client";
 import { Header } from "src/components/Header";
 import "./products.css";
 
 export default function ProductsPage(props: { cuantity: number }) {
   const { props_status } = useAppContext();
   console.log(props_status);
+
   return (
     <div>
       <Header />

@@ -1,4 +1,4 @@
-import { Link } from "pranx";
+import { Link } from "pranx/client";
 
 export function Header() {
   return (
