@@ -26,7 +26,7 @@ Pranx aims to provide a minimal, highly-performant fullstack developer experienc
 ## Project status
 
 - Current state: full rewrite in progress
-- Examples located in `examples/basic`
+- Examples located in `examples/`
 - Expect breaking changes until v1.0
 
 
