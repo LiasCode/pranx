@@ -1,6 +1,29 @@
 # Changelog
 
 
+## v0.1.0-beta.7
+
+[compare changes](https://github.com/LiasCode/pranx/compare/v0.1.0-beta.6...v0.1.0-beta.7)
+
+### 🚀 Enhancements
+
+- Implement Link component for client-side navigation and enhance AppContext for route management ([b055c74](https://github.com/LiasCode/pranx/commit/b055c74))
+- Split server and client exports ([cbdc510](https://github.com/LiasCode/pranx/commit/cbdc510))
+- Add cache ([0a90718](https://github.com/LiasCode/pranx/commit/0a90718))
+- Update getServerSideProps to use event context and remove unused code ([188ef82](https://github.com/LiasCode/pranx/commit/188ef82))
+
+### 🩹 Fixes
+
+- Update ignore path for exec-match.ts in biome configuration ([937b127](https://github.com/LiasCode/pranx/commit/937b127))
+
+### 💅 Refactors
+
+- Organize client files ([166de80](https://github.com/LiasCode/pranx/commit/166de80))
+
+### ❤️ Contributors
+
+- LiasCode <liasraul00@gmail.com>
+
 ## v0.1.0-beta.6
 
 [compare changes](https://github.com/LiasCode/pranx/compare/v0.1.0-beta.5...v0.1.0-beta.6)
