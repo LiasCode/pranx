@@ -37,6 +37,55 @@ export async function start() {
 
   const app = new H3();
 
+  await attach_server_side_pages_to_app(server_manifest, app);
+
+  app.on("GET", "**", (event) => createServeStatic(event));
+
+  const SERVER = serve(app, { port: PORT });
+
+  await SERVER.ready();
+
+  const START_TIME = measureTime("pranx-start");
+
+  logger.success(`Start in ${START_TIME} ms`);
+}
+
+const createServeStatic = (event: H3Event<EventHandlerRequest>) =>
+  serveStatic(event, {
+    indexNames: ["/index.html"],
+
+    getContents: async (id) => {
+      const target_file = join(OUTPUT_BUNDLE_BROWSER_DIR, id);
+      const target_public_file = join(PUBLIC_USER_DIR, id);
+
+      const existsTargetFile = await fse.exists(target_file);
+
+      const buffer = await readFile(existsTargetFile ? target_file : target_public_file);
+
+      return new Uint8Array(buffer);
+    },
+
+    getMeta: async (id) => {
+      const target_file = join(OUTPUT_BUNDLE_BROWSER_DIR, id);
+      const target_public_file = join(PUBLIC_USER_DIR, id);
+
+      const existsTargetFile = await fse.exists(target_file);
+
+      const stats = await stat(existsTargetFile ? target_file : target_public_file).catch(() => {});
+
+      if (stats?.isFile()) {
+        return stats;
+      }
+
+      return undefined;
+    },
+    headers: {
+      "Cache-Control": "public, max-age=2592000, immutable", // agresive caching
+      "Expires": new Date(Date.now() + 2592000000).toUTCString(), // one month
+    },
+  });
+
+const attach_server_side_pages_to_app = async (server_manifest: SERVER_MANIFEST, app: H3) => {
   for (const route of server_manifest.routes) {
     if (route.rendering_kind === "server-side") {
       let server_entry_module: ServerEntryModule | null = null;
@@ -84,8 +133,7 @@ export async function start() {
             css: route.css,
           });
 
-          event.res.headers.set("Content-Type", "text/html");
-
+          event.res.headers.set("Cache-Control", "private, no-cache, no-store, must-revalidate");
           return html(event, html_string);
         })
       );
@@ -93,12 +141,14 @@ export async function start() {
       app.on(
         "GET",
         `/_internal_/${route.server_data_api_key}`,
-        defineHandler(async () => {
+        defineHandler(async (event) => {
           let props_to_return = {};
 
           if (getServerSideProps) {
             props_to_return = await getServerSideProps();
           }
+
+          event.res.headers.set("Cache-Control", "no-store");
 
           return {
             props: props_to_return,
@@ -107,45 +157,4 @@ export async function start() {
       );
     }
   }
-
-  app.on("GET", "**", (event) => createServeStatic(event));
-
-  const SERVER = serve(app, { port: PORT });
-
-  await SERVER.ready();
-
-  const START_TIME = measureTime("pranx-start");
-
-  logger.success(`Start in ${START_TIME} ms`);
-}
-
-const createServeStatic = (event: H3Event<EventHandlerRequest>) =>
-  serveStatic(event, {
-    indexNames: ["/index.html"],
-
-    getContents: async (id) => {
-      const target_file = join(OUTPUT_BUNDLE_BROWSER_DIR, id);
-      const target_public_file = join(PUBLIC_USER_DIR, id);
-
-      const existsTargetFile = await fse.exists(target_file);
-
-      const buffer = await readFile(existsTargetFile ? target_file : target_public_file);
-
-      return new Uint8Array(buffer);
-    },
-
-    getMeta: async (id) => {
-      const target_file = join(OUTPUT_BUNDLE_BROWSER_DIR, id);
-      const target_public_file = join(PUBLIC_USER_DIR, id);
-
-      const existsTargetFile = await fse.exists(target_file);
-
-      const stats = await stat(existsTargetFile ? target_file : target_public_file).catch(() => {});
-
-      if (stats?.isFile()) {
-        return stats;
-      }
-
-      return undefined;
-    },
-  });
+};
