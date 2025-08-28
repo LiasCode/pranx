@@ -1,4 +1,4 @@
-import { ComponentProps, VNode } from "preact";
+import { FunctionalComponent, Ref, VNode } from "preact";
 import { PropsWithChildren } from "preact/compat";
 import { useHead } from "unhead";
 
@@ -107,8 +107,17 @@ declare global {
   }
 }
 
-type LinkProps = ComponentProps<"a"> & {
+export type LinkProps = ComponentProps<"a"> & {
   to: string;
 };
 
-export function Link(props: LinkProps): VNode<any>;
+export declare const Link: FunctionalComponent<
+  React.PropsWithoutRef<LinkProps> & {
+    ref?: Ref<HTMLAnchorElement> | undefined;
+  }
+>;
+
+export declare const useAppContext: () => {
+  props: Record<string, any> | null;
+  props_status: "ready" | "loading" | "error";
+};

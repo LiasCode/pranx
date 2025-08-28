@@ -1,61 +1,67 @@
-import { ofetch } from "ofetch";
 import { createContext } from "preact";
 import type { PropsWithChildren } from "preact/compat";
 import { useCallback, useContext, useState } from "preact/hooks";
-import { find_route } from "./find_route.js";
-import { onRouteChangeUpdateHead } from "./head.js";
+import { find_route } from "./shared/find-route.js";
+import { onRouteChangeUpdateHead } from "./shared/head.js";
 
 export type AppContext = {
   /** Props for the current server side page rendered  */
   _props: Record<string, any> | null;
-  set(key: "props", data: any): void;
+  _props_status: "ready" | "loading" | "error";
+  set(key: "props" | "prop_status", data: any): void;
   onRouteWillChange(next_route: string): Promise<boolean>;
 };
 
 const _app_context = createContext<AppContext>({
   _props: {},
+  _props_status: "ready",
   set() {},
   onRouteWillChange: async () => false,
 });
 
 export const AppContextProvider = (props: PropsWithChildren) => {
-  const [current_props, setCurrentProps] = useState<AppContext["_props"]>(() => {
+  const [page_props, set_page_props] = useState<AppContext["_props"]>(() => {
     const current_route = find_route(window.location.pathname);
     return current_route?.props || null;
   });
+  const [props_status, set_props_status] = useState<AppContext["_props_status"]>("ready");
 
   const set: AppContext["set"] = useCallback((key, data) => {
     if (key === "props") {
-      setCurrentProps(data);
+      set_page_props(data);
+    }
+    if (key === "prop_status") {
+      set_props_status(data);
     }
   }, []);
 
   const onRouteWillChange = async (next_route: string): Promise<boolean> => {
+    set_props_status("loading");
     const next_route_data = find_route(next_route);
 
     if (next_route_data === null) {
       console.error(`Route with value ${next_route} do not exits or not match`);
+      set_props_status("error");
       return false;
     }
 
     if (next_route_data.rendering_kind === "static") {
+      set_props_status("loading");
       onRouteChangeUpdateHead(next_route_data);
       return true;
     }
 
     try {
-      const props_result = await ofetch<{ props: Record<string, any> }>(
-        next_route_data.server_data_api_url,
-        {
-          method: "GET",
-        }
-      );
-      setCurrentProps(props_result.props);
+      const response = await fetch(next_route_data.server_data_api_url);
+      const json_data = (await response.json()) as { props: Record<string, any> };
+      set_page_props(json_data.props);
       onRouteChangeUpdateHead(next_route_data);
+      set_props_status("ready");
       return true;
     } catch (error) {
       if (!(error instanceof Error)) return false;
       console.error("Failed to fetch props:", error);
+      set_props_status("error");
       return false;
     }
   };
@@ -63,7 +69,8 @@ export const AppContextProvider = (props: PropsWithChildren) => {
   return (
     <_app_context.Provider
       value={{
-        _props: current_props,
+        _props: page_props,
+        _props_status: props_status,
         set,
         onRouteWillChange,
       }}
@@ -73,8 +80,19 @@ export const AppContextProvider = (props: PropsWithChildren) => {
   );
 };
 
-export const useAppContext = () => {
+export const _useAppContext = () => {
   const c = useContext(_app_context);
   if (!c) throw new Error("useAppContext must be used within a AppContextProvider");
   return c;
 };
+
+const publicUseAppContext = () => {
+  const c = useContext(_app_context);
+  if (!c) throw new Error("useAppContext must be used within a AppContextProvider");
+  return {
+    props: c._props,
+    props_status: c._props_status,
+  };
+};
+
+export { publicUseAppContext as useAppContext };
