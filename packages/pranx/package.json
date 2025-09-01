@@ -71,7 +71,7 @@
   "dependencies": {
     "@babel/core": "^7.28.3",
     "@babel/parser": "^7.28.3",
-    "@mdx-js/esbuild": "^3.1.0",
+    "@mdx-js/esbuild": "^3.1.1",
     "@swc/html": "^1.13.5",
     "chokidar": "^4.0.3",
     "citty": "^0.1.6",
