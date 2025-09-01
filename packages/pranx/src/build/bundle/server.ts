@@ -3,9 +3,10 @@ import { tailwindcss_plugin } from "@/plugins/tailwind-plugin.js";
 import esbuild from "esbuild";
 import { glob } from "glob";
 import { join } from "pathe";
+import type { PranxConfig } from "types/index.js";
 import { OUTPUT_BUNDLE_SERVER_DIR, SOURCE_DIR, SOURCE_PAGES_DIR } from "../constants.js";
 
-export async function bundle_server(options: { optimize: boolean }) {
+export async function bundle_server(options: { optimize: boolean; user_config: PranxConfig }) {
   const server_entries = await glob(
     [join(SOURCE_PAGES_DIR, "**/*page.{js,ts,tsx,jsx}"), join(SOURCE_DIR, "entry-server.tsx")],
     {
@@ -44,8 +45,13 @@ export async function bundle_server(options: { optimize: boolean }) {
     outbase: SOURCE_DIR,
 
     alias: {
+      ...(options.user_config.esbuild?.alias || {}),
       "react": "preact/compat",
       "react-dom": "preact/compat",
+    },
+
+    define: {
+      ...(options.user_config.esbuild?.define || {}),
     },
 
     loader: {
@@ -58,7 +64,11 @@ export async function bundle_server(options: { optimize: boolean }) {
       ".json": "json",
     },
 
-    plugins: [mdx_pranx_plugin(), tailwindcss_plugin()],
+    plugins: [
+      mdx_pranx_plugin(),
+      tailwindcss_plugin(),
+      ...(options.user_config.esbuild?.plugins || []),
+    ],
   });
 
   return server_bundle_result;

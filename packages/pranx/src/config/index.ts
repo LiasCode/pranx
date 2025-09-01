@@ -22,10 +22,11 @@ export async function load_user_pranx_config() {
   UserPranxConfig = config.config;
 }
 
-export async function get_user_pranx_config() {
+export async function get_user_pranx_config(): Promise<PranxConfig> {
   if (UserPranxConfig !== null) {
     await load_user_pranx_config();
-    return UserPranxConfig;
+    return UserPranxConfig as PranxConfig;
   }
-  return UserPranxConfig;
+
+  return UserPranxConfig as unknown as PranxConfig;
 }

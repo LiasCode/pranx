@@ -1,5 +1,5 @@
 import { filePathToRoutingPath } from "@/build/filepath-to-routing-path.js";
-import { load_user_pranx_config } from "@/config/index.js";
+import { get_user_pranx_config, load_user_pranx_config } from "@/config/index.js";
 import { logger } from "@/utils/logger.js";
 import { measureTime } from "@/utils/time-perf.js";
 import fse from "fs-extra";
@@ -31,6 +31,7 @@ export async function build() {
 
   measureTime("build_measure_time");
 
+  // Loading User Config
   await load_user_pranx_config();
 
   // Clean output
@@ -39,10 +40,12 @@ export async function build() {
   // Bundling
   await bundle_server({
     optimize: true,
+    user_config: await get_user_pranx_config(),
   });
 
   const browser_bundle_metafile = await bundle_browser({
     optimize: true,
+    user_config: await get_user_pranx_config(),
   });
 
   // Manifests

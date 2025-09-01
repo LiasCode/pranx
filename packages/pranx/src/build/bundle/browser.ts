@@ -4,9 +4,10 @@ import { tailwindcss_plugin } from "@/plugins/tailwind-plugin.js";
 import esbuild from "esbuild";
 import { glob } from "glob";
 import { join } from "pathe";
+import type { PranxConfig } from "types/index.js";
 import { OUTPUT_BUNDLE_BROWSER_DIR, SOURCE_DIR, SOURCE_PAGES_DIR } from "../constants.js";
 
-export async function bundle_browser(options: { optimize: boolean }) {
+export async function bundle_browser(options: { optimize: boolean; user_config: PranxConfig }) {
   const browser_entries = await glob(
     [join(SOURCE_PAGES_DIR, "**/*page.{js,ts,tsx,jsx}"), join(SOURCE_DIR, "entry-client.tsx")],
     {
@@ -45,6 +46,7 @@ export async function bundle_browser(options: { optimize: boolean }) {
     conditions: ["import", "module", "require"], // Module resolution conditions
 
     alias: {
+      ...(options.user_config.esbuild?.alias || {}),
       "react": "preact/compat",
       "react-dom": "preact/compat",
     },
@@ -58,6 +60,11 @@ export async function bundle_browser(options: { optimize: boolean }) {
       ".scss": "css",
     },
 
+    define: {
+      ...(options.user_config.esbuild?.define || {}),
+      "window.pranx.csr_enabled": String(options.user_config.csr),
+    },
+
     plugins: [
       strip_server_only_from_pages_plugin([
         "getServerSideProps",
@@ -68,6 +75,7 @@ export async function bundle_browser(options: { optimize: boolean }) {
       ]),
       mdx_pranx_plugin(),
       tailwindcss_plugin(),
+      ...(options.user_config.esbuild?.plugins || []),
     ],
   });
 

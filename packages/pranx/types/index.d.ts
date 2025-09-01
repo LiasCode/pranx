@@ -97,6 +97,10 @@ export type HYDRATE_DATA = {
 declare global {
   interface Window {
     __PRANX_HYDRATE_DATA__: HYDRATE_DATA;
+
+    pranx: {
+      csr_enabled: boolean;
+    };
   }
 }
 

@@ -9,17 +9,30 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>((props, forwardedRe
   if (!props.to) {
     throw new Error("Link element must provide a `to` property");
   }
-  const { set } = _useAppContext();
+
+  if (typeof window !== "undefined" && window.pranx.csr_enabled === true) {
+    const { set } = _useAppContext();
+    return (
+      <a
+        ref={forwardedRef}
+        {...props}
+        data-to={props.to}
+        href={props.to}
+        onClick={() => {
+          set("prop_status", "loading");
+        }}
+      >
+        {props.children}
+      </a>
+    );
+  }
+
   return (
     <a
       ref={forwardedRef}
       {...props}
       data-to={props.to}
       href={props.to}
-      onClick={(e) => {
-        e.preventDefault();
-        set("prop_status", "loading");
-      }}
     >
       {props.children}
     </a>
