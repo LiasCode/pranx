@@ -1,4 +1,5 @@
 import { filePathToRoutingPath } from "@/build/filepath-to-routing-path.js";
+import { load_user_pranx_config } from "@/config/index.js";
 import { logger } from "@/utils/logger.js";
 import { measureTime } from "@/utils/time-perf.js";
 import fse from "fs-extra";
@@ -30,8 +31,12 @@ export async function build() {
 
   measureTime("build_measure_time");
 
+  await load_user_pranx_config();
+
+  // Clean output
   await fse.emptyDir(OUTPUT_PRANX_DIR);
 
+  // Bundling
   await bundle_server({
     optimize: true,
   });
@@ -40,6 +45,7 @@ export async function build() {
     optimize: true,
   });
 
+  // Manifests
   const server_site_manifest: SERVER_MANIFEST = {
     entry_server: join(OUTPUT_BUNDLE_SERVER_DIR, "entry-server.js"),
     routes: [],

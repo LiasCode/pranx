@@ -1,3 +1,4 @@
+import { BuildOptions } from "esbuild";
 import { EventHandlerRequest, H3Event } from "h3";
 import { VNode } from "preact";
 import { PropsWithChildren } from "preact/compat";
@@ -98,3 +99,16 @@ declare global {
     __PRANX_HYDRATE_DATA__: HYDRATE_DATA;
   }
 }
+
+// Config
+export declare type PranxConfig = {
+  /**
+   * Enable client side routing.
+   * If set to false, pranx don't will use `preact-iso` in the client for spa routing
+   */
+  csr?: boolean;
+  /**
+   * Extends esbuild config.
+   */
+  esbuild?: Pick<BuildOptions, "alias" | "define" | "plugins">;
+};
