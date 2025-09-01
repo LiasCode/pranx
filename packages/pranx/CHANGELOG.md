@@ -1,6 +1,29 @@
 # Changelog
 
 
+## v0.1.0-beta.8
+
+[compare changes](https://github.com/LiasCode/pranx/compare/v0.1.0-beta.7...v0.1.0-beta.8)
+
+### 🚀 Enhancements
+
+- Pranx custom user config file ([3007ff7](https://github.com/LiasCode/pranx/commit/3007ff7))
+- Now user can disable client side rendering ([665bba8](https://github.com/LiasCode/pranx/commit/665bba8))
+
+### 🩹 Fixes
+
+- Remove old inline styles from HTML template generation ([5848f95](https://github.com/LiasCode/pranx/commit/5848f95))
+- Update example paths in README and improve type imports in entry-server and page components ([2f8e3f6](https://github.com/LiasCode/pranx/commit/2f8e3f6))
+
+### 🏡 Chore
+
+- Update dependencies in package.json and pnpm-lock.yaml ([e42c194](https://github.com/LiasCode/pranx/commit/e42c194))
+- Bump @mdx-js/esbuild ([1803295](https://github.com/LiasCode/pranx/commit/1803295))
+
+### ❤️ Contributors
+
+- LiasCode <liasraul00@gmail.com>
+
 ## v0.1.0-beta.7
 
 [compare changes](https://github.com/LiasCode/pranx/compare/v0.1.0-beta.6...v0.1.0-beta.7)
