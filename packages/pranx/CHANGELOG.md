@@ -1,6 +1,30 @@
 # Changelog
 
 
+## v0.1.0-beta.9
+
+[compare changes](https://github.com/LiasCode/pranx/compare/v0.1.0-beta.8...v0.1.0-beta.9)
+
+### 🚀 Enhancements
+
+- Add api route handler and server manifest ([ff4197e](https://github.com/LiasCode/pranx/commit/ff4197e))
+- Add runtime for api route handler ([6c19e9d](https://github.com/LiasCode/pranx/commit/6c19e9d))
+
+### 💅 Refactors
+
+- Extract start methods intro runtime folder ([7f4227d](https://github.com/LiasCode/pranx/commit/7f4227d))
+- Normalize path and use better names ([0a5c95f](https://github.com/LiasCode/pranx/commit/0a5c95f))
+
+### 🏡 Chore
+
+- Add a .env.example for needed examples env vars ([28de192](https://github.com/LiasCode/pranx/commit/28de192))
+- Bump deps ([234e4fd](https://github.com/LiasCode/pranx/commit/234e4fd))
+- Bump deps ([8aad4c9](https://github.com/LiasCode/pranx/commit/8aad4c9))
+
+### ❤️ Contributors
+
+- LiasCode <liasraul00@gmail.com>
+
 ## v0.1.0-beta.8
 
 [compare changes](https://github.com/LiasCode/pranx/compare/v0.1.0-beta.7...v0.1.0-beta.8)
