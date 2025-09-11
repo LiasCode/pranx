@@ -38,13 +38,15 @@ export async function build() {
   await fse.emptyDir(OUTPUT_PRANX_DIR);
 
   // Bundling
-  await bundle_server({
-    optimize: true,
+  const optimize_output = false;
+
+  const server_bundle_result = await bundle_server({
+    optimize: optimize_output,
     user_config: await get_user_pranx_config(),
   });
 
   const browser_bundle_result = await bundle_browser({
-    optimize: true,
+    optimize: optimize_output,
     user_config: await get_user_pranx_config(),
   });
 
@@ -52,11 +54,36 @@ export async function build() {
   const server_site_manifest: SERVER_MANIFEST = {
     entry_server: join(OUTPUT_BUNDLE_SERVER_DIR, "entry-server.js"),
     routes: [],
+    api: [],
   };
 
   let server_entry_module: ServerEntryModule | null = null;
 
   server_entry_module = (await import(server_site_manifest.entry_server)) as ServerEntryModule;
+
+  // Generating api routes Manifest
+  const pranx_server_base_path = join(".pranx", "server");
+
+  for (const [file, _output] of Object.entries(server_bundle_result.metafile.outputs)) {
+    if (!file.endsWith("route.js")) continue;
+
+    const pages_relative_path = file.replace(pranx_server_base_path, "");
+
+    const final_path_normalized = `/${pages_relative_path
+      .replace("route.js", "")
+      .replace("pages", "")
+      .split("/")
+      .filter(Boolean)
+      .join("/")}`;
+
+    const module_path = join(OUTPUT_BUNDLE_SERVER_DIR, "pages", pages_relative_path);
+
+    server_site_manifest.api.push({
+      path: final_path_normalized,
+      module: pages_relative_path,
+      absolute_module_path: module_path,
+    });
+  }
 
   const pranx_browser_base_path = join(".pranx", "browser");
 
@@ -266,7 +293,7 @@ export async function build() {
         const html = generate_html_template({
           page_prerendered,
           hydrate_data_as_string,
-          minify: true,
+          minify: optimize_output,
           css: route.css,
         });
 

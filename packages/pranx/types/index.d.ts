@@ -1,5 +1,5 @@
 import { BuildOptions } from "esbuild";
-import { EventHandlerRequest, H3Event } from "h3";
+import { EventHandlerRequest, H3Event, defineHandler } from "h3";
 import { VNode } from "preact";
 import { PropsWithChildren } from "preact/compat";
 import { useHead } from "unhead";
@@ -74,9 +74,27 @@ export type ServerManifestRoute = {
   css: string[];
 };
 
+export type PranxApiHandler = typeof defineHandler;
+
+export type PranxRouteModule = {
+  GET?: PranxApiHandler;
+  POST?: PranxApiHandler;
+  PUT?: PranxApiHandler;
+  DELETE?: PranxApiHandler;
+  PATCH?: PranxApiHandler;
+  HEAD?: PranxApiHandler;
+};
+
+export type ServerManifestApiHandler = {
+  path: string;
+  module: string;
+  absolute_module_path: string;
+};
+
 export type SERVER_MANIFEST = {
   entry_server: string;
   routes: ServerManifestRoute[];
+  api: ServerManifestApiHandler[];
 };
 
 export type HydrateDataRoute = {

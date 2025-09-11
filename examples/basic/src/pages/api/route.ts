@@ -1,15 +1,17 @@
-export const GET = () => {
-  return true;
-};
+import { defineHandler } from "pranx/server";
 
-export const POST = () => {
-  return true;
-};
+export const GET = defineHandler(() => {
+  return { ok: true };
+});
 
-export const PUT = () => {
-  return true;
-};
+export const POST = defineHandler(() => {
+  return { ok: true };
+});
 
-export const DELETE = () => {
-  return true;
-};
+export const PUT = defineHandler(() => {
+  return { ok: true };
+});
+
+export const DELETE = defineHandler(() => {
+  return { ok: true };
+});
