@@ -16,7 +16,7 @@ interface GetStaticPathsResult<Params extends Record<string, any>> {
   fallback: boolean | "blocking";
 }
 
-export type GetStaticPathsFunction<Params extends Record<string, any>> = () => Promise<
+export type GetStaticPathsFunction<Params extends Record<string, any> = {}> = () => Promise<
   GetStaticPathsResult<Params>
 >;
 

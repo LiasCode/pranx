@@ -43,7 +43,7 @@ export async function build() {
     user_config: await get_user_pranx_config(),
   });
 
-  const browser_bundle_metafile = await bundle_browser({
+  const browser_bundle_result = await bundle_browser({
     optimize: true,
     user_config: await get_user_pranx_config(),
   });
@@ -58,81 +58,90 @@ export async function build() {
 
   server_entry_module = (await import(server_site_manifest.entry_server)) as ServerEntryModule;
 
-  const pranx_bundle_replace_path = join(".pranx", "browser");
+  const pranx_browser_base_path = join(".pranx", "browser");
 
-  const css_output: {
+  type CSS_OUTPUT = {
     entry: string;
     [key: string]: string;
-  } = {
+  };
+
+  const css_output: CSS_OUTPUT = {
     entry: "",
   };
 
   // Calculating css files
-  for (const [file, _output] of Object.entries(browser_bundle_metafile.metafile.outputs)) {
+  for (const [file, _output] of Object.entries(browser_bundle_result.metafile.outputs)) {
+    if (!file.endsWith(".css")) continue;
+
     if (file.endsWith("entry-client.css")) {
-      css_output.entry = file.replace(pranx_bundle_replace_path, "");
+      css_output.entry = file.replace(pranx_browser_base_path, "");
       continue;
     }
 
-    if (file.endsWith(".css")) {
-      const pages_relative_path = file.replace(pranx_bundle_replace_path, "");
+    const css_file_relative = file.replace(pranx_browser_base_path, "");
 
-      const path_splitted = pages_relative_path.replace("page.css", "").split("/");
-      path_splitted.pop();
-      const final_path = path_splitted.join("/") || "/";
+    const path_normalized = `/${css_file_relative
+      .replace("page.css", "")
+      .split("/")
+      .filter(Boolean)
+      .join("/")}`;
 
-      css_output[final_path] = pages_relative_path;
-    }
+    css_output[path_normalized] = css_file_relative;
   }
 
-  // Generating Manifest and generating static pages
-  for (const [file, _output] of Object.entries(browser_bundle_metafile.metafile.outputs)) {
+  // Generating Manifest and generating static pages data
+  for (const [file, _output] of Object.entries(browser_bundle_result.metafile.outputs)) {
     if (!file.endsWith("page.js")) continue;
 
-    const pages_relative_path = file.replace(pranx_bundle_replace_path, "");
+    const pages_relative_path = file.replace(pranx_browser_base_path, "");
 
-    const path_splitted = pages_relative_path.replace("page.js", "").split("/");
-    path_splitted.pop();
-    const final_path = path_splitted.join("/") || "/";
+    const final_path_normalized = `/${pages_relative_path
+      .replace("page.js", "")
+      .split("/")
+      .filter(Boolean)
+      .join("/")}`;
 
     const module_path = join(OUTPUT_BUNDLE_SERVER_DIR, "pages", pages_relative_path);
+
     const {
-      // default: PageComponent,
-      getServerSideProps,
-      getStaticProps,
-      getStaticPaths,
-      // meta: metadata,
+      getServerSideProps = undefined,
+      getStaticProps = undefined,
+      getStaticPaths = undefined,
     } = (await import(module_path)) as PageModule;
 
     if (getServerSideProps && (getStaticProps || getStaticPaths)) {
       logger.error(`
-msg: "Only one can be present: getServerSideProps or getStaticProps/getStaticPaths"
-file: ${module_path}
-path: ${final_path}`);
+        msg: "Only one can be present: getServerSideProps or getStaticProps/getStaticPaths"
+        file: ${module_path}
+        path: ${final_path_normalized}
+      `);
       process.exit(1);
     }
 
     const isStatic = !getServerSideProps;
-    const isUrlDynamic = final_path.includes("[");
+    const isUrlDynamic = final_path_normalized.includes("[");
     const dynamic_params = !isUrlDynamic
       ? []
-      : path_splitted
+      : final_path_normalized
+          .split("/")
           .filter((i) => i.startsWith("[") && i.endsWith("]"))
           .map((i) => i.replace("[", "").replace("]", ""));
 
     if (isStatic && isUrlDynamic && !getStaticPaths) {
       logger.error(`
-msg: "getStaticPaths must be present on static pages with dynamic params"
-file: ${module_path}
-path: ${final_path}`);
+        msg: "getStaticPaths must be present on static pages with dynamic params"
+        file: ${module_path}
+        path: ${final_path_normalized}
+      `);
       process.exit(1);
     }
 
     if (!isStatic && isUrlDynamic && !getServerSideProps) {
       logger.error(`
-msg: "getServerSideProps must be present on server pages with dynamic params"
-file: ${module_path}
-path: ${final_path}`);
+        msg: "getServerSideProps must be present on server pages with dynamic params"
+        file: ${module_path}
+        path: ${final_path_normalized}
+      `);
       process.exit(1);
     }
 
@@ -143,17 +152,17 @@ path: ${final_path}`);
 
     if (isStatic && isUrlDynamic && getStaticPaths) {
       const static_paths_result = await getStaticPaths();
-      const new_final_path = final_path;
+      const new_final_path = final_path_normalized;
 
       server_site_manifest.routes.push({
-        path: final_path,
+        path: final_path_normalized,
         module: pages_relative_path,
         props: statics_fn_result.props,
         rendering_kind: "static",
         revalidate: statics_fn_result.revalidate || -1,
         is_dynamic: isUrlDynamic,
         dynamic_params: dynamic_params,
-        css: [css_output.entry, css_output[final_path] || ""].filter(Boolean),
+        css: [css_output.entry, css_output[final_path_normalized] || ""].filter(Boolean),
         static_generated_routes: [],
         absolute_module_path: module_path,
       });
@@ -168,10 +177,11 @@ path: ${final_path}`);
 
         if (replaced_path.includes("[")) {
           logger.error(`
-msg: "getStaticPaths did not return all the necessary params"
-file: ${module_path}
-path: ${final_path}
-params returned by getStaticPaths: ${JSON.stringify(static_path.params)}`);
+            msg: "getStaticPaths did not return all the necessary params"
+            file: ${module_path}
+            path: ${final_path_normalized}
+            params returned by getStaticPaths: ${JSON.stringify(static_path.params)}
+          `);
           process.exit(1);
         }
 
@@ -202,7 +212,7 @@ params returned by getStaticPaths: ${JSON.stringify(static_path.params)}`);
     }
 
     server_site_manifest.routes.push({
-      path: final_path,
+      path: final_path_normalized,
       module: pages_relative_path,
       props: statics_fn_result.props,
       rendering_kind: isStatic ? "static" : "server-side",
@@ -210,7 +220,7 @@ params returned by getStaticPaths: ${JSON.stringify(static_path.params)}`);
       static_generated_routes: [],
       is_dynamic: isUrlDynamic,
       dynamic_params: dynamic_params,
-      css: [css_output.entry, css_output[final_path] || ""].filter(Boolean) as string[],
+      css: [css_output.entry, css_output[final_path_normalized] || ""].filter(Boolean) as string[],
       absolute_module_path: module_path,
     });
   }
@@ -224,7 +234,7 @@ params returned by getStaticPaths: ${JSON.stringify(static_path.params)}`);
         rendering_kind: r.rendering_kind,
         css: r.css,
         is_dynamic: r.is_dynamic,
-        path_parsed_for_routing: filePathToRoutingPath(r.path),
+        path_parsed_for_routing: filePathToRoutingPath(r.path, false),
         static_generated_routes: r.static_generated_routes.map((r) => {
           return {
             path: r.path,

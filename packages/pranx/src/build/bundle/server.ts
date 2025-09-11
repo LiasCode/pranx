@@ -8,7 +8,10 @@ import { OUTPUT_BUNDLE_SERVER_DIR, SOURCE_DIR, SOURCE_PAGES_DIR } from "../const
 
 export async function bundle_server(options: { optimize: boolean; user_config: PranxConfig }) {
   const server_entries = await glob(
-    [join(SOURCE_PAGES_DIR, "**/*page.{js,ts,tsx,jsx}"), join(SOURCE_DIR, "entry-server.tsx")],
+    [
+      join(SOURCE_PAGES_DIR, "**/*{page,route}.{js,ts,tsx,jsx}"),
+      join(SOURCE_DIR, "entry-server.{tsx,jsx}"),
+    ],
     {
       nodir: true,
       absolute: true,
@@ -59,7 +62,7 @@ export async function bundle_server(options: { optimize: boolean; user_config: P
       ".jsx": "jsx",
       ".ts": "tsx",
       ".tsx": "tsx",
-      ".module.css": "local-css",
+      ".module.css": "empty",
       ".css": "empty",
       ".json": "json",
     },

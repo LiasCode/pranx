@@ -9,7 +9,10 @@ import { OUTPUT_BUNDLE_BROWSER_DIR, SOURCE_DIR, SOURCE_PAGES_DIR } from "../cons
 
 export async function bundle_browser(options: { optimize: boolean; user_config: PranxConfig }) {
   const browser_entries = await glob(
-    [join(SOURCE_PAGES_DIR, "**/*page.{js,ts,tsx,jsx}"), join(SOURCE_DIR, "entry-client.tsx")],
+    [
+      join(SOURCE_PAGES_DIR, "**/*page.{js,ts,tsx,jsx}"),
+      join(SOURCE_DIR, "entry-client.{tsx,jsx}"),
+    ],
     {
       nodir: true,
       absolute: true,
