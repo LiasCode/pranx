@@ -38,7 +38,7 @@ export async function build() {
   await fse.emptyDir(OUTPUT_PRANX_DIR);
 
   // Bundling
-  const optimize_output = false;
+  const optimize_output = true;
 
   const server_bundle_result = await bundle_server({
     optimize: optimize_output,
@@ -76,7 +76,7 @@ export async function build() {
       .filter(Boolean)
       .join("/")}`;
 
-    const module_path = join(OUTPUT_BUNDLE_SERVER_DIR, "pages", pages_relative_path);
+    const module_path = join(OUTPUT_BUNDLE_SERVER_DIR, pages_relative_path);
 
     server_site_manifest.api.push({
       path: final_path_normalized,

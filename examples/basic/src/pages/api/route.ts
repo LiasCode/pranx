@@ -1,17 +1,17 @@
 import { defineHandler } from "pranx/server";
 
 export const GET = defineHandler(() => {
-  return { ok: true };
+  return { getting: true };
 });
 
 export const POST = defineHandler(() => {
-  return { ok: true };
+  return { posting: false };
 });
 
 export const PUT = defineHandler(() => {
-  return { ok: true };
+  return { puttin: true };
 });
 
 export const DELETE = defineHandler(() => {
-  return { ok: true };
+  return { deleting: true };
 });

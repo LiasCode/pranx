@@ -1,4 +1,5 @@
 import { SERVER_MANIFEST_OUTPUT_PATH } from "@/build/constants.js";
+import { define_api_handlers } from "@/runtime/define-api-handlers.js";
 import { defineServeStaticHandler } from "@/runtime/define-serve-static.js";
 import { define_ssr_handlers } from "@/runtime/define-ssr-handlers.js";
 import { logger } from "@/utils/logger.js";
@@ -20,6 +21,8 @@ export async function start() {
   const app = new H3();
 
   await define_ssr_handlers(server_manifest, app);
+
+  await define_api_handlers(server_manifest, app);
 
   app.on("GET", "**", (event) => defineServeStaticHandler(event));
 
