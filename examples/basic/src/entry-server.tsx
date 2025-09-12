@@ -34,7 +34,7 @@ export default function ServerEntry({ children }: ServerEntryProps) {
         />
         <Meta />
       </head>
-      <body>
+      <body class="dark">
         {children}
         <Scripts />
       </body>

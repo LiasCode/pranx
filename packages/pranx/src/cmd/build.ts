@@ -38,7 +38,7 @@ export async function build() {
   await fse.emptyDir(OUTPUT_PRANX_DIR);
 
   // Bundling
-  const optimize_output = true;
+  const optimize_output = false;
 
   const server_bundle_result = await bundle_server({
     optimize: optimize_output,
@@ -53,6 +53,7 @@ export async function build() {
   // Manifests
   const server_site_manifest: SERVER_MANIFEST = {
     entry_server: join(OUTPUT_BUNDLE_SERVER_DIR, "entry-server.js"),
+    global_css_filepath: "",
     routes: [],
     api: [],
   };
@@ -101,7 +102,7 @@ export async function build() {
     if (!file.endsWith(".css")) continue;
 
     if (file.endsWith("entry-client.css")) {
-      css_output.entry = file.replace(pranx_browser_base_path, "");
+      css_output.entry = join(OUTPUT_BUNDLE_BROWSER_DIR, file.replace(pranx_browser_base_path, ""));
       continue;
     }
 
@@ -115,6 +116,8 @@ export async function build() {
 
     css_output[path_normalized] = css_file_relative;
   }
+
+  server_site_manifest.global_css_filepath = css_output.entry;
 
   // Generating Manifest and generating static pages data
   for (const [file, _output] of Object.entries(browser_bundle_result.metafile.outputs)) {
@@ -189,7 +192,7 @@ export async function build() {
         revalidate: statics_fn_result.revalidate || -1,
         is_dynamic: isUrlDynamic,
         dynamic_params: dynamic_params,
-        css: [css_output.entry, css_output[final_path_normalized] || ""].filter(Boolean),
+        css: [css_output[final_path_normalized] || ""].filter(Boolean),
         static_generated_routes: [],
         absolute_module_path: module_path,
       });
@@ -247,12 +250,13 @@ export async function build() {
       static_generated_routes: [],
       is_dynamic: isUrlDynamic,
       dynamic_params: dynamic_params,
-      css: [css_output.entry, css_output[final_path_normalized] || ""].filter(Boolean) as string[],
+      css: [css_output[final_path_normalized] || ""].filter(Boolean) as string[],
       absolute_module_path: module_path,
     });
   }
 
   const hydrate_data: HYDRATE_DATA = {
+    entry_css: css_output.entry,
     routes: server_site_manifest.routes.map((r) => {
       return {
         module: r.module,
@@ -294,7 +298,8 @@ export async function build() {
           page_prerendered,
           hydrate_data_as_string,
           minify: optimize_output,
-          css: route.css,
+          css_links: route.css,
+          critical_css_filepath: server_site_manifest.global_css_filepath,
         });
 
         const output_html_path = join(OUTPUT_BUNDLE_BROWSER_DIR, static_route.path, "index.html");
@@ -314,7 +319,8 @@ export async function build() {
       page_prerendered,
       hydrate_data_as_string,
       minify: true,
-      css: route.css,
+      css_links: route.css,
+      critical_css_filepath: server_site_manifest.global_css_filepath,
     });
 
     const output_html_path = join(OUTPUT_BUNDLE_BROWSER_DIR, route.path, "index.html");

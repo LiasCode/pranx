@@ -66,7 +66,8 @@ export const define_ssr_handlers = async (server_manifest: SERVER_MANIFEST, app:
           page_prerendered,
           hydrate_data_as_string: JSON.stringify(hydrate_data),
           minify: true,
-          css: route.css,
+          css_links: route.css,
+          critical_css_filepath: server_manifest.global_css_filepath,
         });
 
         return html(event, html_string);
