@@ -38,7 +38,7 @@ export async function build() {
   await fse.emptyDir(OUTPUT_PRANX_DIR);
 
   // Bundling
-  const optimize_output = false;
+  const optimize_output = true;
 
   const server_bundle_result = await bundle_server({
     optimize: optimize_output,
