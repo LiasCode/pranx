@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.1.0-beta.11
+
+[compare changes](https://github.com/LiasCode/pranx/compare/v0.1.0-beta.10...v0.1.0-beta.11)
+
+### 🩹 Fixes
+
+- Forget to set optimize ([afc55f1](https://github.com/LiasCode/pranx/commit/afc55f1))
+
+### ❤️ Contributors
+
+- LiasCode <liasraul00@gmail.com>
+
 ## v0.1.0-beta.10
 
 [compare changes](https://github.com/LiasCode/pranx/compare/v0.1.0-beta.9...v0.1.0-beta.10)

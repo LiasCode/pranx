@@ -1,6 +1,6 @@
 {
   "name": "pranx",
-  "version": "0.1.0-beta.10",
+  "version": "0.1.0-beta.11",
   "description": "The next of preact. A light-weight, Next.js-like fullstack metaframework",
   "type": "module",
   "scripts": {
