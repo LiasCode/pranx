@@ -1,6 +1,27 @@
 # Changelog
 
 
+## v0.1.0-beta.10
+
+[compare changes](https://github.com/LiasCode/pranx/compare/v0.1.0-beta.9...v0.1.0-beta.10)
+
+### 🚀 Enhancements
+
+- Include critical css into html template ([9044dce](https://github.com/LiasCode/pranx/commit/9044dce))
+
+### 💅 Refactors
+
+- Change the tsconfig target and bundle ([3d59faf](https://github.com/LiasCode/pranx/commit/3d59faf))
+
+### 🏡 Chore
+
+- Pin dependency versions and add clean scripts ([c3a5a28](https://github.com/LiasCode/pranx/commit/c3a5a28))
+- Bump deps ([2992ba1](https://github.com/LiasCode/pranx/commit/2992ba1))
+
+### ❤️ Contributors
+
+- LiasCode <liasraul00@gmail.com>
+
 ## v0.1.0-beta.9
 
 [compare changes](https://github.com/LiasCode/pranx/compare/v0.1.0-beta.8...v0.1.0-beta.9)
