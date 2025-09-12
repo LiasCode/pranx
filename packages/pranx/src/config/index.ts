@@ -1,5 +1,5 @@
 import { loadConfig } from "c12";
-import type { PranxConfig } from "types/index.js";
+import type { PranxConfig } from "types/index";
 
 const DEFAULT_CONFIG: PranxConfig = {
   esbuild: {

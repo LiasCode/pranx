@@ -1,5 +1,5 @@
-import type { HydrateDataRoute } from "types/index.js";
-import { exec_route_match } from "./exec-match.js";
+import type { HydrateDataRoute } from "types/index";
+import { exec_route_match } from "./exec-match";
 
 export const find_route = (url: string) => {
   let current_route: HydrateDataRoute | null = null;

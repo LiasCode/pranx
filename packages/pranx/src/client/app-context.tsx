@@ -1,8 +1,8 @@
 import { createContext } from "preact";
 import type { PropsWithChildren } from "preact/compat";
 import { useCallback, useContext, useState } from "preact/hooks";
-import { find_route } from "./shared/find-route.js";
-import { onRouteChangeUpdateHead } from "./shared/head.js";
+import { find_route } from "./shared/find-route";
+import { onRouteChangeUpdateHead } from "./shared/head";
 
 export type AppContext = {
   /** Props for the current server side page rendered  */

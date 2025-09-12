@@ -1,11 +1,11 @@
-import { remove_top_level_functions } from "@/utils/remove_top_level_funtions.js";
 import type { Plugin } from "esbuild";
 import fse from "fs-extra";
 import { basename } from "pathe";
+import { remove_top_level_functions } from "./lib/remove_top_level_functions";
 
 export const strip_server_only_from_pages_plugin = (ids: string[]): Plugin => {
   return {
-    name: "pranx-remove-server-only",
+    name: "pranx-strip-server-only-function",
     setup(build) {
       build.onLoad({ filter: /\.[jt]sx?$/ }, async (args) => {
         if (!["page.js", "page.jsx", "page.ts", "page.tsx"].includes(basename(args.path))) {

@@ -1,6 +1,6 @@
 import { lazy } from "preact-iso";
 import { Suspense } from "preact/compat";
-import { find_route } from "./shared/find-route.js";
+import { find_route } from "./shared/find-route";
 
 export function AppWithOutCsr() {
   const current_route = find_route(window.location.pathname);

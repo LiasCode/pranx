@@ -1,7 +1,7 @@
 import { ErrorBoundary, lazy, LocationProvider, Route, Router } from "preact-iso";
-import { _useAppContext } from "./app-context.js";
-import { NotFoundPage } from "./components/not-found-page.js";
-import { ServerPage } from "./components/server-page.js";
+import { _useAppContext } from "./app-context";
+import { NotFoundPage } from "./components/not-found-page";
+import { ServerPage } from "./components/server-page";
 
 export function AppRouter() {
   const { onRouteWillChange } = _useAppContext();

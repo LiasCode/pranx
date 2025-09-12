@@ -1,4 +1,4 @@
-export { Meta } from "./Meta.js";
-export { Scripts } from "./Scripts.js";
+export { Meta } from "./components/meta";
+export { Scripts } from "./components/scripts";
 
 export { defineHandler } from "h3";

@@ -1,14 +1,14 @@
-import { OUTPUT_BUNDLE_SERVER_DIR, SITE_MANIFEST_OUTPUT_PATH } from "@/build/constants.js";
-import { filePathToRoutingPath } from "@/build/filepath-to-routing-path.js";
-import { generate_html_template } from "@/build/generate_html_template.js";
-import { defineServeStaticHandler } from "@/runtime/define-serve-static.js";
-import { logger } from "@/utils/logger.js";
+import { OUTPUT_BUNDLE_SERVER_DIR, SITE_MANIFEST_OUTPUT_PATH } from "@/build/constants";
+import { filePathToRoutingPath } from "@/build/filepath-to-routing-path";
+import { generate_html_template } from "@/build/generate_html_template";
+import { logger } from "@/utils/logger";
 import fse from "fs-extra";
 import { defineHandler, type H3, html } from "h3";
 import { extname, join, resolve } from "pathe";
 import { Fragment, h } from "preact";
 import { renderToStringAsync } from "preact-render-to-string";
-import type { HYDRATE_DATA, PageModule, SERVER_MANIFEST, ServerEntryModule } from "types/index.js";
+import type { HYDRATE_DATA, PageModule, SERVER_MANIFEST, ServerEntryModule } from "types/index";
+import { defineServeStaticHandler } from "./define-serve-static";
 
 export const define_ssr_handlers = async (server_manifest: SERVER_MANIFEST, app: H3) => {
   for (const route of server_manifest.routes) {

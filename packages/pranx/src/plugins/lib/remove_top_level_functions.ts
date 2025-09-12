@@ -3,9 +3,9 @@ import MagicString from "magic-string";
 
 /**
  * Remove top-level function declarations whose names are listed in namesToRemove.
- * @param {string} code_src - source code (JSX/ESM)
- * @param {string[]} ids_to_remove - list of top-level function names to remove
- * @returns {string} modified source
+ * @param code_src - source code (JSX/ESM)
+ * @param ids_to_remove - list of top-level function names to remove
+ * @returns modified source
  */
 export function remove_top_level_functions(code_src: string, ids_to_remove: string[]) {
   const ast = parse(code_src, {

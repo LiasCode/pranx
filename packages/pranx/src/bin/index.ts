@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
-import { build } from "@/cmd/build.js";
-import { dev } from "@/cmd/dev.js";
-import { start } from "@/cmd/start.js";
-import { logger } from "@/utils/logger.js";
+import { build } from "@/cmd/build";
+import { dev } from "@/cmd/dev";
+import { start } from "@/cmd/start";
+import { logger } from "@/utils/logger";
 import { defineCommand, runMain } from "citty";
 
 const main = defineCommand({

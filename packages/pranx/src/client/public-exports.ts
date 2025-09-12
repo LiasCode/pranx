@@ -1,4 +1,4 @@
-export { useAppContext } from "./app-context.js";
-export { Link } from "./components/link.js";
-export { mount } from "./mount.js";
-export { StartApp } from "./start-app.js";
+export { useAppContext } from "./app-context";
+export { Link } from "./components/link";
+export { mount } from "./mount";
+export { StartApp } from "./start-app";

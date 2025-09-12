@@ -1,5 +1,5 @@
-import { META_TAG } from "@/server/Meta.js";
-import { SCRIPTS_TAG } from "@/server/Scripts.js";
+import { META_TAG } from "@/server/components/meta";
+import { SCRIPTS_TAG } from "@/server/components/scripts";
 import { minifySync } from "@swc/html";
 
 export const generate_html_template = ({

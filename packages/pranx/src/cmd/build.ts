@@ -1,7 +1,7 @@
-import { filePathToRoutingPath } from "@/build/filepath-to-routing-path.js";
-import { get_user_pranx_config, load_user_pranx_config } from "@/config/index.js";
-import { logger } from "@/utils/logger.js";
-import { measureTime } from "@/utils/time-perf.js";
+import { filePathToRoutingPath } from "@/build/filepath-to-routing-path";
+import { get_user_pranx_config, load_user_pranx_config } from "@/config/index";
+import { logger } from "@/utils/logger";
+import { measureTime } from "@/utils/time-perf";
 import fse from "fs-extra";
 import kleur from "kleur";
 import { join } from "pathe";

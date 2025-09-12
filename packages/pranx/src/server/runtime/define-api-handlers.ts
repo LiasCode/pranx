@@ -1,6 +1,6 @@
-import { filePathToRoutingPath } from "@/build/filepath-to-routing-path.js";
+import { filePathToRoutingPath } from "@/build/filepath-to-routing-path";
 import type { H3 } from "h3";
-import type { PranxRouteModule, SERVER_MANIFEST } from "types/index.js";
+import type { PranxRouteModule, SERVER_MANIFEST } from "types/index";
 
 export const define_api_handlers = async (server_manifest: SERVER_MANIFEST, app: H3) => {
   for (const route of server_manifest.api) {

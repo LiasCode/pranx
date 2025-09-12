@@ -1,5 +1,5 @@
 import { type ComponentProps, forwardRef } from "preact/compat";
-import { _useAppContext } from "../app-context.js";
+import { _useAppContext } from "../app-context";
 
 export type LinkProps = Omit<ComponentProps<"a">, "href"> & {
   to: string;

@@ -1,4 +1,4 @@
-import type { HydrateDataRoute } from "types/index.js";
+import type { HydrateDataRoute } from "types/index";
 import { useHead } from "unhead";
 import { createHead } from "unhead/client";
 

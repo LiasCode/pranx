@@ -1,4 +1,4 @@
-import { OUTPUT_BUNDLE_BROWSER_DIR, PUBLIC_USER_DIR } from "@/build/constants.js";
+import { OUTPUT_BUNDLE_BROWSER_DIR, PUBLIC_USER_DIR } from "@/build/constants";
 import fse from "fs-extra";
 import { type EventHandlerRequest, type H3Event, serveStatic } from "h3";
 import { join } from "pathe";
