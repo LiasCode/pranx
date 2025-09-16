@@ -1,6 +1,29 @@
 # Changelog
 
 
+## v0.1.0-beta.12
+
+[compare changes](https://github.com/LiasCode/pranx/compare/v0.1.0-beta.11...v0.1.0-beta.12)
+
+### 🩹 Fixes
+
+- Unhead instance type ([68dec7f6](https://github.com/LiasCode/pranx/commit/68dec7f6))
+- Minify remove head and body tags ([072e6ea](https://github.com/LiasCode/pranx/commit/072e6ea))
+- Migrate biome config to v2 ([7631ce3](https://github.com/LiasCode/pranx/commit/7631ce3))
+
+### 💅 Refactors
+
+- Replace pnpm to bun as the main package manager ([882252b](https://github.com/LiasCode/pranx/commit/882252b))
+
+### 🏡 Chore
+
+- Change basic example name ([4433243](https://github.com/LiasCode/pranx/commit/4433243))
+- Bump biome to v2 ([21c24d0](https://github.com/LiasCode/pranx/commit/21c24d0))
+
+### ❤️ Contributors
+
+- LiasCode <liasraul00@gmail.com>
+
 ## v0.1.0-beta.11
 
 [compare changes](https://github.com/LiasCode/pranx/compare/v0.1.0-beta.10...v0.1.0-beta.11)
