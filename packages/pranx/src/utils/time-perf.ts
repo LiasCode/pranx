@@ -7,8 +7,7 @@ const timeTags = new Map<string, number>();
  * @returns The elapsed time in milliseconds, or undefined if this is the first call with the tag.
  */
 export function measureTime(tag: string): number | undefined {
-  const now =
-    typeof performance !== "undefined" && performance.now ? performance.now() : Date.now();
+  const now = performance?.now ? performance.now() : Date.now();
 
   const last = timeTags.get(tag);
   timeTags.set(tag, now);
