@@ -46,5 +46,6 @@ export const generate_html_template = ({
     removeRedundantAttributes: "smart",
     quotes: true,
     selfClosingVoidElements: false,
+    tagOmission: "keep-head-and-body",
   }).code;
 };
