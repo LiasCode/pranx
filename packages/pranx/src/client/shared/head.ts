@@ -1,6 +1,6 @@
 import type { HydrateDataRoute } from "types/index";
 import { useHead } from "unhead";
-import { createHead, Unhead } from "unhead/client";
+import { createHead, type Unhead } from "unhead/client";
 
 export const UNHEAD_INSTANCE: Unhead = createHead();
 
