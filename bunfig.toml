@@ -1,0 +1,13 @@
+logLevel = "debug" # "debug" | "warn" | "error"
+telemetry = false
+
+[console]
+depth = 50
+
+[install]
+exact = true
+linker = "isolated"
+cache.disable = false
+
+[run]
+silent = true

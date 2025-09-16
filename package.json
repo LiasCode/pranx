@@ -11,14 +11,22 @@
     "url": "https://lias-code.pages.dev"
   },
   "scripts": {
-    "clean": "rm -rf ./node_modules ./pnpm-lock.yaml"
+    "clean": "bun run --filter '*' clean && rm -rf node_modules bun.lock"
   },
   "engines": {
     "node": ">=18.0.0"
   },
+  "workspaces": [
+    "./examples/*",
+    "./packages/*"
+  ],
   "license": "MIT",
   "devDependencies": {
     "@biomejs/biome": "1.8.3",
     "prettier": "3.6.2"
-  }
+  },
+  "trustedDependencies": [
+    "@biomejs/biome",
+    "@tailwindcss/oxide"
+  ]
 }

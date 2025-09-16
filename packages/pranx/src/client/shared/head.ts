@@ -1,8 +1,8 @@
 import type { HydrateDataRoute } from "types/index";
 import { useHead } from "unhead";
-import { createHead } from "unhead/client";
+import { createHead, Unhead } from "unhead/client";
 
-export const UNHEAD_INSTANCE = createHead();
+export const UNHEAD_INSTANCE: Unhead = createHead();
 
 let headUsed: ReturnType<typeof useHead> | null = null;
 
