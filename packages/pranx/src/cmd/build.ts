@@ -1,6 +1,6 @@
 import { filePathToRoutingPath } from "@/build/filepath-to-routing-path";
 import { get_user_pranx_config, load_user_pranx_config } from "@/config/index";
-import { logger } from "@/utils/logger";
+import { logger } from "@/log/logger.js";
 import { measureTime } from "@/utils/time-perf";
 import fse from "fs-extra";
 import kleur from "kleur";
@@ -13,7 +13,6 @@ import type {
   PageModule,
   SERVER_MANIFEST,
   ServerEntryModule,
-  ServerManifestRoute,
 } from "../../types/index.js";
 import { bundle_browser } from "../build/bundle/browser.js";
 import { bundle_server } from "../build/bundle/server.js";
@@ -25,6 +24,7 @@ import {
   SITE_MANIFEST_OUTPUT_PATH,
 } from "../build/constants.js";
 import { generate_html_template } from "../build/generate_html_template.js";
+import { log_routes_tree } from "../log/log_routes_tree.js";
 
 export async function build() {
   logger.log(kleur.bold().magenta("Pranx Build\n"));
@@ -335,59 +335,7 @@ export async function build() {
 
   const BUILD_TIME = measureTime("build_measure_time");
 
-  printRoutesTreeForUser(server_site_manifest.routes);
+  log_routes_tree(server_site_manifest.routes);
 
   logger.success(`Project builded in ${BUILD_TIME} ms\n`);
-}
-
-export function printRoutesTreeForUser(input_routes: ServerManifestRoute[]) {
-  // Loggin Routes
-  logger.log(kleur.bold().blue().underline("Routes"));
-
-  function buildTree(routes: ServerManifestRoute[]) {
-    const tree: any = {};
-    for (const route of routes) {
-      const parts = route.path === "/" ? [] : route.path.split("/").filter(Boolean);
-      let node = tree;
-      for (const part of parts) {
-        node.children = node.children || {};
-        node.children[part] = node.children[part] || {};
-        node = node.children[part];
-      }
-      node.route = route;
-    }
-    return tree;
-  }
-
-  function printTree(node: any, prefix = "", isLast = true) {
-    if (node.route) {
-      const icon = node.route.rendering_kind === "static" ? "●" : kleur.yellow("λ");
-      let extra = "";
-      if (
-        node.route.rendering_kind === "static" &&
-        node.route.static_generated_routes &&
-        node.route.static_generated_routes.length > 0
-      ) {
-        extra = ` (${kleur.cyan(`${node.route.static_generated_routes.length}`)})`;
-      }
-      logger.log(
-        `${prefix}${isLast ? "└-" : "├-"} ${icon} ${kleur.white(node.route.path)}${extra}`
-      );
-    }
-    if (node.children) {
-      const keys = Object.keys(node.children);
-      keys.forEach((key, idx) => {
-        printTree(node.children[key], prefix + (node.route ? "|  " : ""), idx === keys.length - 1);
-      });
-    }
-  }
-
-  const tree = buildTree(input_routes);
-
-  logger.log(".");
-  printTree(tree, "", true);
-
-  logger.log(`\n${kleur.yellow("λ")} Server-side Page`);
-  logger.log("● Static Page");
-  logger.log(`${kleur.cyan("(#)")} Count of Static Generated Routes\n`);
 }

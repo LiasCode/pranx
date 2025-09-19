@@ -1,8 +1,8 @@
 import { SERVER_MANIFEST_OUTPUT_PATH } from "@/build/constants";
+import { logger } from "@/log/logger";
 import { define_api_handlers } from "@/server/runtime/define-api-handlers";
 import { defineServeStaticHandler } from "@/server/runtime/define-serve-static";
 import { define_ssr_handlers } from "@/server/runtime/define-ssr-handlers";
-import { logger } from "@/utils/logger";
 import { measureTime } from "@/utils/time-perf";
 import fse from "fs-extra";
 import { H3, serve } from "h3";

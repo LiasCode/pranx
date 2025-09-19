@@ -3,7 +3,7 @@
 import { build } from "@/cmd/build";
 import { dev } from "@/cmd/dev";
 import { start } from "@/cmd/start";
-import { logger } from "@/utils/logger";
+import { logger } from "@/log/logger";
 import { defineCommand, runMain } from "citty";
 
 const main = defineCommand({

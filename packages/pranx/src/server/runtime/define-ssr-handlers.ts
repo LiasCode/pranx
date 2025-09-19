@@ -1,7 +1,7 @@
 import { OUTPUT_BUNDLE_SERVER_DIR, SITE_MANIFEST_OUTPUT_PATH } from "@/build/constants";
 import { filePathToRoutingPath } from "@/build/filepath-to-routing-path";
 import { generate_html_template } from "@/build/generate_html_template";
-import { logger } from "@/utils/logger";
+import { logger } from "@/log/logger";
 import fse from "fs-extra";
 import { defineHandler, type H3, html } from "h3";
 import { extname, join, resolve } from "pathe";
