@@ -1,4 +1,9 @@
 import { mount, StartApp } from "pranx/client";
-import "./styles/styles.css";
+import { App } from "./App";
 
-mount(<StartApp />, document.body);
+mount(
+  <App>
+    <StartApp />
+  </App>,
+  document.body
+);

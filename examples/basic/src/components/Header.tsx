@@ -16,6 +16,14 @@ export function Header() {
           </li>
           <li>
             <Link
+              to="/users"
+              className="text-white hover:text-indigo-200 transition-colors font-medium"
+            >
+              Users
+            </Link>
+          </li>
+          <li>
+            <Link
               to="/about"
               className="text-white hover:text-indigo-200 transition-colors font-medium"
             >
