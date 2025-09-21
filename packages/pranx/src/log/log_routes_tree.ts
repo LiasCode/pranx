@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/style/noNonNullAssertion: <explanation> */
+/** biome-ignore-all lint/style/noNonNullAssertion: <> */
 import kleur from "kleur";
 import type { ServerManifestRoute } from "types";
 import { logger } from "./logger";

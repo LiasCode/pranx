@@ -1,5 +1,6 @@
 import { filePathToRoutingPath } from "@/build/filepath-to-routing-path";
 import { get_user_pranx_config, load_user_pranx_config } from "@/config/index";
+import { log_routes_simple } from "@/log/log-routes-simple.js";
 import { logger } from "@/log/logger.js";
 import { measureTime } from "@/utils/time-perf";
 import fse from "fs-extra";
@@ -24,7 +25,6 @@ import {
   SITE_MANIFEST_OUTPUT_PATH,
 } from "../build/constants.js";
 import { generate_html_template } from "../build/generate_html_template.js";
-import { log_routes_tree } from "../log/log_routes_tree.js";
 
 export async function build() {
   logger.log(kleur.bold().magenta("Pranx Build\n"));
@@ -335,7 +335,7 @@ export async function build() {
 
   const BUILD_TIME = measureTime("build_measure_time");
 
-  log_routes_tree(server_site_manifest.routes);
+  log_routes_simple(server_site_manifest.routes);
 
   logger.success(`Project builded in ${BUILD_TIME} ms\n`);
 }
