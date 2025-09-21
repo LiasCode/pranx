@@ -1,6 +1,6 @@
 # Pranx
 
-Pranx — the next of Preact.  
+Pranx — the next of Preact.
 A lightweight, Next.js-like fullstack metaframework for Preact apps.
 
 > Note: Pranx is currently being rewritten from scratch. The API and internals are unstable and subject to change.
@@ -28,8 +28,6 @@ Pranx aims to provide a minimal, highly-performant fullstack developer experienc
 - Current state: full rewrite in progress
 - Examples located in `examples/`
 - Expect breaking changes until v1.0
-
-
 
 Deployment targets: Node servers, serverless platforms, edge runtimes (dependant on handler compile target).
 
