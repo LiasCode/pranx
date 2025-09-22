@@ -1,6 +1,38 @@
 # Changelog
 
 
+## v0.1.0-beta.13
+
+[compare changes](https://github.com/LiasCode/pranx/compare/v0.1.0-beta.12...v0.1.0-beta.13)
+
+### 🚀 Enhancements
+
+- Add code for test contexts ([9073434](https://github.com/LiasCode/pranx/commit/9073434))
+- Better log routes tree ([84b5188](https://github.com/LiasCode/pranx/commit/84b5188))
+- Add simple routes logger ([cd6d270](https://github.com/LiasCode/pranx/commit/cd6d270))
+- Now can use PranxRouter and select application mode. fix: remove  server css output files ([e8313e3](https://github.com/LiasCode/pranx/commit/e8313e3))
+- Auto load App.tsx module for wrap the application on server ([7194d0c](https://github.com/LiasCode/pranx/commit/7194d0c))
+
+### 🩹 Fixes
+
+- Biome config ([5640e40](https://github.com/LiasCode/pranx/commit/5640e40))
+
+### 💅 Refactors
+
+- Group logging code into log folder ([93bab73](https://github.com/LiasCode/pranx/commit/93bab73))
+- Links types are in sync and support router_mode ([8684ea4](https://github.com/LiasCode/pranx/commit/8684ea4))
+- Improve Modules Component types for better code readability ([994d790](https://github.com/LiasCode/pranx/commit/994d790))
+
+### 🏡 Chore
+
+- Mix READMEs ([97b37aa](https://github.com/LiasCode/pranx/commit/97b37aa))
+- Fix features task format ([cce7520](https://github.com/LiasCode/pranx/commit/cce7520))
+- Add features to roadmap ([f16f568](https://github.com/LiasCode/pranx/commit/f16f568))
+
+### ❤️ Contributors
+
+- LiasCode <liasraul00@gmail.com>
+
 ## v0.1.0-beta.12
 
 [compare changes](https://github.com/LiasCode/pranx/compare/v0.1.0-beta.11...v0.1.0-beta.12)
