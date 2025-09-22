@@ -10,6 +10,10 @@ export type ServerEntryModule = {
   default(): VNode<ServerEntryProps>;
 };
 
+export type AppModule = {
+  default(): VNode<PropsWithChildren<any>>;
+};
+
 // Static
 interface GetStaticPathsResult<Params extends Record<string, any>> {
   paths: Array<{ params: Params }>;
@@ -93,6 +97,7 @@ export type ServerManifestApiHandler = {
 
 export type SERVER_MANIFEST = {
   entry_server: string;
+  app_module: string;
   global_css_filepath: string;
   routes: ServerManifestRoute[];
   api: ServerManifestApiHandler[];

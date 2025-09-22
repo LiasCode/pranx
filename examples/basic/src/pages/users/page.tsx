@@ -1,8 +1,14 @@
+import type { GetServerSidePropsFunction } from "pranx";
 import { Header } from "src/components/Header";
 import { useUserContext } from "src/context/user-context";
 
-export default function UsersPage() {
+export default function UsersPage(props: { test: string }) {
   const { user, setUser } = useUserContext();
+
+  console.dir({
+    props,
+    user,
+  });
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -30,3 +36,9 @@ export default function UsersPage() {
     </div>
   );
 }
+
+export const getServerSideProps: GetServerSidePropsFunction = async () => {
+  return {
+    test: "ok!",
+  };
+};

@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "pranx --dev",
-    "build": "pranx --build",
+    "build": "tsc --noEmit && pranx --build",
     "start": "pranx --start",
     "check": "tsc --noEmit",
     "format": "prettier --write --cache src",

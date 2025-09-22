@@ -7,15 +7,21 @@ import { defineHandler, type H3, html } from "h3";
 import { extname, join, resolve } from "pathe";
 import { Fragment, h } from "preact";
 import { renderToStringAsync } from "preact-render-to-string";
-import type { HYDRATE_DATA, PageModule, SERVER_MANIFEST, ServerEntryModule } from "types/index";
+import type {
+  AppModule,
+  HYDRATE_DATA,
+  PageModule,
+  SERVER_MANIFEST,
+  ServerEntryModule,
+} from "types/index";
 import { defineServeStaticHandler } from "./define-serve-static";
 
 export const define_ssr_handlers = async (server_manifest: SERVER_MANIFEST, app: H3) => {
+  const server_entry_module = (await import(server_manifest.entry_server)) as ServerEntryModule;
+  const app_module = (await import(server_manifest.app_module)) as AppModule;
+
   for (const route of server_manifest.routes) {
     if (route.rendering_kind !== "server-side") continue;
-
-    let server_entry_module: ServerEntryModule | null = null;
-    server_entry_module = (await import(server_manifest.entry_server)) as ServerEntryModule;
 
     const file_absolute = resolve(join(OUTPUT_BUNDLE_SERVER_DIR, "pages", route.module));
     const { default: page, getServerSideProps } = (await import(file_absolute)) as PageModule;
@@ -59,7 +65,11 @@ export const define_ssr_handlers = async (server_manifest: SERVER_MANIFEST, app:
         hydrate_data.routes[target_route_index].props = props_to_return;
 
         const page_prerendered = await renderToStringAsync(
-          h(server_entry_module?.default || Fragment, {}, h(page, props_to_return, null))
+          h(
+            server_entry_module?.default || Fragment,
+            {},
+            h(app_module.default, {}, h(page, props_to_return))
+          )
         );
 
         const html_string = generate_html_template({

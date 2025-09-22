@@ -1,6 +1,5 @@
 import type { ServerEntryProps } from "pranx";
 import { Meta, Scripts } from "pranx/server";
-import App from "./App";
 
 export default function ServerEntry({ children }: ServerEntryProps) {
   return (
@@ -36,7 +35,7 @@ export default function ServerEntry({ children }: ServerEntryProps) {
         <Meta />
       </head>
       <body class="dark">
-        <App>{children}</App>
+        {children}
         <Scripts />
       </body>
     </html>

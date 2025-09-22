@@ -9,6 +9,7 @@ import { join } from "pathe";
 import { Fragment, h } from "preact";
 import { renderToStringAsync } from "preact-render-to-string";
 import type {
+  AppModule,
   GetStaticPropsResult,
   HYDRATE_DATA,
   PageModule,
@@ -38,21 +39,22 @@ export async function build() {
   await fse.emptyDir(OUTPUT_PRANX_DIR);
 
   // Bundling
-  const optimize_output = true;
+  const OPTIMIZE_OUTPUT = true;
 
   const server_bundle_result = await bundle_server({
-    optimize: optimize_output,
+    optimize: OPTIMIZE_OUTPUT,
     user_config: await get_user_pranx_config(),
   });
 
   const browser_bundle_result = await bundle_browser({
-    optimize: optimize_output,
+    optimize: OPTIMIZE_OUTPUT,
     user_config: await get_user_pranx_config(),
   });
 
   // Manifests
   const server_site_manifest: SERVER_MANIFEST = {
     entry_server: join(OUTPUT_BUNDLE_SERVER_DIR, "entry-server.js"),
+    app_module: join(OUTPUT_BUNDLE_SERVER_DIR, "App.js"),
     global_css_filepath: "",
     routes: [],
     api: [],
@@ -61,6 +63,10 @@ export async function build() {
   let server_entry_module: ServerEntryModule | null = null;
 
   server_entry_module = (await import(server_site_manifest.entry_server)) as ServerEntryModule;
+
+  let app_module: AppModule | null = null;
+
+  app_module = (await import(server_site_manifest.app_module)) as AppModule;
 
   // Generating api routes Manifest
   const pranx_server_base_path = join(".pranx", "server");
@@ -290,14 +296,14 @@ export async function build() {
           h(
             server_entry_module?.default || Fragment,
             {},
-            h(page_module.default, static_route.props, null)
+            h(app_module.default, {}, h(page_module.default, static_route.props))
           )
         );
 
         const html = generate_html_template({
           page_prerendered,
           hydrate_data_as_string,
-          minify: optimize_output,
+          minify: OPTIMIZE_OUTPUT,
           css_links: route.css,
           critical_css_filepath: server_site_manifest.global_css_filepath,
         });
@@ -312,7 +318,11 @@ export async function build() {
     }
 
     const page_prerendered = await renderToStringAsync(
-      h(server_entry_module?.default || Fragment, {}, h(page_module.default, route.props, null))
+      h(
+        server_entry_module?.default || Fragment,
+        {},
+        h(app_module.default, {}, h(page_module.default, route.props, null))
+      )
     );
 
     const html = generate_html_template({

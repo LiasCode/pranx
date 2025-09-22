@@ -1,3 +1,4 @@
+import { logger } from "@/log/logger";
 import { mdx_pranx_plugin } from "@/plugins/mdx-plugin";
 import { tailwindcss_plugin } from "@/plugins/tailwind-plugin";
 import esbuild from "esbuild";
@@ -19,6 +20,24 @@ export async function bundle_server(options: { optimize: boolean; user_config: P
       absolute: true,
     }
   );
+
+  const app_entry_exists =
+    server_entries.findIndex((e) => e.endsWith("App.tsx") || e.endsWith("App.jsx")) >= 0;
+
+  const server_entry_exists =
+    server_entries.findIndex(
+      (e) => e.endsWith("entry-server.tsx") || e.endsWith("entry-server.jsx")
+    ) >= 0;
+
+  if (!app_entry_exists) {
+    logger.error("The file App.{tsx,jsx} must exists");
+    process.exit(1);
+  }
+
+  if (!server_entry_exists) {
+    logger.error("The file entry-server.{tsx,jsx} must exists");
+    process.exit(1);
+  }
 
   const server_bundle_result = await esbuild.build({
     entryPoints: server_entries,
