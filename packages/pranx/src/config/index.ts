@@ -7,7 +7,6 @@ const DEFAULT_CONFIG: PranxConfig = {
     define: {},
     plugins: [],
   },
-  csr: true,
 };
 
 let UserPranxConfig: PranxConfig | null = null;

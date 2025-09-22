@@ -65,7 +65,6 @@ export async function bundle_browser(options: { optimize: boolean; user_config: 
 
     define: {
       ...(options.user_config.esbuild?.define || {}),
-      "window.pranx.csr_enabled": String(options.user_config.csr),
     },
 
     plugins: [

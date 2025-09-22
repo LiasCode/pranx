@@ -1,6 +1,6 @@
 import type { ServerEntryProps } from "pranx";
 import { Meta, Scripts } from "pranx/server";
-import { App } from "./App";
+import App from "./App";
 
 export default function ServerEntry({ children }: ServerEntryProps) {
   return (

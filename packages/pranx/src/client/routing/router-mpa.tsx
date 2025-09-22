@@ -1,15 +1,16 @@
+import type { VNode } from "preact";
 import { lazy } from "preact-iso";
 import { Suspense } from "preact/compat";
-import { find_route } from "./shared/find-route";
+import { find_route } from "../shared/find-route";
 
-export function AppWithOutCsr() {
+export function RouterMPA() {
   const current_route = find_route(window.location.pathname);
 
   if (current_route === null) {
     throw new Error("Route not found");
   }
 
-  const Page = lazy(() => import(current_route.module));
+  const Page = lazy<() => VNode<any>>(() => import(current_route.module));
 
   let props = current_route.props;
 

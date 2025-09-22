@@ -10,7 +10,7 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>((props, forwardedRe
     throw new Error("Link element must provide a `to` property");
   }
 
-  if (typeof window !== "undefined" && window.pranx.csr_enabled === true) {
+  if (typeof window !== "undefined" && window.pranx.router_mode === "spa") {
     const { set } = _useAppContext();
     return (
       <a

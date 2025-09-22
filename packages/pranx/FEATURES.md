@@ -1,0 +1,21 @@
+# FEATURES ROADMAP
+
+-[X] FSR (File-System-Routing)
+-[X] SSR (Server Side Rendering)
+-[X] SSG (Static Side Generation)
+-[X] Hydratation (Full)
+-[X] CSR (Client-Side-Routing)
+-[X] API routes for server endpoints
+-[X] Extendable user config
+-[ ] ISG (Incremental Static Side Generation)
+-[ ] Per page Metadata
+-[ ] Client Metadata manipulation
+-[ ] Dev Mode
+-[ ] Sass Plugin
+-[ ] Tailwindcss support v3
+-[X] Tailwindcss support v4
+-[X] Css modules support
+-[ ] Layouts
+-[ ] Custom Error Pages
+-[ ] Websockets
+-[ ] Graphql

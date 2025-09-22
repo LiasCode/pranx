@@ -1,57 +1,29 @@
-import { ErrorBoundary, lazy, LocationProvider, Route, Router } from "preact-iso";
-import { _useAppContext } from "./app-context";
-import { NotFoundPage } from "./components/not-found-page";
-import { ServerPage } from "./components/server-page";
+import type { ComponentChildren, VNode } from "preact";
+import type { PranxRouterProps } from "types/client";
+import { AppContextProvider } from "./app-context";
+import { RouterMPA } from "./routing/router-mpa";
+import { RouterSPA } from "./routing/router-spa";
 
-export function AppRouter() {
-  const { onRouteWillChange } = _useAppContext();
+export function PranxRouter(props: PranxRouterProps): VNode<any> | ComponentChildren {
+  const { mode = "spa", children } = props;
 
-  return (
-    <LocationProvider>
-      <ErrorBoundary onError={console.error}>
-        <Router onRouteChange={(url) => onRouteWillChange(url)}>
-          {window.__PRANX_HYDRATE_DATA__.routes.map((r) => {
-            const Page = lazy(() => import(r.module));
+  if (typeof window === "undefined") return children;
 
-            return (
-              <Route
-                key={r.path}
-                path={r.path_parsed_for_routing}
-                component={() => {
-                  let props = r.props;
+  window.pranx = {
+    router_mode: mode,
+  };
 
-                  if (r.rendering_kind === "server-side") {
-                    return (
-                      <ServerPage>
-                        <Page />
-                      </ServerPage>
-                    );
-                  }
+  if (mode === "mpa") {
+    return <RouterMPA />;
+  }
 
-                  if (r.static_generated_routes.length === 0) {
-                    return <Page {...props} />;
-                  }
+  if (mode === "spa") {
+    return (
+      <AppContextProvider>
+        <RouterSPA />
+      </AppContextProvider>
+    );
+  }
 
-                  // For static generated subroutes
-                  for (const route of r.static_generated_routes) {
-                    if (route.path === window.location.pathname) {
-                      props = route.props;
-                      break;
-                    }
-                  }
-
-                  return <Page {...props} />;
-                }}
-              />
-            );
-          })}
-
-          <Route
-            default
-            component={NotFoundPage}
-          />
-        </Router>
-      </ErrorBoundary>
-    </LocationProvider>
-  );
+  throw new Error("The mode should be 'spa' or 'mpa'");
 }

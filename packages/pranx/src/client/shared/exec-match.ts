@@ -1,4 +1,5 @@
 // @ts-nocheck
+/** biome-ignore-all lint/suspicious/noImplicitAnyLet: <> */
 
 export const exec_route_match = (url: string, route: string, matches = {}) => {
   url = url.split("/").filter(Boolean);

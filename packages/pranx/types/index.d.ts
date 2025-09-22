@@ -119,18 +119,13 @@ declare global {
     __PRANX_HYDRATE_DATA__: HYDRATE_DATA;
 
     pranx: {
-      csr_enabled: boolean;
+      router_mode: "spa" | "mpa";
     };
   }
 }
 
 // Config
 export declare type PranxConfig = {
-  /**
-   * Enable client side routing.
-   * If set to false, pranx don't will use `preact-iso` in the client for spa routing
-   */
-  csr?: boolean;
   /**
    * Extends esbuild config.
    */

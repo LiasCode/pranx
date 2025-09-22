@@ -85,7 +85,7 @@ export const AppContextProvider = (props: PropsWithChildren) => {
 
 export const _useAppContext = () => {
   const c = useContext(_app_context);
-  if (!c) throw new Error("useAppContext must be used within a AppContextProvider");
+  if (!c) throw new Error("_useAppContext must be used within a AppContextProvider");
   return c;
 };
 

@@ -19,11 +19,6 @@
     }
   },
   "files": {
-    "includes": [
-      "src/**/*",
-      "!dist/**/*",
-      "!src/client/shared/exec-match.ts",
-      "!**/node_modules/**/*"
-    ]
+    "includes": ["src/**/*", "!dist/**/*", "!**/node_modules/**/*"]
   }
 }

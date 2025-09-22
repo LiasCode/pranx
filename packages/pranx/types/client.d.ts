@@ -1,4 +1,5 @@
 import { ComponentProps, FunctionalComponent, Ref, VNode } from "preact";
+import { PropsWithChildren } from "preact/compat";
 
 export type LinkProps = ComponentProps<"a"> & {
   to: string;
@@ -17,4 +18,11 @@ export declare const useAppContext: () => {
 
 export function mount(app: any, root: Element | DocumentFragment): void;
 
-export function StartApp(): VNode<any>;
+export type PranxRouterProps = PropsWithChildren & {
+  /**
+   * @default "spa"
+   */
+  mode: "spa" | "mpa";
+};
+
+export function PranxRouter(props: PranxRouterProps): VNode<any> | ComponentChildren;

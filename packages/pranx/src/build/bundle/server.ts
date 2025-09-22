@@ -1,6 +1,7 @@
 import { mdx_pranx_plugin } from "@/plugins/mdx-plugin";
 import { tailwindcss_plugin } from "@/plugins/tailwind-plugin";
 import esbuild from "esbuild";
+import fse from "fs-extra";
 import { glob } from "glob";
 import { join } from "pathe";
 import type { PranxConfig } from "types/index";
@@ -11,6 +12,7 @@ export async function bundle_server(options: { optimize: boolean; user_config: P
     [
       join(SOURCE_PAGES_DIR, "**/*{page,route}.{js,ts,tsx,jsx}"),
       join(SOURCE_DIR, "entry-server.{tsx,jsx}"),
+      join(SOURCE_DIR, "App.{tsx,jsx}"),
     ],
     {
       nodir: true,
@@ -73,6 +75,15 @@ export async function bundle_server(options: { optimize: boolean; user_config: P
       ...(options.user_config.esbuild?.plugins || []),
     ],
   });
+
+  const css_emited = await glob([join(OUTPUT_BUNDLE_SERVER_DIR, "**/*.css")], {
+    nodir: true,
+    absolute: true,
+  });
+
+  for (const css_path of css_emited) {
+    await fse.remove(css_path);
+  }
 
   return server_bundle_result;
 }

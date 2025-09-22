@@ -1,7 +1,13 @@
+import { PranxRouter } from "pranx/client";
 import type { PropsWithChildren } from "preact/compat";
 import { UserProvider } from "./context/user-context";
 import "./styles/styles.css";
 
-export function App(props: PropsWithChildren) {
-  return <UserProvider>{props.children}</UserProvider>;
+export default function App(props: PropsWithChildren) {
+  return (
+    <UserProvider>
+      <PranxRouter mode="spa" />
+      {props.children}
+    </UserProvider>
+  );
 }
