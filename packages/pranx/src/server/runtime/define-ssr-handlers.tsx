@@ -5,7 +5,6 @@ import { logger } from "@/log/logger";
 import fse from "fs-extra";
 import { defineHandler, type H3, html } from "h3";
 import { extname, join, resolve } from "pathe";
-import { Fragment, h } from "preact";
 import { renderToStringAsync } from "preact-render-to-string";
 import type {
   AppModule,
@@ -20,11 +19,16 @@ export const define_ssr_handlers = async (server_manifest: SERVER_MANIFEST, app:
   const server_entry_module = (await import(server_manifest.entry_server)) as ServerEntryModule;
   const app_module = (await import(server_manifest.app_module)) as AppModule;
 
+  const AppComponent = app_module.default;
+  const ServerEntryComponent = server_entry_module.default;
+
   for (const route of server_manifest.routes) {
     if (route.rendering_kind !== "server-side") continue;
 
     const file_absolute = resolve(join(OUTPUT_BUNDLE_SERVER_DIR, "pages", route.module));
-    const { default: page, getServerSideProps } = (await import(file_absolute)) as PageModule;
+    const { default: PageComponent, getServerSideProps } = (await import(
+      file_absolute
+    )) as PageModule;
 
     const hydrate_data = (await fse.readJSON(SITE_MANIFEST_OUTPUT_PATH)) as HYDRATE_DATA;
     const url_for_routing_match = filePathToRoutingPath(route.path, false);
@@ -65,11 +69,11 @@ export const define_ssr_handlers = async (server_manifest: SERVER_MANIFEST, app:
         hydrate_data.routes[target_route_index].props = props_to_return;
 
         const page_prerendered = await renderToStringAsync(
-          h(
-            server_entry_module?.default || Fragment,
-            {},
-            h(app_module.default, {}, h(page, props_to_return))
-          )
+          <ServerEntryComponent>
+            <AppComponent>
+              <PageComponent {...props_to_return} />
+            </AppComponent>
+          </ServerEntryComponent>
         );
 
         const html_string = generate_html_template({

@@ -6,7 +6,6 @@ import { measureTime } from "@/utils/time-perf";
 import fse from "fs-extra";
 import kleur from "kleur";
 import { join } from "pathe";
-import { Fragment, h } from "preact";
 import { renderToStringAsync } from "preact-render-to-string";
 import type {
   AppModule,
@@ -60,13 +59,24 @@ export async function build() {
     api: [],
   };
 
-  let server_entry_module: ServerEntryModule | null = null;
+  const server_entry_module = (await import(
+    server_site_manifest.entry_server
+  )) as ServerEntryModule;
 
-  server_entry_module = (await import(server_site_manifest.entry_server)) as ServerEntryModule;
+  const app_module = (await import(server_site_manifest.app_module)) as AppModule;
 
-  let app_module: AppModule | null = null;
+  if (!server_entry_module.default) {
+    logger.error(new Error("entry-server.{tsx,jsx} should `export default` a valid Component"));
+    process.exit(1);
+  }
 
-  app_module = (await import(server_site_manifest.app_module)) as AppModule;
+  if (!app_module.default) {
+    logger.error(new Error("App.{tsx,jsx} should `export default` a valid Component"));
+    process.exit(1);
+  }
+
+  const AppComponent = app_module.default;
+  const ServerEntryComponent = server_entry_module.default;
 
   // Generating api routes Manifest
   const pranx_server_base_path = join(".pranx", "server");
@@ -289,15 +299,16 @@ export async function build() {
     if (route.rendering_kind === "server-side") continue;
 
     const page_module = (await import(route.absolute_module_path)) as PageModule;
+    const PageComponent = page_module.default;
 
     if (route.static_generated_routes.length > 0) {
       for (const static_route of route.static_generated_routes) {
         const page_prerendered = await renderToStringAsync(
-          h(
-            server_entry_module?.default || Fragment,
-            {},
-            h(app_module.default, {}, h(page_module.default, static_route.props))
-          )
+          <ServerEntryComponent>
+            <AppComponent>
+              <PageComponent {...static_route.props} />
+            </AppComponent>
+          </ServerEntryComponent>
         );
 
         const html = generate_html_template({
@@ -318,11 +329,11 @@ export async function build() {
     }
 
     const page_prerendered = await renderToStringAsync(
-      h(
-        server_entry_module?.default || Fragment,
-        {},
-        h(app_module.default, {}, h(page_module.default, route.props, null))
-      )
+      <ServerEntryComponent>
+        <AppComponent>
+          <PageComponent {...route.props} />
+        </AppComponent>
+      </ServerEntryComponent>
     );
 
     const html = generate_html_template({

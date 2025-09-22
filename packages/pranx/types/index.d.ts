@@ -1,17 +1,17 @@
 import { BuildOptions } from "esbuild";
 import { EventHandlerRequest, H3Event, defineHandler } from "h3";
-import { VNode } from "preact";
+import { ComponentType } from "preact";
 import { PropsWithChildren } from "preact/compat";
 import { useHead } from "unhead";
 
-export type ServerEntryProps = PropsWithChildren;
+export type ServerEntryProps = PropsWithChildren<any>;
 
 export type ServerEntryModule = {
-  default(): VNode<ServerEntryProps>;
+  default: ComponentType;
 };
 
 export type AppModule = {
-  default(): VNode<PropsWithChildren<any>>;
+  default: ComponentType;
 };
 
 // Static
@@ -42,7 +42,7 @@ export type GetServerSidePropsFunction<Props extends Record<string, any> = {}> =
 // Meta
 export type MetaFunction = typeof useHead;
 
-export type Page = VNode<any>;
+export type Page = ComponentType;
 
 export type PageModule = {
   default(): Page;
