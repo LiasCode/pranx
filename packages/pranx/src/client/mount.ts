@@ -1,6 +1,6 @@
-import { hydrate, type VNode } from "preact";
+import { type ComponentChild, hydrate } from "preact";
 
-export function mount(app: VNode<any>, root: Element | DocumentFragment): void {
+export function mount(app: ComponentChild, root: Element | DocumentFragment): void {
   document.addEventListener("DOMContentLoaded", () => {
     hydrate(app, root);
   });

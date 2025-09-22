@@ -19,3 +19,4 @@
 -[ ] Custom Error Pages
 -[ ] Websockets
 -[ ] Graphql
+-[ ] Env out of the box

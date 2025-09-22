@@ -1,7 +1,7 @@
-import { ComponentProps, FunctionalComponent, Ref, VNode } from "preact";
+import { ComponentChild, ComponentProps, FunctionalComponent, Ref, VNode } from "preact";
 import { PropsWithChildren } from "preact/compat";
 
-export type LinkProps = ComponentProps<"a"> & {
+export type LinkProps = Omit<ComponentProps<"a">, "href"> & {
   to: string;
 };
 
@@ -16,7 +16,7 @@ export declare const useAppContext: () => {
   props_status: "ready" | "loading" | "error";
 };
 
-export function mount(app: any, root: Element | DocumentFragment): void;
+function mount(app: ComponentChild, root: Element | DocumentFragment): void;
 
 export type PranxRouterProps = PropsWithChildren & {
   /**
