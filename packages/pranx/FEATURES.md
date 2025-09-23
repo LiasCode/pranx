@@ -14,6 +14,7 @@
 - [ ] Sass Plugin
 - [ ] Tailwindcss support v3
 - [x] Tailwindcss support v4
+- [x] Markdown support
 - [x] Css modules support
 - [ ] Layouts
 - [ ] Custom Error Pages
