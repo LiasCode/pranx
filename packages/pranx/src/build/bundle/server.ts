@@ -83,9 +83,8 @@ export async function bundle_server(options: { optimize: boolean; user_config: P
       ".jsx": "jsx",
       ".ts": "tsx",
       ".tsx": "tsx",
-      ".module.css": "empty",
-      ".css": "empty",
       ".json": "json",
+      ".scss": "css",
     },
 
     plugins: [
@@ -95,7 +94,7 @@ export async function bundle_server(options: { optimize: boolean; user_config: P
     ],
   });
 
-  const css_emited = await glob([join(OUTPUT_BUNDLE_SERVER_DIR, "**/*.css")], {
+  const css_emited = await glob(join(OUTPUT_BUNDLE_SERVER_DIR, "**/*.css"), {
     nodir: true,
     absolute: true,
   });
