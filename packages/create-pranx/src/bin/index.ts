@@ -4,8 +4,8 @@ import { logger } from "@/log/logger";
 import { convertHumanReadable } from "@/utils/ms-time-converter";
 import { measureTime } from "@/utils/time-perf";
 import { defineCommand, runMain } from "citty";
-import degit from "degit";
 import fse from "fs-extra";
+import { downloadTemplate } from "giget"
 import kleur from "kleur";
 import * as pathe from "pathe";
 
@@ -36,9 +36,18 @@ const main = defineCommand({
       required: false,
       alias: "f",
     },
+    debug: {
+      type: "boolean",
+      description: "Debug, used for see ctx",
+      default: false,
+      required: false,
+    },
   },
   async run(ctx) {
     try {
+      if (ctx.args.debug) {
+        console.dir(ctx);
+      }
       logger.log(
         `Cloning template ${kleur.bold(ctx.args.template)} into ${kleur.bold(`./${ctx.args.name}`)}`
       );
@@ -54,16 +63,18 @@ const main = defineCommand({
 
       await fse.rm(output_path, { recursive: true, force: true });
 
-      const REPO_URL = "https://github.com/LiasCode/pranx-basic-starter-template" as const;
+      const REPO_URL = `github:LiasCode/pranx-templates/templates/${ctx.args.template}`;
 
-      const emitter = degit(REPO_URL, {
-        cache: true,
+      if (ctx.args.debug) {
+        console.dir(REPO_URL);
+      }
+
+      await downloadTemplate(REPO_URL, {
         force: true,
-        verbose: false,
-        mode: "git",
-      });
-
-      await emitter.clone(output_path);
+        silent: true,
+        forceClean: true,
+        dir: output_path,
+      })
 
       logger.log(`
 Enter the project:
