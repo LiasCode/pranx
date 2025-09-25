@@ -5,7 +5,7 @@ import { convertHumanReadable } from "@/utils/ms-time-converter";
 import { measureTime } from "@/utils/time-perf";
 import { defineCommand, runMain } from "citty";
 import fse from "fs-extra";
-import { downloadTemplate } from "giget"
+import { downloadTemplate } from "giget";
 import kleur from "kleur";
 import * as pathe from "pathe";
 
@@ -74,7 +74,7 @@ const main = defineCommand({
         silent: true,
         forceClean: true,
         dir: output_path,
-      })
+      });
 
       logger.log(`
 Enter the project:
