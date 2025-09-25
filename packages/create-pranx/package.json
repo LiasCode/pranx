@@ -14,7 +14,7 @@
     "lint": "biome lint . --fix --unsafe",
     "prepublishOnly": "bun run build:prod",
     "clean": "rm -rf dist node_modules",
-    "release": "bun run build:prod && bun publish && git push --follow-tags"
+    "release": "bun run build:prod && bun pm version patch && bun publish"
   },
   "repository": {
     "type": "git",
