@@ -1,0 +1,44 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ES2022",
+    "moduleResolution": "bundler",
+
+    "declaration": true,
+
+    // resolution
+    "resolveJsonModule": true,
+    "removeComments": false,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleDetection": "force",
+
+    // strict
+    "strict": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedParameters": true,
+
+    "baseUrl": "./",
+
+    // jsx
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact",
+
+    "checkJs": true,
+
+    "paths": {
+      "react": ["./node_modules/preact/compat/"],
+      "react-dom": ["./node_modules/preact/compat/"],
+      "@/*": ["./src/*"]
+    },
+    "skipLibCheck": true
+  },
+  "include": ["src", "scripts", "types"],
+  "exclude": ["node_modules", "dist"]
+}

@@ -9,7 +9,6 @@ import { defineCommand, runMain } from "citty";
 const main = defineCommand({
   meta: {
     name: "pranx",
-    version: "0.0.1",
     description: "The next of preact",
   },
   args: {

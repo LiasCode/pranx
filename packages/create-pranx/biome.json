@@ -1,0 +1,24 @@
+{
+  "root": true,
+  "$schema": "https://biomejs.dev/schemas/2.2.4/schema.json",
+  "assist": { "actions": { "source": { "organizeImports": "off" } } },
+  "formatter": {
+    "enabled": false,
+    "lineWidth": 100,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineEnding": "crlf"
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "suspicious": {
+        "noExplicitAny": "off"
+      }
+    }
+  },
+  "files": {
+    "includes": ["src/**/*", "!dist/**/*", "!**/node_modules/**/*"]
+  }
+}
