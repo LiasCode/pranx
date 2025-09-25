@@ -6,7 +6,7 @@ A lightweight, Next.js-like fullstack metaframework for Preact apps.
 ## Usage
 
 ```bash
-npx create-pranx
+npx create-pranx@latest -n "my-pranx-project"
 ```
 
 ## Contributing

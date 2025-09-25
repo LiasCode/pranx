@@ -5,6 +5,12 @@ A lightweight, Next.js-like fullstack metaframework for Preact apps.
 
 > Note: Pranx is currently being rewritten from scratch. The API and internals are unstable and subject to change.
 
+## Usage 
+
+```bash
+npx create-pranx@latest -n "my-pranx-project"
+```
+
 ## Why Pranx?
 
 Pranx aims to provide a minimal, highly-performant fullstack developer experience inspired by Next.js but optimized for Preact and small bundles. Focus areas:
