@@ -8,6 +8,7 @@ depth = 50
 exact = true
 linker = "isolated"
 cache.disable = false
+install.registry = "https://registry.npmjs.org/"
 
 [run]
 silent = true

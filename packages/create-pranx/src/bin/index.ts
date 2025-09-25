@@ -39,7 +39,9 @@ const main = defineCommand({
   },
   async run(ctx) {
     try {
-      logger.log(`Cloning template ${kleur.bold(ctx.args.template)} into ${kleur.bold(`./${ctx.args.name}`)}`);
+      logger.log(
+        `Cloning template ${kleur.bold(ctx.args.template)} into ${kleur.bold(`./${ctx.args.name}`)}`
+      );
 
       const output_path = pathe.join(process.cwd(), ctx.args.name);
 
