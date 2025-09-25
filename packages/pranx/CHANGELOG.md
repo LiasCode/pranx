@@ -1,6 +1,29 @@
 # Changelog
 
 
+## v0.1.0-beta.14
+
+[compare changes](https://github.com/LiasCode/pranx/compare/v0.1.0-beta.13...v0.1.0-beta.14)
+
+### 🚀 Enhancements
+
+- Add create-pranx ([53dfed5](https://github.com/LiasCode/pranx/commit/53dfed5))
+
+### 🩹 Fixes
+
+- Support the same extensions for server and browser esbuild bundling ([eea67b8](https://github.com/LiasCode/pranx/commit/eea67b8))
+
+### 🏡 Chore
+
+- **release:** V0.1.0-beta.13 ([845f8af](https://github.com/LiasCode/pranx/commit/845f8af))
+- Add new features ROADMAP ([29dc4dd](https://github.com/LiasCode/pranx/commit/29dc4dd))
+- Add new feature ([138360a](https://github.com/LiasCode/pranx/commit/138360a))
+- Add create-pranx usage to all READMEs ([ce606bd](https://github.com/LiasCode/pranx/commit/ce606bd))
+
+### ❤️ Contributors
+
+- LiasCode <liasraul00@gmail.com>
+
 ## v0.1.0-beta.13
 
 [compare changes](https://github.com/LiasCode/pranx/compare/v0.1.0-beta.12...v0.1.0-beta.13)
