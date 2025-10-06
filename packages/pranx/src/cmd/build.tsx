@@ -3,6 +3,7 @@ import { get_user_pranx_config, load_user_pranx_config } from "@/config/index";
 import { log_routes_simple } from "@/log/log-routes-simple.js";
 import { logger } from "@/log/logger.js";
 import { measureTime } from "@/utils/time-perf";
+import * as pranxEnv from "@pranx/env";
 import fse from "fs-extra";
 import kleur from "kleur";
 import { join } from "pathe";
@@ -30,6 +31,15 @@ export async function build() {
   logger.log(kleur.bold().magenta("Pranx Build\n"));
 
   measureTime("build_measure_time");
+
+  const env = pranxEnv.loadEnv();
+
+  if (!env) {
+    process.exit(1);
+  }
+
+  // const privateEnv = pranxEnv.extractPrivateEnv(env)
+  // const publicEnv = pranxEnv.extractPublicEnv(env)
 
   // Loading User Config
   await load_user_pranx_config();

@@ -4,6 +4,7 @@ import { define_api_handlers } from "@/server/runtime/define-api-handlers";
 import { defineServeStaticHandler } from "@/server/runtime/define-serve-static";
 import { define_ssr_handlers } from "@/server/runtime/define-ssr-handlers";
 import { measureTime } from "@/utils/time-perf";
+import * as pranxEnv from "@pranx/env";
 import fse from "fs-extra";
 import { H3, serve } from "h3";
 import kleur from "kleur";
@@ -11,6 +12,12 @@ import type { SERVER_MANIFEST } from "types/index";
 
 export async function start() {
   measureTime("pranx-start");
+
+  const env = pranxEnv.loadEnv();
+
+  if (!env) {
+    process.exit(1);
+  }
 
   logger.log(kleur.bold().magenta("Pranx Start"));
 

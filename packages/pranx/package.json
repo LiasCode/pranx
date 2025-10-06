@@ -91,7 +91,8 @@
     "pathe": "^2.0.3",
     "preact-iso": "^2.10.0",
     "ufo": "^1.6.1",
-    "unhead": "2.0.14"
+    "unhead": "2.0.14",
+    "@pranx/env": "workspace:*"
   },
   "peerDependencies": {
     "postcss": "^8.5.6",
